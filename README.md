@@ -4,5 +4,5 @@ i'm a 17 year old developer who's ambition revolves around working on solving co
 
 i'm currently...
 * 🔎 building within artificial intelligence & quantum computing
-* 📺 watching the office for the 16th time
 * 🎧 listening to lover by taylor swift
+* 🍍 probably eating a pineapple  
