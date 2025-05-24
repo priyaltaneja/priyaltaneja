@@ -58,7 +58,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden flex flex-col items-center justify-center bg-white">
-      <div className="flex flex-col items-center justify-center md:min-h-screen p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-2 md:gap-32" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-32" style={georgiaStyle}>
         {/* Left side content */}
         <div className={`
           flex flex-col items-center justify-center min-h-[80vh]
