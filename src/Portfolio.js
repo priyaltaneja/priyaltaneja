@@ -6,7 +6,7 @@ const georgiaStyle = {
   fontFamily: 'Georgia, serif'
 };
 
-const Portfolio = ({ onNavigate }) => {
+const Portfolio = ({ onNavigate, currentPage }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [nextSlideIndex, setNextSlideIndex] = useState(null);
   const [slideDirection, setSlideDirection] = useState('');
@@ -22,8 +22,10 @@ const Portfolio = ({ onNavigate }) => {
   ];
 
   useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+    setIsLoaded(false);
+    const timeout = setTimeout(() => setIsLoaded(true), 10);
+    return () => clearTimeout(timeout);
+  }, [currentPage]);
 
   useEffect(() => {
     if (isSliding && nextSlideIndex !== null) {
