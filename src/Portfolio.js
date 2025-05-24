@@ -16,9 +16,9 @@ const Portfolio = ({ onNavigate }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   // Sample images using placeholder service with square dimensions
   const images = [
-    "https://picsum.photos/800/800?random=1",
-    "https://picsum.photos/800/800?random=2",
-    "https://picsum.photos/800/800?random=3"
+    process.env.PUBLIC_URL + "/images/1.png",
+    process.env.PUBLIC_URL + "/images/2.png",
+    process.env.PUBLIC_URL + "/images/3.png"
   ];
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const Portfolio = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden flex flex-col items-center justify-center bg-white">
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-8 md:gap-32" style={georgiaStyle}>
+      <div className="flex flex-col items-center justify-center md:min-h-screen p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-2 md:gap-32" style={georgiaStyle}>
         {/* Left side content */}
         <div className={`
           flex flex-col items-center justify-center min-h-[80vh]
@@ -123,11 +123,11 @@ const Portfolio = ({ onNavigate }) => {
           </div>
         </div>
         
-        {/* Right side image carousel */}
-        <div className="relative min-h-screen w-full flex flex-col items-center justify-center">
+        {/* Right side image carousel with animation */}
+        <div className={`relative w-full flex flex-col items-center justify-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {/* Pink gradient background as a perfect circle behind the carousel */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[500px] max-h-[500px] rounded-full pointer-events-none opacity-50"
+            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[500px] max-h-[500px] rounded-full pointer-events-none opacity-50 transition-all duration-700 ${isLoaded ? 'opacity-50 scale-100' : 'opacity-0 scale-95'}`}
             style={{
               zIndex: 0,
               background: 'radial-gradient(circle, rgba(236, 72, 153, 0.8) 0%, rgba(236, 72, 153, 0.6) 40%, rgba(236, 72, 153, 0.2) 70%, rgba(236, 72, 153, 0) 100%)',
