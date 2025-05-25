@@ -45,11 +45,12 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         {/* Left side content */}
         <div
           ref={animatedRef}
-          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[80vh] md:block md:items-center md:justify-center md:min-h-0 md:pr-32 text-center transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`.replace(/\s+/g, ' ')}
+          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[80vh] md:block md:items-center md:justify-center md:min-h-0 md:pr-32 text-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`.replace(/\s+/g, ' ')}
+          style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-6 text-center whitespace-nowrap">Priyal Taneja</h1>
           
-          <p className={`text-lg sm:text-xl md:text-2xl mb-6 transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center max-w-[500px]`} style={{lineHeight: '1.6'}}>
+          <p className={`text-lg sm:text-xl md:text-2xl mb-6 transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} text-center max-w-[500px]`} style={{lineHeight: '1.6', transform: 'translateZ(0)', backfaceVisibility: 'hidden'}}>
             <div className="whitespace-nowrap">
               <span>engineer exploring </span>
               <span className="bg-pink-100 px-1 rounded">human-centered AI</span>
@@ -61,7 +62,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
           </p>
           
           {/* Navigation */}
-          <nav className={`mb-4 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>
+          <nav className={`mb-4 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} text-center`} style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}>
             <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center">
               <li>
                 <button 
@@ -91,7 +92,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
           </nav>
           
           {/* Social Icons */}
-          <div className={`flex space-x-4 mt-2 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'} justify-center`}>
+          <div className={`flex space-x-4 mt-2 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} justify-center`} style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}>
             <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="Email">
               <Mail size={20} />
             </a>
