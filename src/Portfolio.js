@@ -6,7 +6,7 @@ const georgiaStyle = {
   fontFamily: 'Georgia, serif'
 };
 
-const Portfolio = ({ onNavigate, currentPage }) => {
+const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [nextSlideIndex, setNextSlideIndex] = useState(null);
   const [slideDirection, setSlideDirection] = useState('');
@@ -25,7 +25,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
     setIsLoaded(false);
     const timeout = setTimeout(() => setIsLoaded(true), 10);
     return () => clearTimeout(timeout);
-  }, [currentPage]);
+  }, [currentPage, animationKey]);
 
   useEffect(() => {
     if (isSliding && nextSlideIndex !== null) {
@@ -57,7 +57,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   const prevSlide = () => startSlide('left');
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden flex flex-col items-center justify-center bg-white">
+    <div className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
       <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-32" style={georgiaStyle}>
         {/* Left side content */}
         <div className={`
