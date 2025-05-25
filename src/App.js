@@ -39,7 +39,7 @@ function App() {
       case 'writing':
         return <Writing onNavigate={handleNavigate} />;
       default:
-        return <Portfolio onNavigate={handleNavigate} currentPage={currentPage} animationKey={animationKey} />;
+        return <Portfolio key={animationKey} onNavigate={handleNavigate} currentPage={currentPage} animationKey={animationKey} />;
     }
   };
 

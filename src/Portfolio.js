@@ -127,15 +127,6 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         
         {/* Right side image carousel with animation */}
         <div className={`relative w-full flex flex-col items-center justify-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          {/* Pink gradient background as a perfect circle behind the carousel */}
-          <div
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[500px] max-h-[500px] rounded-full pointer-events-none opacity-50 transition-all duration-700 ${isLoaded ? 'opacity-50 scale-100' : 'opacity-0 scale-95'}`}
-            style={{
-              zIndex: 0,
-              background: 'radial-gradient(circle, rgba(236, 72, 153, 0.8) 0%, rgba(236, 72, 153, 0.6) 40%, rgba(236, 72, 153, 0.2) 70%, rgba(236, 72, 153, 0) 100%)',
-              filter: 'blur(40px)'
-            }}
-          />
           <div className="relative rounded-lg overflow-hidden shadow-lg aspect-square w-[250px] md:w-[350px] z-10" style={{zIndex: 10}}>
             <div className="w-full h-full overflow-hidden relative">
               {isSliding && nextSlideIndex !== null ? (
