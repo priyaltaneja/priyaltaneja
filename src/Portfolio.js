@@ -9,6 +9,8 @@ const georgiaStyle = {
 const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
   const animatedRef = useRef(null);
   // Sample images using placeholder service with square dimensions
   const images = [
@@ -16,6 +18,9 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
     process.env.PUBLIC_URL + "/images/2.png",
     process.env.PUBLIC_URL + "/images/3.png"
   ];
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     setIsLoaded(false);
@@ -26,6 +31,30 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
     const timeout = setTimeout(() => setIsLoaded(true), 10);
     return () => clearTimeout(timeout);
   }, [currentPage, animationKey]);
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    }
+    if (isRightSwipe) {
+      prevSlide();
+    }
+  };
 
   const prevSlide = () => setCurrentSlide((s) => (s - 1 + images.length) % images.length);
   const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
@@ -101,9 +130,14 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         
         {/* Right side image carousel with cross-fade animation */}
         <div
-          className={`flex-1 md:w-1/2 flex justify-center items-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className={`flex-1 md:w-1/2 flex flex-col items-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <div className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg mx-auto">
+          <div 
+            className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             {images.map((src, idx) => (
               <img
                 key={idx}
@@ -136,6 +170,21 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
               </>
             )}
           </div>
+          {/* Pagination dots */}
+          {images.length > 1 && (
+            <div className="flex justify-center space-x-2 mt-3">
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    idx === currentSlide ? 'bg-pink-500' : 'bg-gray-300'
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
