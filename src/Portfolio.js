@@ -32,7 +32,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
 
   return (
     <div key={animationKey} className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
-      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 h-[100dvh] md:h-screen" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 min-h-screen" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
