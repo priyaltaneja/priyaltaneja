@@ -14,9 +14,9 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const animatedRef = useRef(null);
   // Sample images using placeholder service with square dimensions
   const images = [
-    process.env.PUBLIC_URL + "/images/1.png",
-    process.env.PUBLIC_URL + "/images/2.png",
-    process.env.PUBLIC_URL + "/images/3.png"
+    process.env.PUBLIC_URL + "/images/PriyalImage1.jpeg",
+    process.env.PUBLIC_URL + "/images/PriyalImage2.jpg",
+    process.env.PUBLIC_URL + "/images/PriyalImage3.jpg"
   ];
 
   // Minimum swipe distance (in px)

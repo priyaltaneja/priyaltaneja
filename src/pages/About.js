@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 
 const About = ({ onNavigate }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -50,7 +50,7 @@ const About = ({ onNavigate }) => {
           </ul>
         </nav>
 
-        <div className={`max-w-3xl mx-auto transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`max-w-4xl mx-auto transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center">About Me</h1>
           
           <div className="space-y-8 text-lg">
@@ -67,14 +67,14 @@ const About = ({ onNavigate }) => {
             <div>
               <h2 className="text-2xl font-medium mb-4">i'm currently…</h2>
               <ul className="list-disc list-inside space-y-2">
-                <li>studying <span className="bg-pink-100 px-1 rounded">electrical engineering</span> and working towards my iron ring @ <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors">mcmaster university</a></li>
-                <li>exploring <span className="bg-pink-100 px-1 rounded">human-computer interaction</span> research @ the <a href="https://esilab.cas.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors">embodied social interaction (ESI) lab</a></li>
+                <li>studying <span className="bg-pink-100 px-1 rounded">electrical engineering</span> and working towards my iron ring @ <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1">mcmaster university <ExternalLink size={14} /></a></li>
+                <li>exploring <span className="bg-pink-100 px-1 rounded">human-computer interaction</span> research @ the <a href="https://esilab.cas.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1">embodied social interaction (ESI) lab <ExternalLink size={14} /></a></li>
               </ul>
             </div>
 
             <div>
               <p className="leading-relaxed">
-                i'm always excited to connect with ambitious people working on leveraging tech for impact. if that's you, <a href="https://calendly.com/priyaltaneja/15-minute-meeting" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors italic">let's chat!</a>
+                i'm always excited to connect with ambitious people working on leveraging tech for impact. if that's you, <a href="https://calendly.com/priyaltaneja/15-minute-meeting" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1 italic">let's chat! <ExternalLink size={14} /></a>
               </p>
             </div>
 
