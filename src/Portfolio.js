@@ -8,7 +8,6 @@ const georgiaStyle = {
 
 const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const animatedRef = useRef(null);
   // Sample images using placeholder service with square dimensions
@@ -28,24 +27,16 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
     return () => clearTimeout(timeout);
   }, [currentPage, animationKey]);
 
-  const handleSlideChange = (newIndex) => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentSlide(newIndex);
-      setIsTransitioning(false);
-    }, 300);
-  };
-
-  const prevSlide = () => handleSlideChange((currentSlide - 1 + images.length) % images.length);
-  const nextSlide = () => handleSlideChange((currentSlide + 1) % images.length);
+  const prevSlide = () => setCurrentSlide((s) => (s - 1 + images.length) % images.length);
+  const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
 
   return (
     <div key={animationKey} className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
-      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-32" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 h-[100dvh] md:h-screen" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
-          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[80vh] md:block md:items-center md:justify-center md:min-h-0 md:pr-32 text-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`.replace(/\s+/g, ' ')}
+          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`.replace(/\s+/g, ' ')}
           style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-6 text-center whitespace-nowrap">Priyal Taneja</h1>
@@ -108,37 +99,42 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
           </div>
         </div>
         
-        {/* Right side image carousel with animation */}
+        {/* Right side image carousel with cross-fade animation */}
         <div
           className={`flex-1 md:w-1/2 flex justify-center items-center transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <div className="rounded-lg overflow-hidden shadow-lg aspect-square w-[250px] md:w-[350px] z-10">
-            <div className="w-full h-full overflow-hidden relative flex items-center justify-center">
+          <div className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg mx-auto">
+            {images.map((src, idx) => (
               <img
-                src={images[currentSlide]}
-                alt={`Slide ${currentSlide + 1}`}
-                className={`w-full h-full object-cover transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+                key={idx}
+                src={src}
+                alt={`Slide ${idx + 1}`}
+                className={`
+                  absolute inset-0 w-full h-full object-cover
+                  transition-opacity duration-500 ease-in-out
+                  ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}
+                `}
               />
-              {/* Carousel navigation buttons */}
-              {images.length > 1 && (
-                <>
-                  <button
-                    onClick={prevSlide}
-                    className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-opacity-100 transition-all z-20"
-                    aria-label="Previous image"
-                  >
-                    <ChevronLeft size={16} className="md:w-5 md:h-5" />
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-opacity-100 transition-all z-20"
-                    aria-label="Next image"
-                  >
-                    <ChevronRight size={16} className="md:w-5 md:h-5" />
-                  </button>
-                </>
-              )}
-            </div>
+            ))}
+            {/* Carousel navigation buttons */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-gray-200 transition-all duration-300 z-20"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={16} className="md:w-5 md:h-5" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-gray-200 transition-all duration-300 z-20"
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={16} className="md:w-5 md:h-5" />
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
