@@ -26,6 +26,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const animatedRef = useRef(null);
+  const prevPageRef = useRef(currentPage);
 
   // Sample images using placeholder service with square dimensions
   const images = [
@@ -38,15 +39,18 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const minSwipeDistance = 50;
 
   useEffect(() => {
-    // Reset animation state
-    setIsLoaded(false);
+    // Reset animation state when page changes
+    if (prevPageRef.current !== currentPage) {
+      setIsLoaded(false);
+      prevPageRef.current = currentPage;
+    }
 
     // Force a reflow
     if (animatedRef.current) {
       void animatedRef.current.offsetHeight;
     }
 
-    // Start animation
+    // Start animation with a small delay
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 50);
@@ -85,7 +89,11 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
     animation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
     opacity: 0,
     transform: 'translateY(20px)',
-    willChange: 'opacity, transform'
+    willChange: 'opacity, transform',
+    WebkitAnimation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
+    WebkitTransform: 'translateY(20px)',
+    WebkitBackfaceVisibility: 'hidden',
+    backfaceVisibility: 'hidden'
   };
 
   return (
