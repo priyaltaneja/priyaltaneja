@@ -8,6 +8,16 @@ const georgiaStyle = {
 
 // Animation keyframes
 const fadeInAnimation = `
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+      -webkit-transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      -webkit-transform: translateY(0);
+    }
+  }
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -87,11 +97,11 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
 
   const animationStyle = {
     animation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
+    WebkitAnimation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
     opacity: 0,
     transform: 'translateY(20px)',
-    willChange: 'opacity, transform',
-    WebkitAnimation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
     WebkitTransform: 'translateY(20px)',
+    willChange: 'opacity, transform',
     WebkitBackfaceVisibility: 'hidden',
     backfaceVisibility: 'hidden'
   };
