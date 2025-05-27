@@ -6,30 +6,6 @@ const georgiaStyle = {
   fontFamily: 'Georgia, serif'
 };
 
-// Animation keyframes
-const fadeInAnimation = `
-  @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
-      -webkit-transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      -webkit-transform: translateY(0);
-    }
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
 const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -95,26 +71,29 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const prevSlide = () => setCurrentSlide((s) => (s - 1 + images.length) % images.length);
   const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
 
-  const animationStyle = {
-    animation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
-    WebkitAnimation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
-    opacity: 0,
-    transform: 'translateY(20px)',
-    WebkitTransform: 'translateY(20px)',
-    willChange: 'opacity, transform',
-    WebkitBackfaceVisibility: 'hidden',
-    backfaceVisibility: 'hidden'
-  };
-
   return (
     <div key={animationKey} className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
-      <style>{fadeInAnimation}</style>
+      <style>
+        {`
+          .safari-fade {
+            opacity: 0;
+            -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+            -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+          }
+          .safari-fade.loaded {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+          }
+        `}
+      </style>
       <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 min-h-screen" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
-          className="flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center"
-          style={animationStyle}
+          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center safari-fade${isLoaded ? ' loaded' : ''}`}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-6 text-center whitespace-nowrap">Priyal Taneja</h1>
           
@@ -178,8 +157,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         
         {/* Right side image carousel with cross-fade animation */}
         <div
-          className="flex-1 md:w-1/2 flex flex-col items-center"
-          style={animationStyle}
+          className={`flex-1 md:w-1/2 flex flex-col items-center safari-fade${isLoaded ? ' loaded' : ''}`}
         >
           <div 
             className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg"
