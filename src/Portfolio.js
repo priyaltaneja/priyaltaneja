@@ -6,13 +6,11 @@ const georgiaStyle = {
   fontFamily: 'Georgia, serif'
 };
 
-const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
+const Portfolio = ({ onNavigate, currentPage }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const animatedRef = useRef(null);
-  const prevPageRef = useRef(currentPage);
 
   // Sample images using placeholder service with square dimensions
   const images = [
@@ -23,26 +21,6 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
-
-  useEffect(() => {
-    // Reset animation state when page changes
-    if (prevPageRef.current !== currentPage) {
-      setIsLoaded(false);
-      prevPageRef.current = currentPage;
-    }
-
-    // Force a reflow
-    if (animatedRef.current) {
-      void animatedRef.current.offsetHeight;
-    }
-
-    // Start animation with a small delay
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [currentPage, animationKey]);
 
   const onTouchStart = (e) => {
     setTouchEnd(null);
@@ -72,7 +50,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
 
   return (
-    <div key={animationKey} className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
+    <div className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
       <style>
         {`
           .safari-fade {
@@ -93,7 +71,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         {/* Left side content */}
         <div
           ref={animatedRef}
-          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center safari-fade${isLoaded ? ' loaded' : ''}`}
+          className="flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center"
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-6 text-center whitespace-nowrap">Priyal Taneja</h1>
           
@@ -157,7 +135,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         
         {/* Right side image carousel with cross-fade animation */}
         <div
-          className={`flex-1 md:w-1/2 flex flex-col items-center safari-fade${isLoaded ? ' loaded' : ''}`}
+          className="flex-1 md:w-1/2 flex flex-col items-center"
         >
           <div 
             className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg"

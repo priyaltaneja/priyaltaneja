@@ -4,6 +4,7 @@ import About from './pages/About';
 import Projects from './pages/Projects';
 import Writing from './pages/Writing';
 import Footer from './components/Footer';
+import PageContainer from './components/PageContainer';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -11,11 +12,9 @@ function App() {
     const hash = window.location.hash.replace('#', '');
     return hash || 'home';
   });
-  const [animationKey, setAnimationKey] = useState(0);
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
-    setAnimationKey(Date.now()); // update key on every navigation
     window.location.hash = page;
   };
 
@@ -39,14 +38,16 @@ function App() {
       case 'writing':
         return <Writing onNavigate={handleNavigate} />;
       default:
-        return <Portfolio key={animationKey} onNavigate={handleNavigate} currentPage={currentPage} animationKey={animationKey} />;
+        return <Portfolio onNavigate={handleNavigate} currentPage={currentPage} />;
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow">
-        {renderPage()}
+        <PageContainer pageKey={currentPage}>
+          {renderPage()}
+        </PageContainer>
       </div>
       <Footer />
     </div>
