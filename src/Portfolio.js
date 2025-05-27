@@ -6,13 +6,26 @@ const georgiaStyle = {
   fontFamily: 'Georgia, serif'
 };
 
+// Animation keyframes
+const fadeInAnimation = `
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
 const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const animatedRef = useRef(null);
-  const timeoutRef = useRef(null);
 
   // Sample images using placeholder service with square dimensions
   const images = [
@@ -25,32 +38,20 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const minSwipeDistance = 50;
 
   useEffect(() => {
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
     // Reset animation state
     setIsLoaded(false);
 
-    // Force reflow for Safari and ensure hardware acceleration
+    // Force a reflow
     if (animatedRef.current) {
       void animatedRef.current.offsetHeight;
-      animatedRef.current.style.transform = 'translateZ(0)';
     }
 
-    // Use requestAnimationFrame to ensure smooth animation
-    requestAnimationFrame(() => {
-      timeoutRef.current = setTimeout(() => {
-        setIsLoaded(true);
-      }, 50); // Slightly longer delay for Safari
-    });
+    // Start animation
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 50);
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+    return () => clearTimeout(timer);
   }, [currentPage, animationKey]);
 
   const onTouchStart = (e) => {
@@ -80,18 +81,26 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
   const prevSlide = () => setCurrentSlide((s) => (s - 1 + images.length) % images.length);
   const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
 
+  const animationStyle = {
+    animation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
+    opacity: 0,
+    transform: 'translateY(20px)',
+    willChange: 'opacity, transform'
+  };
+
   return (
     <div key={animationKey} className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
+      <style>{fadeInAnimation}</style>
       <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 min-h-screen" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
-          className={`flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center transition-all duration-700 will-change-transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`.replace(/\s+/g, ' ')}
-          style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+          className="flex-1 md:w-1/2 flex flex-col items-center justify-center min-h-[50vh] md:min-h-0 md:block md:items-center md:justify-center md:pr-8 text-center"
+          style={animationStyle}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-6 text-center whitespace-nowrap">Priyal Taneja</h1>
           
-          <p className={`text-lg sm:text-xl md:text-2xl mb-6 transition-all duration-700 delay-100 will-change-transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} text-center max-w-[500px]`} style={{lineHeight: '1.6', transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden'}}>
+          <p className="text-lg sm:text-xl md:text-2xl mb-6 text-center max-w-[500px]" style={{lineHeight: '1.6'}}>
             <div className="whitespace-nowrap">
               <span>engineer exploring </span>
               <span className="bg-pink-100 px-1 rounded">human-centered AI</span>
@@ -103,7 +112,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
           </p>
           
           {/* Navigation */}
-          <nav className={`mb-4 transition-all duration-700 delay-200 will-change-transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} text-center`} style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+          <nav className="mb-4 text-center">
             <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center">
               <li>
                 <button 
@@ -133,7 +142,7 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
           </nav>
           
           {/* Social Icons */}
-          <div className={`flex space-x-4 mt-2 transition-all duration-700 delay-300 will-change-transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} justify-center`} style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+          <div className="flex space-x-4 mt-2 justify-center">
             <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="Email">
               <Mail size={20} />
             </a>
@@ -151,8 +160,8 @@ const Portfolio = ({ onNavigate, currentPage, animationKey }) => {
         
         {/* Right side image carousel with cross-fade animation */}
         <div
-          className={`flex-1 md:w-1/2 flex flex-col items-center transition-all duration-700 will-change-transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+          className="flex-1 md:w-1/2 flex flex-col items-center"
+          style={animationStyle}
         >
           <div 
             className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg"
