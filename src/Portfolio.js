@@ -9,9 +9,6 @@ const georgiaStyle = {
 const Portfolio = ({ onNavigate, currentPage }) => {
   const [currentSlide, setCurrentSlide] = useState(1); // Start at 1 because of clone
   const [isAnimating, setIsAnimating] = useState(false);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-  const [touchStartY, setTouchStartY] = useState(null);
   const animatedRef = useRef(null);
 
   // Sample images using placeholder service with square dimensions
@@ -22,40 +19,6 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   ];
   // Clone last and first for seamless looping
   const images = [realImages[realImages.length - 1], ...realImages, realImages[0]];
-
-  // Minimum swipe distance (in px)
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-    setTouchStartY(e.targetTouches[0].clientY);
-  };
-
-  const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-    const deltaX = Math.abs(e.targetTouches[0].clientX - touchStart);
-    const deltaY = Math.abs(e.targetTouches[0].clientY - touchStartY);
-    // Only prevent default if horizontal swipe is greater than vertical
-    if (deltaX > deltaY) {
-      e.preventDefault();
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      nextSlide();
-    }
-    if (isRightSwipe) {
-      prevSlide();
-    }
-  };
 
   const prevSlide = () => {
     if (isAnimating) return;
@@ -153,7 +116,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           }
         `}
       </style>
-      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-4 md:gap-20 min-h-screen" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-4 md:gap-20" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
@@ -236,9 +199,6 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             />
             <div 
               className="relative w-full h-full rounded-xl overflow-hidden shadow-lg z-10"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
             >
               <div
                 className="carousel-slider-row"
