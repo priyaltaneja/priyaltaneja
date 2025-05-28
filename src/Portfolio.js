@@ -7,17 +7,20 @@ const georgiaStyle = {
 };
 
 const Portfolio = ({ onNavigate, currentPage }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(1); // Start at 1 because of clone
+  const [isAnimating, setIsAnimating] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const animatedRef = useRef(null);
 
   // Sample images using placeholder service with square dimensions
-  const images = [
+  const realImages = [
     process.env.PUBLIC_URL + "/images/PriyalImage1.jpeg",
     process.env.PUBLIC_URL + "/images/PriyalImage2.jpg",
     process.env.PUBLIC_URL + "/images/PriyalImage3.jpg"
   ];
+  // Clone last and first for seamless looping
+  const images = [realImages[realImages.length - 1], ...realImages, realImages[0]];
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -46,8 +49,37 @@ const Portfolio = ({ onNavigate, currentPage }) => {
     }
   };
 
-  const prevSlide = () => setCurrentSlide((s) => (s - 1 + images.length) % images.length);
-  const nextSlide = () => setCurrentSlide((s) => (s + 1) % images.length);
+  const prevSlide = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((s) => s - 1);
+  };
+  const nextSlide = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((s) => s + 1);
+  };
+
+  // Infinite loop effect: after animation, jump to real image if at clone
+  useEffect(() => {
+    if (!isAnimating) return;
+    const timeout = setTimeout(() => {
+      setIsAnimating(false);
+      if (currentSlide === 0) {
+        setCurrentSlide(realImages.length);
+      } else if (currentSlide === realImages.length + 1) {
+        setCurrentSlide(1);
+      }
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [isAnimating, currentSlide, realImages.length]);
+
+  // For pagination dots
+  const getRealIndex = () => {
+    if (currentSlide === 0) return realImages.length - 1;
+    if (currentSlide === realImages.length + 1) return 0;
+    return currentSlide - 1;
+  };
 
   return (
     <div className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
@@ -65,9 +97,55 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             -webkit-transform: translateY(0);
             transform: translateY(0);
           }
+          .slide-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+          }
+          .slide-img.inactive {
+            opacity: 0;
+            z-index: 1;
+          }
+          .slide-img.active {
+            opacity: 1;
+            z-index: 2;
+          }
+          .slide-img.slide-in-right {
+            transform: translateX(100%);
+            animation: slideInFromRight 0.5s forwards;
+          }
+          .slide-img.slide-in-left {
+            transform: translateX(-100%);
+            animation: slideInFromLeft 0.5s forwards;
+          }
+          @keyframes slideInFromRight {
+            from { transform: translateX(100%); opacity: 1; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+          @keyframes slideInFromLeft {
+            from { transform: translateX(-100%); opacity: 1; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+          .carousel-slider-row {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+          }
+          .carousel-slider-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            flex-shrink: 0;
+          }
         `}
       </style>
-      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-2 md:gap-16 min-h-screen" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center md:min-h-screen max-w-7xl mx-auto relative gap-4 md:gap-20 min-h-screen" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
@@ -137,53 +215,71 @@ const Portfolio = ({ onNavigate, currentPage }) => {
         <div
           className="flex-1 md:w-1/2 flex flex-col items-center"
         >
-          <div 
-            className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-lg overflow-hidden shadow-lg"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-          >
-            {images.map((src, idx) => (
-              <img
-                key={idx}
-                src={src}
-                alt={`Slide ${idx + 1}`}
-                className={`
-                  absolute inset-0 w-full h-full object-cover
-                  transition-opacity duration-500 ease-in-out
-                  ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}
-                `}
-              />
-            ))}
-            {/* Carousel navigation buttons */}
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-gray-200 transition-all duration-300 z-20"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={16} className="md:w-5 md:h-5" />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 p-1.5 md:p-2 rounded-full shadow-md hover:bg-gray-200 transition-all duration-300 z-20"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={16} className="md:w-5 md:h-5" />
-                </button>
-              </>
-            )}
+          <div className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] flex items-center justify-center" style={{ overflow: 'visible' }}>
+            {/* Larger, centered gradient that can overflow */}
+            <div
+              className="absolute left-1/2 top-1/2 z-0 pointer-events-none"
+              style={{
+                width: '180%',
+                height: '180%',
+                transform: 'translate(-50%, -50%)',
+                background: 'radial-gradient(circle at 50% 50%, rgba(249,168,212,0.75) 0%, rgba(251,207,232,0.45) 46%, transparent 56%)'
+              }}
+            />
+            <div 
+              className="relative w-full h-full rounded-xl overflow-hidden shadow-lg z-10"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
+              <div
+                className="carousel-slider-row"
+                style={{
+                  width: `${images.length * 100}%`,
+                  transform: `translateX(-${currentSlide * (100 / images.length)}%)`,
+                  transition: isAnimating ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
+                }}
+              >
+                {images.map((src, idx) => (
+                  <img
+                    key={idx}
+                    src={src}
+                    alt={`Slide ${((idx - 1 + realImages.length) % realImages.length) + 1}`}
+                    className="carousel-slider-img"
+                    style={{ width: `${100 / images.length}%` }}
+                  />
+                ))}
+              </div>
+              {/* Carousel navigation buttons */}
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-2 md:left-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={32} className="text-white group-hover:text-gray-300" />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 md:right-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={32} className="text-white group-hover:text-gray-300" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           {/* Pagination dots */}
-          {images.length > 1 && (
+          {realImages.length > 1 && (
             <div className="flex justify-center space-x-2 mt-3">
-              {images.map((_, idx) => (
+              {realImages.map((_, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setCurrentSlide(idx)}
+                  onClick={() => !isAnimating && setCurrentSlide(idx + 1)}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    idx === currentSlide ? 'bg-pink-500' : 'bg-gray-300'
+                    getRealIndex() === idx ? 'bg-pink-500' : 'bg-gray-300'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
