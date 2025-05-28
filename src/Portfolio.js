@@ -11,6 +11,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const [touchStartY, setTouchStartY] = useState(null);
   const animatedRef = useRef(null);
 
   // Sample images using placeholder service with square dimensions
@@ -28,10 +29,17 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   const onTouchStart = (e) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
   };
 
   const onTouchMove = (e) => {
     setTouchEnd(e.targetTouches[0].clientX);
+    const deltaX = Math.abs(e.targetTouches[0].clientX - touchStart);
+    const deltaY = Math.abs(e.targetTouches[0].clientY - touchStartY);
+    // Only prevent default if horizontal swipe is greater than vertical
+    if (deltaX > deltaY) {
+      e.preventDefault();
+    }
   };
 
   const onTouchEnd = () => {
