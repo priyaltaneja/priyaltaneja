@@ -53,7 +53,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   };
 
   return (
-    <div className="w-full overflow-x-hidden block bg-white md:flex md:flex-col md:items-center md:min-h-screen md:justify-center">
+    <div className="w-full overflow-x-hidden block bg-white flex flex-col items-center min-h-screen justify-center">
       <style>
         {`
           .safari-fade {
@@ -256,6 +256,8 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           )}
         </div>
       </div>
+      {/* Add breathing room for footer */}
+      <div className="h-10 md:h-20"></div>
     </div>
   );
 };
