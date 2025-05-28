@@ -9,6 +9,10 @@ const georgiaStyle = {
 const Portfolio = ({ onNavigate, currentPage }) => {
   const [currentSlide, setCurrentSlide] = useState(1); // Start at 1 because of clone
   const [isAnimating, setIsAnimating] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchStartY, setTouchStartY] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [swipeDirection, setSwipeDirection] = useState(null);
   const animatedRef = useRef(null);
 
   // Sample images using placeholder service with square dimensions
@@ -19,6 +23,57 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   ];
   // Clone last and first for seamless looping
   const images = [realImages[realImages.length - 1], ...realImages, realImages[0]];
+
+  // Touch event handlers for carousel
+  useEffect(() => {
+    const carousel = document.querySelector('.carousel-slider-row');
+    if (!carousel) return;
+
+    const handleTouchStart = (e) => {
+      setTouchStart(e.targetTouches[0].clientX);
+      setTouchStartY(e.targetTouches[0].clientY);
+      setSwipeDirection(null);
+      setTouchEnd(null);
+    };
+    const handleTouchMove = (e) => {
+      if (!touchStart || !touchStartY) return;
+      const deltaX = e.targetTouches[0].clientX - touchStart;
+      const deltaY = e.targetTouches[0].clientY - touchStartY;
+      if (swipeDirection === null) {
+        if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+          const direction = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
+          setSwipeDirection(direction);
+        }
+      }
+      if (swipeDirection === 'horizontal') {
+        e.preventDefault(); // ONLY prevent scrolling if it's truly horizontal
+        setTouchEnd(e.targetTouches[0].clientX);
+      }
+    };
+    const handleTouchEnd = () => {
+      if (!touchStart || !touchEnd) return;
+      const distance = touchStart - touchEnd;
+      const minSwipeDistance = 50;
+      const isLeftSwipe = distance > minSwipeDistance;
+      const isRightSwipe = distance < -minSwipeDistance;
+      if (isLeftSwipe) {
+        nextSlide();
+      }
+      if (isRightSwipe) {
+        prevSlide();
+      }
+    };
+
+    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      carousel.removeEventListener('touchstart', handleTouchStart);
+      carousel.removeEventListener('touchmove', handleTouchMove);
+      carousel.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [touchStart, touchStartY, touchEnd, swipeDirection]);
 
   const prevSlide = () => {
     if (isAnimating) return;
