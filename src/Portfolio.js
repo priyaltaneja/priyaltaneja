@@ -108,7 +108,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
   };
 
   return (
-    <div className="w-full overflow-x-hidden block bg-white flex flex-col items-center min-h-screen justify-center">
+    <div className="w-full min-h-screen flex items-center justify-center bg-white overflow-x-hidden">
       <style>
         {`
           .safari-fade {
@@ -168,6 +168,27 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             object-fit: cover;
             border-radius: 0.75rem;
             flex-shrink: 0;
+          }
+          /* Gradient Glow Container */
+          .gradient-glow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            border-radius: 1.5rem;
+            background: radial-gradient(circle at 50% 50%, rgba(236,72,153,0.95) 0%, rgba(244,114,182,0.85) 52%, transparent 71%);
+            overflow: hidden;
+            box-sizing: border-box;
+            max-width: 400px;
+            max-height: 400px;
+          }
+          @media (max-width: 600px) {
+            .gradient-glow {
+              padding: 24px;
+              background: radial-gradient(circle at 50% 50%, rgba(236,72,153,0.85) 0%, rgba(244,114,182,0.7) 52%, transparent 71%);
+              max-width: 95vw;
+              max-height: 95vw;
+            }
           }
         `}
       </style>
@@ -238,60 +259,51 @@ const Portfolio = ({ onNavigate, currentPage }) => {
         </div>
         
         {/* Right side image carousel with cross-fade animation */}
-        <div
-          className="flex-1 md:w-1/2 flex flex-col items-center"
-        >
-          <div className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] flex items-center justify-center" style={{ overflow: 'visible' }}>
-            {/* Larger, centered gradient that can overflow */}
-            <div
-              className="absolute left-1/2 top-1/2 z-0 pointer-events-none"
-              style={{
-                width: '180%',
-                height: '180%',
-                transform: 'translate(-50%, -50%)',
-                background: 'radial-gradient(circle at 50% 50%, rgba(249,168,212,0.75) 0%, rgba(251,207,232,0.45) 46%, transparent 56%)'
-              }}
-            />
-            <div 
-              className="relative w-full h-full rounded-xl overflow-hidden shadow-lg z-10"
-            >
-              <div
-                className="carousel-slider-row"
-                style={{
-                  width: `${images.length * 100}%`,
-                  transform: `translateX(-${currentSlide * (100 / images.length)}%)`,
-                  transition: isAnimating ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
-                }}
+        <div className="flex-1 md:w-1/2 flex flex-col items-center">
+          {/* Gradient Glow Container */}
+          <div className="gradient-glow">
+            <div className="relative w-[250px] h-[250px] md:w-[350px] md:h-[350px] flex items-center justify-center" style={{ overflow: 'hidden', background: 'none' }}>
+              <div 
+                className="relative w-full h-full rounded-xl overflow-hidden shadow-lg z-10"
               >
-                {images.map((src, idx) => (
-                  <img
-                    key={idx}
-                    src={src}
-                    alt={`Slide ${((idx - 1 + realImages.length) % realImages.length) + 1}`}
-                    className="carousel-slider-img"
-                    style={{ width: `${100 / images.length}%` }}
-                  />
-                ))}
+                <div
+                  className="carousel-slider-row"
+                  style={{
+                    width: `${images.length * 100}%`,
+                    transform: `translateX(-${currentSlide * (100 / images.length)}%)`,
+                    transition: isAnimating ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
+                  }}
+                >
+                  {images.map((src, idx) => (
+                    <img
+                      key={idx}
+                      src={src}
+                      alt={`Slide ${((idx - 1 + realImages.length) % realImages.length) + 1}`}
+                      className="carousel-slider-img"
+                      style={{ width: `${100 / images.length}%` }}
+                    />
+                  ))}
+                </div>
+                {/* Carousel navigation buttons */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevSlide}
+                      className="absolute left-2 md:left-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft size={32} className="text-white group-hover:text-gray-300" />
+                    </button>
+                    <button
+                      onClick={nextSlide}
+                      className="absolute right-2 md:right-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight size={32} className="text-white group-hover:text-gray-300" />
+                    </button>
+                  </>
+                )}
               </div>
-              {/* Carousel navigation buttons */}
-              {images.length > 1 && (
-                <>
-                  <button
-                    onClick={prevSlide}
-                    className="absolute left-2 md:left-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
-                    aria-label="Previous image"
-                  >
-                    <ChevronLeft size={32} className="text-white group-hover:text-gray-300" />
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className="absolute right-2 md:right-2 top-1/2 -translate-y-1/2 transition-colors duration-200 z-20 group"
-                    aria-label="Next image"
-                  >
-                    <ChevronRight size={32} className="text-white group-hover:text-gray-300" />
-                  </button>
-                </>
-              )}
             </div>
           </div>
           {/* Pagination dots */}
