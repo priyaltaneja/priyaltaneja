@@ -45,7 +45,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow">
-        <PageContainer pageKey={currentPage}>
+        <PageContainer key={currentPage} pageKey={currentPage}>
           {renderPage()}
         </PageContainer>
       </div>
