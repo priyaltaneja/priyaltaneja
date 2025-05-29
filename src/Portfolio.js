@@ -113,15 +113,19 @@ const Portfolio = ({ onNavigate, currentPage }) => {
         {`
           .safari-fade {
             opacity: 0;
-            -webkit-transform: translateY(20px);
-            transform: translateY(20px);
+            -webkit-transform: translateY(20px) translateZ(0);
+            transform: translateY(20px) translateZ(0);
             -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
+            -moz-transition: opacity 0.5s ease, transform 0.5s ease;
             transition: opacity 0.5s ease, transform 0.5s ease;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform, opacity;
           }
           .safari-fade.loaded {
             opacity: 1;
-            -webkit-transform: translateY(0);
-            transform: translateY(0);
+            -webkit-transform: translateY(0) translateZ(0);
+            transform: translateY(0) translateZ(0);
           }
           .slide-img {
             position: absolute;
@@ -192,7 +196,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           }
         `}
       </style>
-      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-4 md:gap-20" style={georgiaStyle}>
+      <div className="flex flex-col items-center p-4 md:flex-row md:items-center md:justify-center max-w-7xl mx-auto relative gap-0.5 md:gap-20" style={georgiaStyle}>
         {/* Left side content */}
         <div
           ref={animatedRef}
