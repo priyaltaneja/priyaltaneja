@@ -14,8 +14,11 @@ function App() {
   });
 
   const handleNavigate = (page) => {
-    setCurrentPage(page);
-    window.location.hash = page;
+    // Add a small delay specifically for Safari page transitions
+    setTimeout(() => {
+      setCurrentPage(page);
+      window.location.hash = page;
+    }, 10);
   };
 
   // Listen for hash changes
