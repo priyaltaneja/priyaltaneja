@@ -29,10 +29,9 @@ const Projects = ({ onNavigate }) => {
 
   const projects = [
     {
-      title: "NextScholar",
+      title: "NextScholar - Chrome Extension for Scholarship Progress Tracking",
       tech: ["Full-Stack", "UX/UI"],
       image: process.env.PUBLIC_URL + "/images/NextScholarImage.png",
-      year: "2024",
       links: [
         {
           url: "https://chromewebstore.google.com/detail/nextscholar/ndohegljfodihdiaopgalhlinaamcfbj",
@@ -45,7 +44,6 @@ const Projects = ({ onNavigate }) => {
       title: "QSVM for Cardiovascular Disease Risk",
       tech: ["Research", "Quantum Computing"],
       image: process.env.PUBLIC_URL + "/images/QSVMImage.webp",
-      year: "2023",
       links: [
         {
           url: "https://priyaltaneja.medium.com/predicting-early-heart-diseases-with-quantum-support-vector-machines-2f2c678e80b7",
@@ -58,7 +56,6 @@ const Projects = ({ onNavigate }) => {
       title: "Reshaping Search Results With Semantic Search",
       tech: ["Machine Learning"],
       image: process.env.PUBLIC_URL + "/images/SemanticSearchImage.png",
-      year: "2023",
       links: [
         {
           url: "https://priyaltaneja.medium.com/from-query-to-meaning-reshaping-the-landscape-of-google-search-results-through-semantic-search-7f5aa02ebc65",
@@ -71,7 +68,6 @@ const Projects = ({ onNavigate }) => {
       title: "Optimizing Database Searching with Grover's Algorithm",
       tech: ["Backend", "Quantum Computing"],
       image: process.env.PUBLIC_URL + "/images/GroversImage.png",
-      year: "2023",
       links: [
         {
           url: "https://priyaltaneja.medium.com/optimizing-database-searching-with-grovers-algorithm-cad50a603494",
@@ -86,10 +82,9 @@ const Projects = ({ onNavigate }) => {
       ]
     },
     {
-      title: "Creating Simple and Scalable Digital Touchpoints for Walmart Blue Labs",
+      title: "Creating Digital Touchpoints for Walmart Blue Labs",
       tech: ["Consulting", "UX/UI"],
       image: process.env.PUBLIC_URL + "/images/WalmartImage.png",
-      year: "2023",
       links: [
         {
           url: "https://firebasestorage.googleapis.com/v0/b/tks-life-prod.appspot.com/o/items%2Fpriyal.taneja%2FTanvi%2C%20Priyal%2C%20Krish%2C%20Zara%2C%20Vinaya.pptx%20(1).pdf?alt=media&token=536326ab-a32b-4995-b684-72cf188822ce",
@@ -177,7 +172,7 @@ const Projects = ({ onNavigate }) => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 tabIndex={0}
               >
-                {selectedTags.length === 0 && <span className="text-gray-400">Filter by tag...</span>}
+                {selectedTags.length === 0 && <span className="text-gray-400">filter by skill...</span>}
                 {selectedTags.map(tag => (
                   <span key={tag} className="flex items-center bg-pink-100 text-black px-3 py-1 rounded-full text-sm font-medium mr-1 mb-1">
                     {tag}
@@ -197,7 +192,7 @@ const Projects = ({ onNavigate }) => {
                   <input
                     className="w-full px-4 py-2 border-b border-pink-100 focus:outline-none rounded-t-xl"
                     style={{ fontFamily: 'Georgia, serif' }}
-                    placeholder="Search tags..."
+                    placeholder="search skills..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     autoFocus
@@ -227,63 +222,60 @@ const Projects = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
             {filteredProjects.map((project, index) => (
               <div 
                 key={project.title}
                 className={`
-                  bg-white border border-gray-200 rounded-2xl p-5 transition-all duration-500
-                  shadow-none hover:shadow-xl hover:border-pink-200
+                  bg-white rounded-2xl shadow-md transition-all duration-500
+                  hover:shadow-xl flex flex-col overflow-hidden
                   ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
                 `}
                 style={{ transitionDelay: `${150 + index * 100}ms` }}
               >
-                <div className="flex flex-col md:flex-row gap-8 h-full">
-                  {/* Left: Icon, tags, title, description */}
-                  <div className="flex-1 flex flex-col items-start">
-                    {/* Icon top left */}
-                    <div className="mb-2 flex flex-row items-center gap-2">
-                      <span className="flex items-center justify-center"><LinkIcon size={18} className="text-black" /></span><span className="text-xl font-bold text-black select-none ml-0">:</span>
-                      {project.links.map((link, i) => (
-                        <a
-                          key={i}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center bg-pink-100 p-2 rounded-full hover:bg-pink-200 transition-colors group cursor-pointer"
-                          aria-label={link.label}
-                        >
-                          {React.createElement(link.icon, { size: 20, className: "text-black group-hover:text-black transition-colors" })}
-                        </a>
-                      ))}
-                    </div>
-                    {/* Tags below icon */}
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {project.tech.map(tech => (
-                        <span 
-                          key={tech}
-                          className="bg-pink-100 px-3 py-1 rounded-full text-sm text-black font-medium"
-                          style={{ fontFamily: 'Georgia, serif' }}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    {/* Title and description below tags */}
-                    <h2 className="text-xl md:text-2xl font-medium mb-2 mt-2 text-left" style={{ fontFamily: 'Georgia, serif' }}>
-                      {project.title}
-                      <span className="block h-1 w-10 bg-pink-200 rounded-full mt-1" />
-                    </h2>
+                {/* Image on top */}
+                {project.image && (
+                  <div className="relative w-full">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-48 object-cover rounded-t-2xl"
+                    />
+                    {/* Subtle overlay */}
+                    <div className="absolute inset-0 rounded-t-2xl" style={{ background: 'rgba(0,0,0,0.18)' }} />
                   </div>
-                  {/* Right: Image always top right */}
-                  <div className="flex-shrink-0 flex items-start justify-end w-full md:w-auto">
-                    {project.image && (
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-44 h-32 md:w-36 md:h-28 object-cover rounded-xl shadow-md border border-pink-100"
-                      />
-                    )}
+                )}
+                {/* Content section below image */}
+                <div className="flex flex-col gap-2 px-6 py-5">
+                  <div className="flex flex-row items-start justify-between w-full">
+                    <div>
+                      <div className="text-xl md:text-xl font-medium text-black" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
+                      <span className="block h-1 w-8 bg-pink-200 rounded-full mt-1 mb-1" />
+                    </div>
+                  </div>
+                  {/* Tags and links row */}
+                  <div className="flex flex-row flex-wrap gap-2 items-center mt-1">
+                    {project.tech.map(tech => (
+                      <span 
+                        key={tech}
+                        className="bg-pink-100 text-black px-3 py-1 rounded-full text-xs font-medium"
+                        style={{ fontFamily: 'Georgia, serif' }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {project.links.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center bg-pink-100 p-2 rounded-full hover:bg-pink-200 transition-colors group cursor-pointer"
+                        aria-label={link.label}
+                      >
+                        {React.createElement(link.icon, { size: 18, className: "text-black group-hover:text-pink-600 transition-colors" })}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
