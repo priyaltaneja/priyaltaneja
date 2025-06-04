@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Chrome, Youtube, Presentation, NotebookPen, Link as LinkIcon, X } from 'lucide-react';
+import { ArrowLeft, Chrome, Youtube, Presentation, NotebookPen, Link as LinkIcon, X, Info } from 'lucide-react';
 
 const Projects = ({ onNavigate }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -7,6 +7,7 @@ const Projects = ({ onNavigate }) => {
   const [search, setSearch] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [hoveredLearnMore, setHoveredLearnMore] = useState(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -30,6 +31,7 @@ const Projects = ({ onNavigate }) => {
   const projects = [
     {
       title: "NextScholar - Chrome Extension for Scholarship Progress Tracking",
+      description: "a chrome extension designed to help students conquer scholarship applications – track deadlines, requirements, and personal progress, all in one place.",
       tech: ["Full-Stack", "UX/UI"],
       image: process.env.PUBLIC_URL + "/images/NextScholarImage.png",
       links: [
@@ -42,6 +44,7 @@ const Projects = ({ onNavigate }) => {
     },
     {
       title: "QSVM for Cardiovascular Disease Risk",
+      description: "translating high-dimensional classical health data into quantum states to power quantum support vector machines for early-stage heart disease detection. presented at World Summit AI 2023 in Montreal.",
       tech: ["Research", "Quantum Computing"],
       image: process.env.PUBLIC_URL + "/images/QSVMImage.webp",
       links: [
@@ -54,6 +57,7 @@ const Projects = ({ onNavigate }) => {
     },
     {
       title: "Reshaping Search Results With Semantic Search",
+      description: "built a semantic search engine that understands meaning, not just syntax, through advanced text embeddings.",
       tech: ["Machine Learning"],
       image: process.env.PUBLIC_URL + "/images/SemanticSearchImage.png",
       links: [
@@ -66,7 +70,8 @@ const Projects = ({ onNavigate }) => {
     },
     {
       title: "Optimizing Database Searching with Grover's Algorithm",
-      tech: ["Backend", "Quantum Computing"],
+      description: "demonstrating quantum advantage through grover's algorithm accelerating unstructured search.",
+      tech: ["Quantum Computing"],
       image: process.env.PUBLIC_URL + "/images/GroversImage.png",
       links: [
         {
@@ -83,6 +88,7 @@ const Projects = ({ onNavigate }) => {
     },
     {
       title: "Creating Digital Touchpoints for Walmart Blue Labs",
+      description: "redesigned Walmart into a seamless omni-channel retailer by integrating real-time personalization, queue management, and community engagement. selected as a top 5 global finalist by Walmart c-suite executives.",
       tech: ["Consulting", "UX/UI"],
       image: process.env.PUBLIC_URL + "/images/WalmartImage.png",
       links: [
@@ -243,14 +249,39 @@ const Projects = ({ onNavigate }) => {
                     />
                     {/* Subtle overlay */}
                     <div className="absolute inset-0 rounded-t-2xl" style={{ background: 'rgba(0,0,0,0.18)' }} />
+                    {/* Tooltip overlay filling the image area */}
+                    {project.description && hoveredLearnMore === index && (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-t-2xl z-40 backdrop-blur-md" style={{ background: 'rgba(30,41,59,0.65)' }}>
+                        <div className="text-base text-white text-center px-6" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 8px rgba(0,0,0,0.25)' }}>
+                          {project.description}
+                        </div>
+                      </div>
+                    )}
+                    {/* Question mark icon in bottom right */}
+                    {project.description && (
+                      <div className="absolute bottom-3 right-3 z-50">
+                        <button
+                          className="flex items-center justify-center w-7 h-7 rounded-full focus:outline-none p-0 m-0 transition-colors"
+                          style={{ background: 'rgba(255,255,255,0.9)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', color: '#4B5563' }}
+                          onMouseEnter={e => { setHoveredLearnMore(index); e.currentTarget.style.color = '#EC4899'; }}
+                          onMouseLeave={e => { setHoveredLearnMore(null); e.currentTarget.style.color = '#4B5563'; }}
+                          onFocus={e => { setHoveredLearnMore(index); e.currentTarget.style.color = '#EC4899'; }}
+                          onBlur={e => { setHoveredLearnMore(null); e.currentTarget.style.color = '#4B5563'; }}
+                          type="button"
+                          aria-label="Show project description"
+                        >
+                          <Info size={22} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
                 {/* Content section below image */}
-                <div className="flex flex-col gap-2 px-6 py-5">
+                <div className="flex flex-col gap-2 px-6 py-5 relative">
                   <div className="flex flex-row items-start justify-between w-full">
                     <div>
                       <div className="text-xl md:text-xl font-medium text-black" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
-                      <span className="block h-1 w-8 bg-pink-200 rounded-full mt-1 mb-1" />
+                      <span className="block h-1 w-8 bg-pink-200 rounded-full mt-1 mb-0.25" />
                     </div>
                   </div>
                   {/* Tags and links row */}
