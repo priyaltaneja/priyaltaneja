@@ -282,21 +282,11 @@ const Projects = ({ onNavigate }) => {
                 <div className="flex flex-col gap-2 px-6 py-5 relative">
                   <div className="flex flex-row items-start justify-between w-full">
                     <div>
-                      <div className="text-xl md:text-xl font-medium text-black" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
-                      <span className="block h-1 w-8 bg-pink-200 rounded-full mt-1 mb-0.25" />
+                      <div className="text-xl md:text-xl font-medium text-black mb-1" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
                     </div>
                   </div>
                   {/* Tags and links row */}
-                  <div className="flex flex-row flex-wrap gap-2 items-center mt-1">
-                    {project.tech.map(tech => (
-                      <span 
-                        key={tech}
-                        className="bg-pink-100 text-black px-3 py-1 rounded-full text-xs font-medium"
-                        style={{ fontFamily: 'Georgia, serif' }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="flex flex-row flex-wrap gap-2 items-center -mt-1">
                     {project.links.map((link, i) => (
                       <a
                         key={i}
@@ -306,8 +296,17 @@ const Projects = ({ onNavigate }) => {
                         className="flex items-center justify-center bg-pink-100 p-2 rounded-full hover:bg-pink-200 transition-colors group cursor-pointer"
                         aria-label={link.label}
                       >
-                        {React.createElement(link.icon, { size: 18, className: "text-black group-hover:text-black transition-colors" })}
+                        {React.createElement(link.icon, { size: 17, className: "text-black group-hover:text-black transition-colors" })}
                       </a>
+                    ))}
+                    {project.tech.map(tech => (
+                      <span 
+                        key={tech}
+                        className="bg-pink-100 text-black px-3 py-1 rounded-full text-xs font-medium"
+                        style={{ fontFamily: 'Georgia, serif' }}
+                      >
+                        {tech}
+                      </span>
                     ))}
                   </div>
                 </div>
