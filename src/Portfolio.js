@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { Mail, Linkedin, Twitter, Github, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {FaLinkedinIn,FaGithub} from 'react-icons/fa';
+import {MdOutlineEmail} from 'react-icons/md';
+import {BsTwitterX} from 'react-icons/bs';
+import { RiTwitterXFill } from "react-icons/ri";
 
 // Add custom styles for Georgia font
 const georgiaStyle = {
@@ -248,16 +252,16 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           {/* Social Icons */}
           <div className="flex space-x-4 mt-2 justify-center">
             <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="Email">
-              <Mail size={20} />
+              <MdOutlineEmail size={20} />
             </a>
             <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="LinkedIn">
-              <Linkedin size={20} />
+              <FaLinkedinIn size={20} />
             </a>
             <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="Twitter">
-              <Twitter size={20} />
+              <RiTwitterXFill size={20} />
             </a>
             <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="bg-gray-200 p-3 rounded-full hover:bg-pink-100 transition-colors" aria-label="GitHub">
-              <Github size={20} />
+              <FaGithub size={20} />
             </a>
           </div>
         </div>

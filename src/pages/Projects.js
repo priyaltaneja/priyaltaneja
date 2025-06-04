@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Chrome, Youtube, Presentation, NotebookPen, Link as LinkIcon, X, Info } from 'lucide-react';
+import { ArrowLeft, Youtube, Presentation, NotebookPen, Link as LinkIcon, X, Info } from 'lucide-react';
+import { FaMediumM, FaGithub, FaYoutube, FaChrome } from 'react-icons/fa';
+import { LuPresentation } from 'react-icons/lu';
 
 const Projects = ({ onNavigate }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -37,7 +39,7 @@ const Projects = ({ onNavigate }) => {
       links: [
         {
           url: "https://chromewebstore.google.com/detail/nextscholar/ndohegljfodihdiaopgalhlinaamcfbj",
-          icon: Chrome,
+          icon: FaChrome,
           label: "Chrome Store"
         }
       ]
@@ -50,7 +52,7 @@ const Projects = ({ onNavigate }) => {
       links: [
         {
           url: "https://priyaltaneja.medium.com/predicting-early-heart-diseases-with-quantum-support-vector-machines-2f2c678e80b7",
-          icon: NotebookPen,
+          icon: FaMediumM,
           label: "Read on Medium"
         }
       ]
@@ -63,7 +65,7 @@ const Projects = ({ onNavigate }) => {
       links: [
         {
           url: "https://priyaltaneja.medium.com/from-query-to-meaning-reshaping-the-landscape-of-google-search-results-through-semantic-search-7f5aa02ebc65",
-          icon: NotebookPen,
+          icon: FaMediumM,
           label: "Read on Medium"
         }
       ]
@@ -76,12 +78,12 @@ const Projects = ({ onNavigate }) => {
       links: [
         {
           url: "https://priyaltaneja.medium.com/optimizing-database-searching-with-grovers-algorithm-cad50a603494",
-          icon: NotebookPen,
+          icon: FaMediumM,
           label: "Read on Medium"
         },
         {
           url: "https://youtu.be/HeYGWe20yqc?si=Eng6hl0LRjsoO7jv",
-          icon: Youtube,
+          icon: FaYoutube,
           label: "Watch Video"
         }
       ]
@@ -94,7 +96,7 @@ const Projects = ({ onNavigate }) => {
       links: [
         {
           url: "https://firebasestorage.googleapis.com/v0/b/tks-life-prod.appspot.com/o/items%2Fpriyal.taneja%2FTanvi%2C%20Priyal%2C%20Krish%2C%20Zara%2C%20Vinaya.pptx%20(1).pdf?alt=media&token=536326ab-a32b-4995-b684-72cf188822ce",
-          icon: Presentation,
+          icon: LuPresentation,
           label: "View Presentation"
         }
       ]
@@ -304,7 +306,7 @@ const Projects = ({ onNavigate }) => {
                         className="flex items-center justify-center bg-pink-100 p-2 rounded-full hover:bg-pink-200 transition-colors group cursor-pointer"
                         aria-label={link.label}
                       >
-                        {React.createElement(link.icon, { size: 18, className: "text-black group-hover:text-pink-600 transition-colors" })}
+                        {React.createElement(link.icon, { size: 18, className: "text-black group-hover:text-black transition-colors" })}
                       </a>
                     ))}
                   </div>
