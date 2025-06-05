@@ -67,7 +67,7 @@ const About = ({ onNavigate }) => {
             <div>
               <h2 className="text-2xl font-medium mb-4">i'm currently…</h2>
               <ul className="list-disc list-inside space-y-2">
-                <li>studying <span className="bg-pink-100 px-1 rounded">electrical engineering</span> and working towards my iron ring @ <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1">mcmaster university <ExternalLink size={14} /></a></li>
+                <li>studying <span className="bg-pink-100 px-1 rounded">computer engineering</span> and working towards my iron ring @ <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1">mcmaster university <ExternalLink size={14} /></a></li>
                 <li>exploring <span className="bg-pink-100 px-1 rounded">human-computer interaction</span> research @ the <a href="https://esilab.cas.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-600 transition-colors inline-flex items-center gap-1">embodied social interaction (ESI) lab <ExternalLink size={14} /></a></li>
               </ul>
             </div>
