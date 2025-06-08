@@ -3,6 +3,7 @@ import Portfolio from './Portfolio';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import Writing from './pages/Writing';
+import ArticleDetail from './pages/ArticleDetail';
 import Footer from './components/Footer';
 import PageContainer from './components/PageContainer';
 
@@ -33,6 +34,9 @@ function App() {
   }, []);
 
   const renderPage = () => {
+    if (/^article-\d+$/.test(currentPage)) {
+      return <ArticleDetail onNavigate={handleNavigate} />;
+    }
     switch (currentPage) {
       case 'about':
         return <About onNavigate={handleNavigate} />;
