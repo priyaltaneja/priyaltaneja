@@ -143,7 +143,7 @@ const Writing = ({ onNavigate }) => {
               >
                 <div className="flex items-center justify-between px-6 py-8">
                   <div>
-                    <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-900 transition-colors">{article.title}</h2>
+                    <h2 className="text-2xl sm:text-3xl mb-2 text-gray-900 transition-colors">{article.title}</h2>
                     <div className="text-gray-500 text-sm mt-2">{article.date}</div>
                   </div>
                   <span className="ml-4 text-pink-500">

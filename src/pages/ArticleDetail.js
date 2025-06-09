@@ -106,7 +106,7 @@ const ArticleDetail = ({ onNavigate }) => {
         <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 text-black hover:text-pink-500 transition-colors">
           <ArrowLeft size={24} /> Back to Writing
         </button>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{article.title}</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl mb-4">{article.title}</h1>
         <div className="text-gray-500 text-lg mb-8">{article.date}</div>
         <hr className="border-t border-pink-100 mb-8" />
         <div className="italic text-xl text-pink-500 mb-8">{article.quote}</div>
