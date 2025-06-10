@@ -236,12 +236,12 @@ const Projects = ({ onNavigate }) => {
                 key={project.title}
                 className={`
                   bg-white rounded-2xl shadow-md border border-pink-100
-                  transition-all duration-300
-                  hover:scale-105 hover:shadow-pink-100 hover:shadow-lg hover:border-pink-200
+                  transition-all duration-150
+                  hover:shadow-pink-100 hover:shadow-lg 
                   flex flex-col overflow-hidden
                   ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
                 `}
-                style={{ transitionDelay: `${150 + index * 100}ms` }}
+                style={{ transitionDelay: isLoaded ? '0ms' : `${150 + index * 100}ms` }}
               >
                 {/* Image on top */}
                 {project.image && (

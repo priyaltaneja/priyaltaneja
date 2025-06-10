@@ -138,7 +138,7 @@ const Writing = ({ onNavigate }) => {
             {articles.map((article, idx) => (
               <div
                 key={idx}
-                className="mb-10 border border-transparent cursor-pointer rounded-lg transition transform bg-white hover:scale-105 hover:shadow-pink-100 hover:shadow-lg hover:border-pink-200"
+                className="mb-10 border border-transparent cursor-pointer rounded-lg transition transform bg-white hover:shadow-pink-100 hover:shadow-lg hover:border-pink-200"
                 onClick={() => handleArticleClick(idx)}
               >
                 <div className="flex items-center justify-between px-6 py-8">
