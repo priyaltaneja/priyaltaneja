@@ -22,21 +22,24 @@ const Portfolio = ({ onNavigate, currentPage }) => {
       if (currentSlide === 2) {
         // Reset animation with staggered delays
         setExitingSlide(null);
-        // First polaroid resets immediately
-        setCurrentSlide(0);
         
-        // Add classes for staggered animation timing
+        // Add staggered delays before changing slide
         document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
-          polaroid.style.transitionDelay = `${index * 100}ms`;
+          polaroid.style.transitionDelay = `${index * 150}ms`;
         });
+
+        // Slight delay before changing slide state
+        setTimeout(() => {
+          setCurrentSlide(0);
+        }, 50);
 
         // Remove transition delays after animation
         setTimeout(() => {
           document.querySelectorAll('.polaroid').forEach(polaroid => {
-            polaroid.style.transitionDelay = '0ms';
+            polaroid.style.transitionDelay = '';
           });
           setIsAnimating(false);
-        }, 600); // Increased timeout to account for staggered delays
+        }, 750); // Increased timeout to account for staggered delays
       } else {
         // Normal progression
         const newSlide = (currentSlide + 1) % 3;
@@ -95,11 +98,6 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             will-change: transform, opacity;
           }
 
-          /* Quick transition for reset */
-          .polaroid.quick-reset {
-            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-          }
-
           /* Initial stacked position */
           .polaroid:nth-child(1) {
             transform: rotate(-5deg) translateY(-8px);
@@ -137,6 +135,11 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           .polaroid.bottom {
             transform: rotate(3deg) translateY(4px);
             z-index: 0;
+          }
+
+          /* Quick transition for reset */
+          .polaroid.quick-reset {
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
           }
 
           .polaroid img {
