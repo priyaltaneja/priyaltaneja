@@ -20,19 +20,32 @@ const Portfolio = ({ onNavigate, currentPage }) => {
       setIsAnimating(true);
       
       if (currentSlide === 2) {
-        // Reset animation without sliding off
+        // Reset animation with staggered delays
+        setExitingSlide(null);
+        // First polaroid resets immediately
         setCurrentSlide(0);
+        
+        // Add classes for staggered animation timing
+        document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
+          polaroid.style.transitionDelay = `${index * 100}ms`;
+        });
+
+        // Remove transition delays after animation
         setTimeout(() => {
+          document.querySelectorAll('.polaroid').forEach(polaroid => {
+            polaroid.style.transitionDelay = '0ms';
+          });
           setIsAnimating(false);
-        }, 300);
+        }, 600); // Increased timeout to account for staggered delays
       } else {
-        // Normal progression with slide-off
+        // Normal progression
         const newSlide = (currentSlide + 1) % 3;
         setExitingSlide(currentSlide);
-        // Slight delay before changing current slide to ensure exit animation starts properly
+        
         requestAnimationFrame(() => {
           setCurrentSlide(newSlide);
         });
+
         setTimeout(() => {
           setExitingSlide(null);
           setIsAnimating(false);
@@ -82,6 +95,11 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             will-change: transform, opacity;
           }
 
+          /* Quick transition for reset */
+          .polaroid.quick-reset {
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+          }
+
           /* Initial stacked position */
           .polaroid:nth-child(1) {
             transform: rotate(-5deg) translateY(-8px);
@@ -98,32 +116,27 @@ const Portfolio = ({ onNavigate, currentPage }) => {
             z-index: 0;
           }
 
-          /* Active states based on currentSlide */
+          /* Active states */
           .polaroid.exit {
             transform: translate(-120%, 120%) rotate(-15deg);
             opacity: 0;
             pointer-events: none;
-            z-index: 10;
+            z-index: 30;
           }
 
           .polaroid.top {
             transform: rotate(0deg) translateY(0);
-            z-index: 3;
+            z-index: 20;
           }
 
           .polaroid.middle {
             transform: rotate(-3deg) translateY(-4px);
-            z-index: 2;
+            z-index: 10;
           }
 
           .polaroid.bottom {
             transform: rotate(3deg) translateY(4px);
-            z-index: 1;
-          }
-
-          /* Quick transition only for reset */
-          .polaroid.quick-reset {
-            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            z-index: 0;
           }
 
           .polaroid img {
