@@ -20,26 +20,46 @@ const Portfolio = ({ onNavigate, currentPage }) => {
       setIsAnimating(true);
       
       if (currentSlide === 2) {
-        // Reset animation with staggered delays
-        setExitingSlide(null);
-        
-        // Add staggered delays before changing slide
+        // Reset animation with smooth sliding for first two polaroids only
         document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
-          polaroid.style.transitionDelay = `${index * 150}ms`;
+          if (index < 2) { // Only move first two polaroids
+            polaroid.style.transform = 'translate(-120%, 120%) rotate(-15deg)';
+            polaroid.style.transition = 'none';
+            polaroid.style.opacity = '0';
+          }
+        });
+        
+        // Force reflow
+        void document.body.offsetHeight;
+        
+        // Clear exiting state and update current slide
+        setExitingSlide(null);
+        setCurrentSlide(0);
+        
+        // Animate back to original positions
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
+            if (index < 2) { // Only animate first two polaroids
+              polaroid.style.transition = 'all 0.5s cubic-bezier(0.2, 0, 0.1, 1)';
+              polaroid.style.transitionDelay = `${index * 100}ms`;
+              polaroid.style.transform = '';
+              polaroid.style.opacity = '1';
+            }
+          });
         });
 
-        // Slight delay before changing slide state
+        // Cleanup
         setTimeout(() => {
-          setCurrentSlide(0);
-        }, 50);
-
-        // Remove transition delays after animation
-        setTimeout(() => {
-          document.querySelectorAll('.polaroid').forEach(polaroid => {
-            polaroid.style.transitionDelay = '';
+          document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
+            if (index < 2) { // Only cleanup first two polaroids
+              polaroid.style.transition = '';
+              polaroid.style.transitionDelay = '';
+              polaroid.style.transform = '';
+              polaroid.style.opacity = '';
+            }
           });
           setIsAnimating(false);
-        }, 750); // Increased timeout to account for staggered delays
+        }, 800);
       } else {
         // Normal progression
         const newSlide = (currentSlide + 1) % 3;
