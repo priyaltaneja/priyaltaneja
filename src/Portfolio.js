@@ -144,9 +144,9 @@ const Portfolio = ({ onNavigate, currentPage }) => {
       <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl mx-auto px-4 gap-12 md:gap-4 py-8 md:py-0">
         {/* Left side content */}
         <div className="flex flex-col items-center justify-center text-center w-full md:w-1/2">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap" style={georgiaStyle}>Priyal Taneja</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap" style={georgiaStyle}>Priyal Taneja</h1>
           
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 max-w-[450px]" style={{...georgiaStyle, lineHeight: '1.2'}}>
+          <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 max-w-[450px]" style={{...georgiaStyle, lineHeight: '1.2'}}>
             <div className="whitespace-nowrap mb-2">
               <span>engineer exploring </span>
               <span className="bg-pink-100 px-1 rounded">human-centered AI</span>
@@ -159,7 +159,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           
           {/* Navigation */}
           <nav className="mb-2">
-            <ul className="flex space-x-8 md:space-x-10 text-base sm:text-lg md:text-xl lg:text-2xl justify-center" style={georgiaStyle}>
+            <ul className="flex space-x-8 md:space-x-10 text-lg sm:text-xl md:text-xl lg:text-2xl justify-center" style={georgiaStyle}>
               <li>
                 <button 
                   onClick={() => onNavigate('about')}
