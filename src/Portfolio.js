@@ -141,12 +141,12 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           }
         `}
       </style>
-      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl mx-auto px-4 gap-12 md:gap-4 py-8 md:py-0">
+      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gap-8 md:gap-0 py-8 md:py-0">
         {/* Left side content */}
-        <div className="flex flex-col items-center justify-center text-center w-full md:w-1/2">
+        <div className="flex flex-col items-center justify-center text-center w-full md:w-1/2 md:pl-12 lg:pl-16">
           <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap" style={georgiaStyle}>Priyal Taneja</h1>
           
-          <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 max-w-[450px]" style={{...georgiaStyle, lineHeight: '1.2'}}>
+          <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6" style={{...georgiaStyle, lineHeight: '1.2'}}>
             <div className="whitespace-nowrap mb-2">
               <span>engineer exploring </span>
               <span className="bg-pink-100 px-1 rounded">human-centered AI</span>
