@@ -188,8 +188,8 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <span className="bg-pink-100 px-1 rounded">human-centered AI</span>
             </div>
             <div>
-              <span>and </span>
-              <span className="bg-pink-100 px-1 rounded">embedded systems</span>
+              <span>and designing meaningful </span>
+              <span className="bg-pink-100 px-1 rounded">products</span>
             </div>
           </p>
           
