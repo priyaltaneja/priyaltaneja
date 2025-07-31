@@ -60,7 +60,7 @@ const About = ({ onNavigate }) => {
               </h2>
               <p className="leading-relaxed">
                 i'm driven by the desire to <span className="bg-pink-100 px-1 rounded">design solutions</span> to non-obvious problems and make a meaningful impact. 
-                i gravitate toward building systems that challenge assumptions, expand beyond the status quo, and redefine how we experience the world.
+                i gravitate toward building systems that challenge the status quo and redefine how we experience the world.
               </p>
             </div>
 
