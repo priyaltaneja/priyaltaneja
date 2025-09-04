@@ -6,11 +6,19 @@ const ThemeToggle = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [showTooltip, setShowTooltip] = useState(false);
   const timeoutRef = useRef(null);
+  const lastClickTimeRef = useRef(0);
+  const cooldownPeriod = 2000; // 2 seconds cooldown after clicking
 
   const handleMouseEnter = () => {
+    const now = Date.now();
+    // Don't show tooltip if we recently clicked (within cooldown period)
+    if (now - lastClickTimeRef.current < cooldownPeriod) {
+      return;
+    }
+    
     timeoutRef.current = setTimeout(() => {
       setShowTooltip(true);
-    }, 1000); // 6 seconds delay
+    }, 1000); // 1 second delay
   };
 
   const handleMouseLeave = () => {
@@ -21,10 +29,27 @@ const ThemeToggle = () => {
     setShowTooltip(false);
   };
 
+  const handleClick = () => {
+    // Record click time for cooldown
+    lastClickTimeRef.current = Date.now();
+    
+    // Clear any pending tooltip
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    
+    // Hide tooltip immediately if showing
+    setShowTooltip(false);
+    
+    // Toggle theme
+    toggleTheme();
+  };
+
   return (
     <div className="fixed top-6 right-6 z-50">
       <button
-        onClick={toggleTheme}
+        onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className="p-3 rounded-full bg-white/80 dark:bg-[#000000] backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 focus:outline-none"
