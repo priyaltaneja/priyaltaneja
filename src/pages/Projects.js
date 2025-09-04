@@ -175,7 +175,7 @@ const Projects = ({ onNavigate }) => {
           <div className="flex justify-center mb-10 relative">
             <div className="w-full max-w-xs" ref={dropdownRef}>
               <div
-                className="w-full px-3 py-2 rounded-full border border-pink-200 dark:border-[#FF69B4] bg-white dark:bg-gray-800 text-black dark:text-white text-left font-medium flex flex-wrap gap-2 items-center min-h-[44px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-[#FF69B4] transition-all"
+                className="w-full px-3 py-2 rounded-full border border-pink-200 dark:border-[#FF69B4] bg-white dark:bg-[#121212] text-black dark:text-white text-left font-medium flex flex-wrap gap-2 items-center min-h-[44px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-[#FF69B4] transition-all"
                 style={{ fontFamily: 'Georgia, serif' }}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 tabIndex={0}
@@ -196,7 +196,7 @@ const Projects = ({ onNavigate }) => {
                 <span className="ml-auto text-black dark:text-white">▾</span>
               </div>
               {dropdownOpen && (
-                <div className="absolute left-0 w-full mt-2 bg-white dark:bg-gray-800 border border-pink-200 dark:border-[#FF69B4] rounded-xl shadow-lg z-10 transition-colors duration-300" style={{ minWidth: '100%' }}>
+                <div className="absolute left-0 w-full mt-2 bg-white dark:bg-[#121212] border border-pink-200 dark:border-[#FF69B4] rounded-xl shadow-lg z-10 transition-colors duration-300" style={{ minWidth: '100%' }}>
                   <input
                     type="text"
                     placeholder="Search tags..."
@@ -235,7 +235,7 @@ const Projects = ({ onNavigate }) => {
               <div 
                 key={project.title}
                 className={`
-                  bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-pink-100 dark:border-[#FF69B4]
+                  bg-white dark:bg-[#121212] rounded-2xl shadow-md border border-pink-100 dark:border-[#FF69B4]
                   transition-all duration-150
                   hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg 
                   flex flex-col overflow-hidden
@@ -295,10 +295,10 @@ const Projects = ({ onNavigate }) => {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-pink-100 dark:bg-[#FF69B4]/70 p-2 rounded-full hover:bg-pink-200 dark:hover:bg-[#FF69B4]/60 transition-colors group cursor-pointer"
+                        className="flex items-center justify-center bg-gray-200 dark:bg-gray-700 p-1.5 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors group cursor-pointer"
                         aria-label={link.label}
                       >
-                        {React.createElement(link.icon, { size: 17, className: "text-black dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors" })}
+                        {React.createElement(link.icon, { size: 16, className: "md:w-4 md:h-4 text-gray-700 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors" })}
                       </a>
                     ))}
                     {project.tech.map(tech => (
