@@ -54,7 +54,14 @@ export const ThemeProvider = ({ children }) => {
   }, []);
 
   const toggleTheme = () => {
-    setIsDarkMode(prev => !prev);
+    // Safari optimization: Use requestAnimationFrame for smoother transitions
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(() => {
+        setIsDarkMode(prev => !prev);
+      });
+    } else {
+      setIsDarkMode(prev => !prev);
+    }
   };
 
   const value = {

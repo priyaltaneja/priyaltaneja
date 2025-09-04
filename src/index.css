@@ -54,10 +54,29 @@ html, body {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Optimized transitions for Safari */
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  /* Safari-specific optimizations */
+  -webkit-transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  /* Force hardware acceleration for smoother transitions */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
-/* Ensure smooth transitions for all theme-related properties */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Remove global transitions to prevent Safari performance issues */
+/* Individual components will handle their own transitions */
+
+/* Safari-specific optimizations for theme switching */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .dark {
+    /* Force repaint for Safari */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Optimize text rendering during transitions */
+  body, * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
