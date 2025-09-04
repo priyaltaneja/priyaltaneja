@@ -77,7 +77,7 @@ const articles = [
         <p className="text-lg mb-6">This may seem like a small achievement, but even a small step towards true happiness is a victory in my opinion.</p>
         <p className="text-lg mb-6">And, I've come to realize that a significant change in the way you doesn't happen overnight. It's an iterative process of both failures and successes, and it's common to find yourself reverting to what's comfortable. But, as long as you are self-aware, you'll continue being conscious of your method of thinking.</p>
         <p className="text-lg mb-6">Regardless, I'm still finding my way, navigating through life, and striving to be the best version of myself.</p>
-        <div className="mt-8 p-4 bg-pink-50 rounded-lg text-pink-500 font-semibold text-center">TL;DR? As humans, our greatest gift is that happiness is in our control.</div>
+        <div className="mt-8 p-4 bg-[#FF69B4]/30 rounded-lg text-pink-500 dark:text-[#FF69B4] font-semibold text-center">TL;DR? As humans, our greatest gift is that happiness is in our control.</div>
       </>
     ),
   },
@@ -85,32 +85,37 @@ const articles = [
 ];
 
 const ArticleDetail = ({ onNavigate }) => {
+  
   // Get article index from hash, e.g., #article-0
   const idx = parseInt(window.location.hash.replace('#article-', ''), 10);
   const article = articles[idx];
 
   if (!article) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#121212] transition-colors duration-300">
+        <div className="text-center text-black dark:text-white transition-colors duration-300">
           <h2 className="text-2xl font-bold mb-4">Article not found</h2>
-          <button onClick={() => onNavigate('writing')} className="text-black hover:text-pink-500">Back to Writing</button>
+          <button onClick={() => onNavigate('writing')} className="text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-300">Back to Writing</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-300">
       <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
-        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 text-black hover:text-pink-500 transition-colors">
+        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-300">
           <ArrowLeft size={24} /> Back to Writing
         </button>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl mb-4">{article.title}</h1>
-        <div className="text-gray-500 text-lg mb-8">{article.date}</div>
-        <hr className="border-t border-pink-100 mb-8" />
-        <div className="italic text-xl text-pink-500 mb-8">{article.quote}</div>
-        <div className="prose prose-lg max-w-none mb-8">{article.content}</div>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl mb-4 text-black dark:text-white transition-colors duration-300">{article.title}</h1>
+        <div className="text-gray-500 dark:text-gray-400 text-lg mb-8 transition-colors duration-300">{article.date}</div>
+        <hr className="border-t border-pink-100 dark:border-[#FF69B4] mb-8 transition-colors duration-300" />
+        <div className="italic text-xl text-pink-500 dark:text-[#FF69B4] mb-8">{article.quote}</div>
+        <div className="prose prose-lg max-w-none mb-8 text-black dark:text-white transition-colors duration-300">
+          {React.cloneElement(article.content, {
+            className: 'text-black dark:text-white transition-colors duration-300'
+          })}
+        </div>
       </div>
     </div>
   );

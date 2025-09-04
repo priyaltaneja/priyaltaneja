@@ -6,6 +6,8 @@ import Writing from './pages/Writing';
 import ArticleDetail from './pages/ArticleDetail';
 import Footer from './components/Footer';
 import PageContainer from './components/PageContainer';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -50,14 +52,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-grow">
-        <PageContainer key={currentPage} pageKey={currentPage}>
-          {renderPage()}
-        </PageContainer>
+    <ThemeProvider>
+      <div className="min-h-screen flex flex-col">
+        <ThemeToggle />
+        <div className="flex-grow">
+          <PageContainer key={currentPage} pageKey={currentPage}>
+            {renderPage()}
+          </PageContainer>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ThemeProvider>
   );
 }
 
