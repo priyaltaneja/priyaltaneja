@@ -186,11 +186,11 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           
           {/* Navigation */}
           <nav className="mb-2">
-            <ul className="flex space-x-8 md:space-x-10 text-lg sm:text-xl md:text-xl lg:text-2xl justify-center text-black dark:text-white transition-colors duration-300" style={georgiaStyle}>
+            <ul className="flex space-x-8 md:space-x-10 text-lg sm:text-xl md:text-xl lg:text-2xl justify-center text-black dark:text-white" style={georgiaStyle}>
               <li>
                 <button 
                   onClick={() => onNavigate('about')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
                 >
                   about
                 </button>
@@ -198,7 +198,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <li>
                 <button 
                   onClick={() => onNavigate('projects')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
                 >
                   projects
                 </button>
@@ -206,7 +206,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <li>
                 <button 
                   onClick={() => onNavigate('writing')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
                 >
                   writing
                 </button>

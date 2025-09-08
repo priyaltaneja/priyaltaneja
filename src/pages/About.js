@@ -13,11 +13,11 @@ const About = ({ onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
         {/* Navigation */}
         <nav className={`mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>
-          <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center items-center text-black dark:text-white transition-colors duration-300">
+          <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center items-center text-black dark:text-white">
             <li>
               <button 
                 onClick={() => onNavigate('home')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors flex items-center gap-2"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4] flex items-center gap-2"
                 aria-label="Back to home"
               >
                 <ArrowLeft size={24} />
@@ -34,7 +34,7 @@ const About = ({ onNavigate }) => {
             <li>
               <button 
                 onClick={() => onNavigate('projects')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
               >
                 projects
               </button>
@@ -42,7 +42,7 @@ const About = ({ onNavigate }) => {
             <li>
               <button 
                 onClick={() => onNavigate('writing')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
               >
                 writing
               </button>
@@ -56,7 +56,7 @@ const About = ({ onNavigate }) => {
           <div className="space-y-8 text-lg text-black dark:text-white transition-colors duration-300">
             <div>
               <h2 className="text-2xl font-medium mb-4">
-                hey, i'm <span className="decoration-pink-100 dark:decoration-pink-900 decoration-3 underline decoration-solid [text-decoration-skip-ink:none] transition-colors duration-300">priyal</span>!
+                hey, i'm <span className="decoration-pink-100 dark:decoration-pink-900 decoration-3 underline decoration-solid [text-decoration-skip-ink:none]">priyal</span>!
               </h2>
               <p className="leading-relaxed">
                 i'm driven by the desire to <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-300 text-black dark:text-white">design solutions</span> to non-obvious problems and make a meaningful impact. 
