@@ -52,7 +52,7 @@ const articles = [
             />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
-            This piece first went out in field notes by priyal — my weekly corner for sharing reflections and sparks of curiosity. If you'd like to journey along with me and receive these notes straight in your inbox, you can subscribe! ♡
+            This piece first went out in field notes by priyal — my weekly corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
           </p>
         </div>
       </>
