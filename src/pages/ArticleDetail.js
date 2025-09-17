@@ -33,6 +33,28 @@ const articles = [
         <p className="text-lg mb-6">I also want to mention that <strong>unlearning perfectionism does not mean lowering your standards.</strong> It's about freeing yourself from the fear of not being "enough" and internalizing that <strong>progress > perfection.</strong></p>
         <p className="text-lg mb-6">Excellence still matters, but it flourishes most when it's rooted in curiosity, growth, and joy instead of fear. By letting go of the need to get everything right, we create space for mistakes, risks, and the kind of progress that actually moves you forward.</p>
         <p className="text-lg mb-6">So the next time you catch yourself hesitating or waiting to be certain you can do it perfectly, take the step anyway. <strong>Progress will always carry you further than perfection ever could, because real growth comes not from flawless execution, but from the courage to begin.</strong></p>
+        
+        <hr className="border-t border-pink-200 dark:border-pink-800 my-12" />
+        
+        <div className="mt-8">
+          <div 
+            className="substack-embed" 
+            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed"
+            data-substack-domain="fieldnotesbypriyal.substack.com"
+          >
+            <iframe 
+              src="https://fieldnotesbypriyal.substack.com/embed" 
+              width="100%" 
+              height="320" 
+              style={{border: '1px solid #EEE', background: 'white', borderRadius: '8px'}}
+              frameBorder="0" 
+              scrolling="no"
+            />
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
+            This piece first went out in field notes by priyal — my weekly corner for sharing reflections and sparks of curiosity. If you'd like to journey along with me and receive these notes straight in your inbox, you can subscribe! ♡
+          </p>
+        </div>
       </>
     ),
   },
