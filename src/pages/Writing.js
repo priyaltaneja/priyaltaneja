@@ -3,9 +3,42 @@ import { ArrowLeft, ChevronRight } from 'lucide-react';
 
 const articles = [
   {
+    title: 'Unlearning Perfectionism',
+    date: 'September 17, 2025',
+    quote: '"Perfectionism doesn\'t drive success, it hinders it."',
+    content: (
+      <>
+        <p className="text-lg mb-6">The obvious definition is wanting everything you do to be perfect.</p>
+        <p className="text-lg mb-6">That definition only scratches the surface. It says what perfectionism looks like, but not why we cling to it.</p>
+        <p className="text-lg mb-6">On a deeper level, <strong>perfectionism is the tendency to tie your self-worth and identity to your achievements.</strong></p>
+        <p className="text-lg mb-6">These achievements are subjective and aren't the same for everyone. To one, it may mean securing their dream internship and to the next, it means buying a house by 25, graduating as valedictorian or always looking put-together.</p>
+        <p className="text-lg mb-6">None of these goals are wrong on their own. In fact, I would argue that goals traditionally help add structure and direction to life. <strong>The danger comes when this gets tangled up in identity.</strong> When your wins feel like proof of your worth and your failures feel like a personal flaw.</p>
+        <p className="text-lg mb-6">If you've ever felt a similar way, I don't blame you. For as long as we've known, Our educational system has upheld a hierarchy of intelligence which has conditioned us to equate our value with numbers on a test, class rankings or praise from our parents and teachers.</p>
+        <p className="text-lg mb-6">In today's digital world, that message only gets louder. Social media metrics, LinkedIn updates, and curated highlight reels amplify the sense that our worth is something to be measured, compared, and displayed.</p>
+        <p className="text-lg mb-6">When you grow up in that kind of environment, those lessons don't stay abstract. I remember creating a 3D model of the respiratory system, presenting it to my peers, and later being referred by my teacher to a district-wide conference.</p>
+        <p className="text-lg mb-6">At ten years old, I didn't have the language for it, but I remember how much I liked being seen as capable and intelligent. It was the first time I realized that my efforts, and the way others recognized them, could shape how I was valued.</p>
+        <p className="text-lg mb-6">With a natural ability to excel academically, I gradually built my sense of self around overachievement. This mindset followed me for years. but as I've grown, I've firsthand seen & experienced how fragile and exhausting it is.</p>
+        <p className="text-lg mb-6">One of the clearest ways I've seen perfectionism show up is in the form of procrastination. To break it down to its core, easy tasks feel safe and their completion will reaffirm our confidence. But when a task feels remotely difficult, it's put off — not out of laziness, but out of fear.</p>
+        <p className="text-lg mb-6">The fear of trying and discovering we can't do it perfectly. So instead of taking the risk, we delay, waiting for the "right" time that never really comes.</p>
+        <p className="text-lg mb-6">The irony is that procrastination doesn't protect us from failure; it just delays growth. and each time we avoid the hard thing, we reinforce the belief that our worth is tied to effortless success. That oscillating cycle between action and avoidance compounds and decreases both your confidence and capacity to take risks.</p>
+        <p className="text-lg mb-6">Good news is <strong>perfectionism is a learned pattern, not a fixed trait.</strong> This means it's within our control to unlearn this mindset. That being said, it's comparable to training at the gym - we won't see overnight results and it'll require repetition and discipline.</p>
+        <p className="text-lg mb-6">I'm still figuring out how to let go of this mindset, but so far my favorite ways to unlearn perfectionism have been:</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>Daily updates:</strong> Write down everything you've done during the day, no matter how trivial it seems. Review this at the end of the week or periodically. Over time, you'll rewire your brain to appreciate consistency over the shiny achievements.</li>
+          <li className="text-lg"><strong>Be a beginner on purpose:</strong> Carve out time for activities that don't align with your career path or what you're "supposed" to be good at. Exploring unfamiliar skills gives you permission to be a beginner again and reminds you that your worth isn't tied to expertise.</li>
+          <li className="text-lg"><strong>Seek feedback early:</strong> The next time you work on a project, ask for feedback after your v1. It takes the pressure off always presenting flawless work and I've found that it helps enjoy the process of iteration too!</li>
+        </ul>
+        <p className="text-lg mb-6">The key to all these practices is shifting the focus away from outcomes and back onto the process.</p>
+        <p className="text-lg mb-6">I also want to mention that <strong>unlearning perfectionism does not mean lowering your standards.</strong> It's about freeing yourself from the fear of not being "enough" and internalizing that <strong>progress > perfection.</strong></p>
+        <p className="text-lg mb-6">Excellence still matters, but it flourishes most when it's rooted in curiosity, growth, and joy instead of fear. By letting go of the need to get everything right, we create space for mistakes, risks, and the kind of progress that actually moves you forward.</p>
+        <p className="text-lg mb-6">So the next time you catch yourself hesitating or waiting to be certain you can do it perfectly, take the step anyway. <strong>Progress will always carry you further than perfection ever could, because real growth comes not from flawless execution, but from the courage to begin.</strong></p>
+      </>
+    ),
+  },
+  {
     title: 'I\'ll Be Happy When [insert here] — A Reflection on Conditional Happiness Versus True Happiness.',
     date: 'June 6, 2023',
-    quote: '“Conditional Happiness not only prevents us from being happy in the present, it also stunts our progress and personal growth. It holds us back from the success we are forfeiting happiness to achieve.”',
+    quote: '"Conditional Happiness not only prevents us from being happy in the present, it also stunts our progress and personal growth. It holds us back from the success we are forfeiting happiness to achieve."',
     image: '/images/article.webp',
     bookImage: '/images/book.jpeg',
     tweet: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">we're wired to seek comfortability, not happiness. so, when we're presented with situations that surpass our upper limit, it's easy to unconsciously sabotage what's happening so you bring yourself to what's most familiar.</p>&mdash; priyal (@TanejaPriyal) <a href="https://twitter.com/TanejaPriyal/status/1609389471861981184?ref_src=twsrc%5Etfw">January 1, 2023</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`,
