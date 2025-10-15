@@ -236,7 +236,7 @@ const Projects = ({ onNavigate }) => {
                 key={project.title}
                 className={`
                   bg-white dark:bg-[#121212] rounded-2xl shadow-md border border-pink-100 dark:border-[#FF69B4]
-                  transition-all duration-150
+                  transition-all duration-300
                   hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg 
                   flex flex-col overflow-hidden
                   ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}

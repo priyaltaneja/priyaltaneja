@@ -52,7 +52,7 @@ const ThemeToggle = () => {
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="p-3 rounded-full bg-white/80 dark:bg-[#000000] backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 focus:outline-none"
+        className="p-3 rounded-full bg-white/80 dark:bg-[#000000] backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none"
         aria-label={`switch to ${isDarkMode ? 'light' : 'dark'} mode`}
       >
         {isDarkMode ? (
