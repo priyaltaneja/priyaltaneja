@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { slugify } from '../utils/slugify';
 
 const articles = [
   {
@@ -141,8 +142,9 @@ const Writing = ({ onNavigate }) => {
     setIsLoaded(true);
   }, []);
 
-  const handleArticleClick = (idx) => {
-    window.location.hash = `article-${idx}`;
+  const handleArticleClick = (article) => {
+    const slug = slugify(article.title);
+    window.location.hash = `article-${slug}`;
   };
 
   return (
@@ -194,7 +196,7 @@ const Writing = ({ onNavigate }) => {
               <div
                 key={idx}
                 className="mb-10 border border-transparent cursor-pointer rounded-lg transition transform bg-white dark:bg-[#000000] hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg hover:border-pink-200 dark:hover:border-[#FF69B4] transition-colors duration-300"
-                onClick={() => handleArticleClick(idx)}
+                onClick={() => handleArticleClick(article)}
               >
                 <div className="flex items-center justify-between px-6 py-8">
                   <div>

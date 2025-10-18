@@ -36,7 +36,7 @@ function App() {
   }, []);
 
   const renderPage = () => {
-    if (/^article-\d+$/.test(currentPage)) {
+    if (/^article-/.test(currentPage)) {
       return <ArticleDetail onNavigate={handleNavigate} />;
     }
     switch (currentPage) {

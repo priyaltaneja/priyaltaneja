@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { findArticleBySlug } from '../utils/slugify';
 import TwitterEmbed from '../components/TwitterEmbed';
 
 const articles = [
@@ -141,8 +142,9 @@ const articles = [
 
 const ArticleDetail = ({ onNavigate }) => {
   
-  // Get article index from hash, e.g., #article-0
-  const idx = parseInt(window.location.hash.replace('#article-', ''), 10);
+  // Get article slug from hash, e.g., #article-unlearning-perfectionism
+  const slug = window.location.hash.replace('#article-', '');
+  const idx = findArticleBySlug(articles, slug);
   const article = articles[idx];
 
   if (!article) {
