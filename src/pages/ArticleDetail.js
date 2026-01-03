@@ -844,13 +844,24 @@ const articles = [
 
 const ArticleDetail = ({ onNavigate }) => {
   
-  // Get article slug from pathname, e.g., /article-unlearning-perfectionism or /understanding-field-programmable-gate-arrays-fpgas-from-first-principles
+  // Get article slug from pathname, e.g., /article-unlearning-perfectionism or /understanding-fpgas-from-first-principles
   const path = window.location.pathname;
   const pathWithoutSlash = path.startsWith('/') ? path.substring(1) : path;
   // Remove 'article-' prefix if present (case-insensitive) and normalize to lowercase
   const slug = pathWithoutSlash.replace(/^article-/i, '').toLowerCase();
-  const idx = findArticleBySlug(articles, slug);
-  const article = articles[idx];
+  
+  // Special handling for FPGA article with custom slug
+  const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
+  let idx;
+  let article;
+  if (slug === fpgaArticleSlug) {
+    const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
+    idx = findArticleBySlug(articles, slugify(fpgaTitle));
+    article = articles[idx];
+  } else {
+    idx = findArticleBySlug(articles, slug);
+    article = articles[idx];
+  }
 
   // Check if this is the FPGA article
   const isFPGAArticle = article && slugify(article.title) === slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles');

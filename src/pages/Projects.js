@@ -39,7 +39,7 @@ const Projects = ({ onNavigate }) => {
       image: process.env.PUBLIC_URL + "/images/FPGA.png",
       links: [
         {
-          url: `/${slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles')}`,
+          url: `/understanding-fpgas-from-first-principles`,
           icon: FileText,
           label: "Read Article"
         }

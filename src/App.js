@@ -47,7 +47,7 @@ function App() {
   }, []);
 
   // Check if current page is the FPGA article (with or without "article-" prefix)
-  const fpgaArticleSlug = slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles').toLowerCase();
+  const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
   const currentPageLower = currentPage.toLowerCase();
   const isFPGAPage = currentPageLower === fpgaArticleSlug;
   const isFPGAArticle = isFPGAPage || 

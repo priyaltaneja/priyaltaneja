@@ -147,7 +147,7 @@ const Writing = ({ onNavigate }) => {
     // Special case: FPGA article doesn't use "article-" prefix
     const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
     if (slugify(article.title) === slugify(fpgaTitle)) {
-      onNavigate(slug);
+      onNavigate('understanding-fpgas-from-first-principles');
     } else {
       onNavigate(`article-${slug}`);
     }
