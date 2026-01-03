@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock, Download } from 'lucide-react';
 import { FaLinkedinIn } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { findArticleBySlug, slugify } from '../utils/slugify';
@@ -914,6 +914,16 @@ const ArticleDetail = ({ onNavigate }) => {
               {article.date && (
                 <span className="text-sm">{article.date}</span>
               )}
+              <span className="text-[#1a1a1a]">|</span>
+              <a
+                href={process.env.PUBLIC_URL + "/Understanding_FPGAs_from_First_Principles.pdf"}
+                download
+                className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#fce7f3] text-[#1a1a1a] font-medium hover:bg-[#f9d4e8] transition-colors duration-200 border border-[#1a1a1a]/20 shadow-sm"
+                aria-label="Download PDF"
+              >
+                <Download size={12} />
+                <span className="text-xs">Download PDF</span>
+              </a>
             </div>
             </>
           )}
