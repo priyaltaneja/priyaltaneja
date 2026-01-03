@@ -33,7 +33,7 @@ const Projects = ({ onNavigate }) => {
 
   const projects = [
     {
-      title: "Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles",
+      title: "Understanding FPGAs from First Principles",
       description: "a technical explanation of the internal architecture of modern FPGAs, exploring how the device is constructed in silicon and how its major components interact to form a digital circuit that is reconfigurable.",
       tech: ["Technical Writing", "Hardware"],
       image: process.env.PUBLIC_URL + "/images/FPGA.png",
