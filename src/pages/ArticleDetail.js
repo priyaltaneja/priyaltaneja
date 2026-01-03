@@ -537,7 +537,7 @@ const articles = [
   },
   {
     title: 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles',
-    date: null,
+    date: 'January 3, 2026',
     quote: null,
     content: (
       <>
@@ -884,14 +884,8 @@ const ArticleDetail = ({ onNavigate }) => {
           {isFPGAArticle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
-              <span className="text-sm italic">By: Priyal Taneja</span>
-                <span className="text-[#1a1a1a]">|</span>
-                <div className="flex items-center gap-1.5">
-                  <Clock size={14} className="text-[#1a1a1a]" />
-                  <span className="text-sm">30 min read</span>
-                </div>
-              <span className="text-[#1a1a1a]">|</span>
-              <div className="flex items-center space-x-3">
+              <span className="text-sm">By: Priyal Taneja</span>
+              <div className="flex items-center space-x-1.5">
                 <a 
                   href="https://www.linkedin.com/in/priyaltaneja/" 
                   target="_blank" 
@@ -911,11 +905,20 @@ const ArticleDetail = ({ onNavigate }) => {
                   <RiTwitterXFill size={16} />
                 </a>
               </div>
+              <span className="text-[#1a1a1a]">|</span>
+              <div className="flex items-center gap-1.5">
+                <Clock size={14} className="text-[#1a1a1a]" />
+                <span className="text-sm">30 min read</span>
+              </div>
+              <span className="text-[#1a1a1a]">|</span>
+              {article.date && (
+                <span className="text-sm">{article.date}</span>
+              )}
             </div>
             </>
           )}
         </div>
-        {article.date && (
+        {article.date && !isFPGAArticle && (
         <div className="text-gray-500 dark:text-gray-400 text-lg mb-8 transition-colors duration-200">{article.date}</div>
         )}
         {article.quote && (
