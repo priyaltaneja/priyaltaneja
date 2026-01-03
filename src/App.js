@@ -8,35 +8,54 @@ import Footer from './components/Footer';
 import PageContainer from './components/PageContainer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ThemeToggle from './components/ThemeToggle';
+import { slugify } from './utils/slugify';
+
+// Helper function to get page from pathname
+const getPageFromPath = () => {
+  const path = window.location.pathname;
+  if (path === '/' || path === '') {
+    return 'home';
+  }
+  // Remove leading slash
+  return path.substring(1);
+};
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
-    // Get initial page from URL hash or default to home
-    const hash = window.location.hash.replace('#', '');
-    return hash || 'home';
+    // Get initial page from URL pathname or default to home
+    return getPageFromPath();
   });
 
   const handleNavigate = (page) => {
     // Add a small delay specifically for Safari page transitions
     setTimeout(() => {
       setCurrentPage(page);
-      window.location.hash = page;
+      // Use pushState for browser history routing
+      const path = page === 'home' ? '/' : `/${page}`;
+      window.history.pushState(null, '', path);
     }, 10);
   };
 
-  // Listen for hash changes
+  // Listen for browser back/forward navigation
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      setCurrentPage(hash || 'home');
+    const handlePopState = () => {
+      setCurrentPage(getPageFromPath());
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Check if current page is the FPGA article (with or without "article-" prefix)
+  const fpgaArticleSlug = slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles').toLowerCase();
+  const currentPageLower = currentPage.toLowerCase();
+  const isFPGAPage = currentPageLower === fpgaArticleSlug;
+  const isFPGAArticle = isFPGAPage || 
+    (currentPageLower.startsWith('article-') && currentPageLower.replace(/^article-/, '') === fpgaArticleSlug);
+
   const renderPage = () => {
-    if (/^article-/.test(currentPage)) {
+    // Check if it's an article page (either with "article-" prefix or the FPGA article without prefix)
+    if (/^article-/.test(currentPage) || isFPGAPage) {
       return <ArticleDetail onNavigate={handleNavigate} />;
     }
     switch (currentPage) {
@@ -54,13 +73,13 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col">
-        <ThemeToggle />
+        {!isFPGAArticle && <ThemeToggle />}
         <div className="flex-grow">
           <PageContainer key={currentPage} pageKey={currentPage}>
             {renderPage()}
           </PageContainer>
         </div>
-        <Footer />
+        <Footer isFPGAArticle={isFPGAArticle} isArticlePage={/^article-/.test(currentPage) || isFPGAPage} />
       </div>
     </ThemeProvider>
   );

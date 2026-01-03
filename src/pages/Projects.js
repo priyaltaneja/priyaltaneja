@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, X, Info } from 'lucide-react';
+import { ArrowLeft, X, Info, FileText } from 'lucide-react';
 import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
 import { LuPresentation } from 'react-icons/lu';
+import { slugify } from '../utils/slugify';
 
 const Projects = ({ onNavigate }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -31,6 +32,19 @@ const Projects = ({ onNavigate }) => {
   }, [dropdownOpen]);
 
   const projects = [
+    {
+      title: "Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles",
+      description: "a technical explanation of the internal architecture of modern FPGAs, exploring how the device is constructed in silicon and how its major components interact to form a digital circuit that is reconfigurable.",
+      tech: ["Technical Writing", "Hardware"],
+      image: process.env.PUBLIC_URL + "/images/FPGA.png",
+      links: [
+        {
+          url: `/${slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles')}`,
+          icon: FileText,
+          label: "Read Article"
+        }
+      ]
+    },
     {
       title: "NextScholar - Chrome Extension for Scholarship Progress Tracking",
       description: "a chrome extension designed to help students conquer scholarship applications – track deadlines, requirements, and personal progress, all in one place.",
@@ -128,7 +142,7 @@ const Projects = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-300">
+    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
         {/* Navigation */}
         <nav className={`mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>
@@ -170,22 +184,22 @@ const Projects = ({ onNavigate }) => {
         </nav>
 
         <div className={`transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center text-black dark:text-white transition-colors duration-300">Projects</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center text-black dark:text-white transition-colors duration-200">Projects</h1>
           {/* Multi-select dropdown for filtering (now below the title) */}
           <div className="flex justify-center mb-10 relative">
             <div className="w-full max-w-xs" ref={dropdownRef}>
               <div
-                className="w-full px-3 py-2 rounded-full border border-pink-200 dark:border-[#FF69B4] bg-white dark:bg-[#121212] text-black dark:text-white text-left font-medium flex flex-wrap gap-2 items-center min-h-[44px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-[#FF69B4] transition-all"
+                className="w-full px-3 py-2 rounded-full border border-pink-200 dark:border-[#FF69B4] bg-white dark:bg-[#121212] text-black dark:text-white text-left font-medium flex flex-wrap gap-2 items-center min-h-[44px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-[#FF69B4] transition-colors duration-200"
                 style={{ fontFamily: 'Georgia, serif' }}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 tabIndex={0}
               >
-                {selectedTags.length === 0 && <span className="text-gray-400 dark:text-gray-500">filter by skill...</span>}
+                {selectedTags.length === 0 && <span className="text-gray-400 dark:text-gray-500 transition-colors duration-200">filter by skill...</span>}
                 {selectedTags.map(tag => (
-                  <span key={tag} className="flex items-center bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-sm font-medium mr-1 mb-1 transition-colors duration-300">
+                  <span key={tag} className="flex items-center bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-sm font-medium mr-1 mb-1 transition-colors duration-200">
                     {tag}
                     <button
-                      className="ml-1 text-black dark:text-white hover:text-pink-500 focus:outline-none"
+                      className="ml-1 text-black dark:text-white hover:text-pink-500 focus:outline-none transition-colors duration-200"
                       onClick={e => { e.stopPropagation(); removeTag(tag); }}
                       tabIndex={-1}
                     >
@@ -193,16 +207,16 @@ const Projects = ({ onNavigate }) => {
                     </button>
                   </span>
                 ))}
-                <span className="ml-auto text-black dark:text-white">▾</span>
+                <span className="ml-auto text-black dark:text-white transition-colors duration-200">▾</span>
               </div>
               {dropdownOpen && (
-                <div className="absolute left-0 w-full mt-2 bg-white dark:bg-[#121212] border border-pink-200 dark:border-[#FF69B4] rounded-xl shadow-lg z-10 transition-colors duration-300" style={{ minWidth: '100%' }}>
+                <div className="absolute left-0 w-full mt-2 bg-white dark:bg-[#121212] border border-pink-200 dark:border-[#FF69B4] rounded-xl shadow-lg z-10 transition-colors duration-200" style={{ minWidth: '100%' }}>
                   <input
                     type="text"
                     placeholder="Search tags..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full px-4 py-3 border-b border-pink-200 dark:border-[#FF69B4] bg-transparent text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none transition-colors duration-300"
+                    className="w-full px-4 py-3 border-b border-pink-200 dark:border-[#FF69B4] bg-transparent text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none transition-colors duration-200"
                     style={{ fontFamily: 'Georgia, serif' }}
                   />
                   <div className="max-h-48 overflow-y-auto">
@@ -211,7 +225,7 @@ const Projects = ({ onNavigate }) => {
                         <button
                           key={tag}
                           onClick={() => toggleTag(tag)}
-                          className={`w-full px-4 py-3 text-left hover:bg-pink-100/50 dark:hover:bg-[#FF69B4]/25 transition-colors duration-300 ${
+                          className={`w-full px-4 py-3 text-left hover:bg-pink-100/50 dark:hover:bg-[#FF69B4]/25 transition-colors duration-200 ${
                             selectedTags.includes(tag) 
                               ? 'bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white' 
                               : 'text-black dark:text-white'
@@ -222,7 +236,7 @@ const Projects = ({ onNavigate }) => {
                         </button>
                       ))
                     ) : (
-                      <div className="px-5 py-2 text-gray-400 dark:text-gray-500">No tags found</div>
+                      <div className="px-5 py-2 text-gray-400 dark:text-gray-500 transition-colors duration-200">No tags found</div>
                     )}
                   </div>
                 </div>
@@ -236,7 +250,7 @@ const Projects = ({ onNavigate }) => {
                 key={project.title}
                 className={`
                   bg-white dark:bg-[#121212] rounded-2xl shadow-md border border-pink-100 dark:border-[#FF69B4]
-                  transition-all duration-300
+                  transition-all duration-200
                   hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg 
                   flex flex-col overflow-hidden
                   ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
@@ -284,27 +298,34 @@ const Projects = ({ onNavigate }) => {
                 <div className="flex flex-col gap-2 px-6 py-5 relative">
                   <div className="flex flex-row items-start justify-between w-full">
                     <div>
-                      <div className="text-xl md:text-xl font-medium text-black dark:text-white mb-1 transition-colors duration-300" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
+                      <div className="text-xl md:text-xl font-medium text-black dark:text-white mb-1 transition-colors duration-200" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
                     </div>
                   </div>
                   {/* Tags and links row */}
                   <div className="flex flex-row flex-wrap gap-2 items-center -mt-1">
-                    {project.links.map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-gray-200 dark:bg-gray-700 p-1.5 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors group cursor-pointer"
-                        aria-label={link.label}
-                      >
-                        {React.createElement(link.icon, { size: 16, className: "md:w-4 md:h-4 text-gray-700 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors" })}
-                      </a>
-                    ))}
+                    {project.links.map((link, i) => {
+                      const isInternalLink = link.url.startsWith('#') || (!link.url.startsWith('http') && !link.url.startsWith('//'));
+                      return (
+                        <a
+                          key={i}
+                          href={link.url}
+                          {...(isInternalLink ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                          onClick={isInternalLink ? (e) => {
+                            e.preventDefault();
+                            const path = link.url.startsWith('#') ? link.url.replace('#', '') : link.url.replace('/', '');
+                            onNavigate(path);
+                          } : undefined}
+                          className="flex items-center justify-center bg-gray-200 dark:bg-gray-700 p-1.5 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200 group cursor-pointer"
+                          aria-label={link.label}
+                        >
+                          {React.createElement(link.icon, { size: 16, className: "md:w-4 md:h-4 text-gray-700 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200" })}
+                        </a>
+                      );
+                    })}
                     {project.tech.map(tech => (
                       <span 
                         key={tech}
-                        className="bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-xs font-medium transition-colors duration-300"
+                        className="bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200"
                         style={{ fontFamily: 'Georgia, serif' }}
                       >
                         {tech}

@@ -10,5 +10,7 @@ export const slugify = (title) => {
 
 // Utility function to find article by slug
 export const findArticleBySlug = (articles, slug) => {
-  return articles.findIndex(article => slugify(article.title) === slug);
+  const normalizedSlug = slug.toLowerCase();
+  return articles.findIndex(article => slugify(article.title).toLowerCase() === normalizedSlug);
 };
+

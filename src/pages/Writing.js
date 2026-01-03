@@ -144,19 +144,25 @@ const Writing = ({ onNavigate }) => {
 
   const handleArticleClick = (article) => {
     const slug = slugify(article.title);
-    window.location.hash = `article-${slug}`;
+    // Special case: FPGA article doesn't use "article-" prefix
+    const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
+    if (slugify(article.title) === slugify(fpgaTitle)) {
+      onNavigate(slug);
+    } else {
+      onNavigate(`article-${slug}`);
+    }
   };
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-300">
+    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
         {/* Navigation */}
         <nav className={`mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>
-          <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center items-center text-black dark:text-white">
+          <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center items-center text-black dark:text-white transition-colors duration-200">
             <li>
               <button 
                 onClick={() => onNavigate('home')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4] flex items-center gap-2"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4] flex items-center gap-2 transition-colors duration-200"
                 aria-label="Back to home"
               >
                 <ArrowLeft size={24} />
@@ -166,7 +172,7 @@ const Writing = ({ onNavigate }) => {
             <li>
               <button 
                 onClick={() => onNavigate('about')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
               >
                 about
               </button>
@@ -174,14 +180,14 @@ const Writing = ({ onNavigate }) => {
             <li>
               <button 
                 onClick={() => onNavigate('projects')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
+                className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
               >
                 projects
               </button>
             </li>
             <li>
               <button 
-                className="text-pink-500 dark:text-[#FF69B4]"
+                className="text-pink-500 dark:text-[#FF69B4] transition-colors duration-200"
               >
                 writing
               </button>
@@ -190,18 +196,18 @@ const Writing = ({ onNavigate }) => {
         </nav>
 
         <div className={`transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center text-black dark:text-white transition-colors duration-300">Writing</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center text-black dark:text-white transition-colors duration-200">Writing</h1>
           <div className="max-w-3xl mx-auto">
             {articles.map((article, idx) => (
               <div
                 key={idx}
-                className="mb-10 border border-transparent cursor-pointer rounded-lg transition transform bg-white dark:bg-[#000000] hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg hover:border-pink-200 dark:hover:border-[#FF69B4] transition-colors duration-300"
+                className="mb-10 border border-transparent cursor-pointer rounded-lg transition transform bg-white dark:bg-[#000000] hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg hover:border-pink-200 dark:hover:border-[#FF69B4] transition-colors duration-200"
                 onClick={() => handleArticleClick(article)}
               >
                 <div className="flex items-center justify-between px-6 py-8">
                   <div>
-                    <h2 className="text-2xl sm:text-3xl mb-2 text-gray-900 dark:text-white transition-colors duration-300">{article.title}</h2>
-                    <div className="text-gray-500 dark:text-gray-400 text-sm mt-2 transition-colors duration-300">{article.date}</div>
+                    <h2 className="text-2xl sm:text-3xl mb-2 text-gray-900 dark:text-white transition-colors duration-200">{article.title}</h2>
+                    <div className="text-gray-500 dark:text-gray-400 text-sm mt-2 transition-colors duration-200">{article.date}</div>
                   </div>
                   <span className="ml-4 text-pink-500">
                     <ChevronRight size={28} />
@@ -209,7 +215,7 @@ const Writing = ({ onNavigate }) => {
                 </div>
               </div>
             ))}
-            <div className="text-center text-gray-400 dark:text-gray-500 italic mt-12 transition-colors duration-300">more articles coming soon :)</div>
+            <div className="text-center text-gray-400 dark:text-gray-500 italic mt-12 transition-colors duration-200">more articles coming soon :)</div>
           </div>
         </div>
       </div>

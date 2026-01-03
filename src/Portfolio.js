@@ -77,7 +77,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
 
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-white dark:bg-[#000000] overflow-hidden transition-colors duration-300">
+    <div className="w-full h-screen flex items-center justify-center bg-white dark:bg-[#000000] overflow-hidden transition-colors duration-200">
       <style>
         {`
           .carousel-container {
@@ -171,16 +171,16 @@ const Portfolio = ({ onNavigate, currentPage }) => {
       <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gap-8 md:gap-0 py-8 md:py-0">
         {/* Left side content */}
         <div className="flex flex-col items-center justify-center text-center w-full md:w-1/2 md:pl-12 lg:pl-16">
-          <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap text-black dark:text-white transition-colors duration-300" style={georgiaStyle}>Priyal Taneja</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap text-black dark:text-white transition-colors duration-200" style={georgiaStyle}>Priyal Taneja</h1>
           
-                      <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 text-black dark:text-white transition-colors duration-300" style={{...georgiaStyle, lineHeight: '1.2'}}>
+                      <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 text-black dark:text-white transition-colors duration-200" style={{...georgiaStyle, lineHeight: '1.2'}}>
             <div className="whitespace-nowrap mb-2">
                               <span>engineer exploring </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-300 text-black dark:text-white">human-centered AI</span>
+                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">human-centered AI</span>
             </div>
             <div>
                               <span>and designing meaningful </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-300 text-black dark:text-white">products</span>
+                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">products</span>
             </div>
           </p>
           
@@ -190,7 +190,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <li>
                 <button 
                   onClick={() => onNavigate('about')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
                 >
                   about
                 </button>
@@ -198,7 +198,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <li>
                 <button 
                   onClick={() => onNavigate('projects')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
                 >
                   projects
                 </button>
@@ -206,7 +206,7 @@ const Portfolio = ({ onNavigate, currentPage }) => {
               <li>
                 <button 
                   onClick={() => onNavigate('writing')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
+                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
                 >
                   writing
                 </button>
@@ -216,17 +216,17 @@ const Portfolio = ({ onNavigate, currentPage }) => {
           
           {/* Social Icons */}
           <div className="flex space-x-4 mt-2 justify-center">
-            <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-300" aria-label="Email">
-              <MdOutlineEmail size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+            <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="Email">
+              <MdOutlineEmail size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
             </a>
-            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-300" aria-label="LinkedIn">
-              <FaLinkedinIn size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="LinkedIn">
+              <FaLinkedinIn size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
             </a>
-            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-300" aria-label="Twitter">
-              <RiTwitterXFill size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="Twitter">
+              <RiTwitterXFill size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
             </a>
-            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-300" aria-label="GitHub">
-              <FaGithub size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="GitHub">
+              <FaGithub size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
             </a>
           </div>
         </div>

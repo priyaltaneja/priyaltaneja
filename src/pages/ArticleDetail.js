@@ -1,7 +1,404 @@
-import React from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { findArticleBySlug } from '../utils/slugify';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock } from 'lucide-react';
+import { FaLinkedinIn } from 'react-icons/fa';
+import { RiTwitterXFill } from 'react-icons/ri';
+import { findArticleBySlug, slugify } from '../utils/slugify';
 import TwitterEmbed from '../components/TwitterEmbed';
+
+const FPGA_SLIDES = [
+  {
+    number: 1,
+    title: "Configurable Logic Block (CLB)",
+    image: process.env.PUBLIC_URL + "/images/CLB.png",
+    text: "The CLBs are the FPGA's basic logic units, which you configure to carry out the digital operations and functionality your circuit requires."
+  },
+  {
+    number: 2,
+    title: "Programmable Interconnect",
+    image: process.env.PUBLIC_URL + "/images/IConnect.png",
+    text: "The programmable interconnect is the reconfigurable wiring fabric that links logic, memory, and I/O resources according to the user's design."
+  },
+  {
+    number: 3,
+    title: "Input/Output Blocks",
+    image: process.env.PUBLIC_URL + "/images/IO.png",
+    text: "The I/O blocks form the interface between the FPGA's internal circuitry and the outside world, enabling communication with external components and systems."
+  },
+  {
+    number: 4,
+    title: "Specialized Blocks",
+    image: process.env.PUBLIC_URL + "/images/SB.png",
+    text: "Specialized blocks are fixed-function hardware elements integrated into the chip to support operations that benefit from optimized, non-programmable circuitry."
+  }
+];
+
+const FPGASlideshow = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  
+  // Preload all images on mount
+  useEffect(() => {
+    let loadedCount = 0;
+    const totalImages = FPGA_SLIDES.length;
+    const imagePromises = FPGA_SLIDES.map((slide) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            setImagesLoaded(true);
+          }
+          resolve();
+        };
+        img.onerror = reject;
+        img.src = slide.image;
+      });
+    });
+
+    Promise.all(imagePromises).catch(() => {
+      // Even if some fail, mark as loaded to prevent infinite loading
+      setImagesLoaded(true);
+    });
+  }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % FPGA_SLIDES.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + FPGA_SLIDES.length) % FPGA_SLIDES.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <div className="my-12">
+      <div className="relative max-w-4xl mx-auto">
+        {/* Image Container */}
+        <div className="relative mb-6 overflow-hidden">
+          <div className="relative w-full" style={{ minHeight: imagesLoaded ? 'auto' : '400px' }}>
+            {FPGA_SLIDES.map((slide, index) => (
+              <img 
+                key={index}
+                src={slide.image} 
+                alt={slide.title}
+                className={`w-full h-auto ${
+                  index === currentSlide 
+                    ? 'opacity-100 relative' 
+                    : 'opacity-0 absolute top-0 left-0 pointer-events-none'
+                }`}
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            ))}
+          </div>
+          
+          {/* Navigation Buttons */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 transition-all duration-300 hover:scale-110 z-10"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft size={28} className="text-[#1a1a1a] drop-shadow-lg" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 transition-all duration-300 hover:scale-110 z-10"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={28} className="text-[#1a1a1a] drop-shadow-lg" />
+          </button>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="flex justify-center gap-2 mb-6">
+          {FPGA_SLIDES.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide 
+                  ? 'bg-[#1a1a1a] w-8' 
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Text Content */}
+        <div className="text-center">
+          <h3 className="text-xl font-medium mb-3 text-[#1a1a1a]">
+            {FPGA_SLIDES[currentSlide].number}. {FPGA_SLIDES[currentSlide].title}
+          </h3>
+          <p className="text-lg text-[#1a1a1a]">
+            {FPGA_SLIDES[currentSlide].text}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LUT_SLIDES = [
+  { number: 1, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_1.PNG" },
+  { number: 2, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_2.PNG" },
+  { number: 3, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_3.png" },
+  { number: 4, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_4.PNG" },
+  { number: 5, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_5.PNG" },
+  { number: 6, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_6.PNG" },
+  { number: 7, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_7.PNG" },
+  { number: 8, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_8.PNG" },
+  { number: 9, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_9.PNG" }
+];
+
+const HDLCodeExample = () => {
+  const [isCombinational, setIsCombinational] = useState(true);
+
+  const combinationalCode = `// These two assignments describe two separate logic circuits.
+// Both circuits exist at the same time and continuously observe their inputs.
+// When any input changes, both outputs are re-evaluated in parallel—there is no order of execution.
+
+signal_a = input_1 & input_2;   // AND gate
+signal_b = input_1 | input_3;   // OR gate`;
+
+  const combinationalExplanation = `The AND gate and the OR gate are physically separate pieces of hardware.
+They may share inputs, but each computes its output independently and simultaneously.`;
+
+  const sequentialCode = `// Both registers sample their inputs on the same clock edge.
+// The logic feeding each register runs in parallel before the clock arrives.
+// On the clock edge, both stored values update at the same instant.
+
+always @(posedge clk) begin
+    signal_a_reg <= input_1 & input_2;   // AND logic feeding register A
+    signal_b_reg <= input_1 | input_3;   // OR logic feeding register B
+end`;
+
+  const sequentialExplanation = `The AND logic and OR logic are evaluated continuously and independently.
+The clock does not sequence the operations; it only defines the moment when both results are captured.`;
+
+  const formatCode = (code) => {
+    const lines = code.split('\n');
+    return lines.map((line, index) => {
+      const trimmedLine = line.trim();
+      const isBlockComment = trimmedLine.startsWith('//') && trimmedLine.length > 0;
+      const hasInlineComment = line.includes('//') && !isBlockComment;
+      
+      if (isBlockComment) {
+        return (
+          <div key={index} className="text-[#6a737d]">
+            {line || '\u00A0'}
+          </div>
+        );
+      } else if (hasInlineComment) {
+        const commentIndex = line.indexOf('//');
+        const codePart = line.substring(0, commentIndex);
+        const commentPart = line.substring(commentIndex);
+        return (
+          <div key={index} className="text-[#1a1a1a]">
+            <span>{codePart}</span>
+            <span className="text-[#6a737d]">{commentPart}</span>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} className="text-[#1a1a1a]">
+            {line || '\u00A0'}
+          </div>
+        );
+      }
+    });
+  };
+
+  return (
+    <div className="my-8">
+      <h4 className="text-lg font-medium text-[#1a1a1a] text-center mb-6">Concurrency in Verilog</h4>
+      
+      {/* Two Separate Buttons */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <button
+          onClick={() => setIsCombinational(true)}
+          className={`px-6 py-2 rounded-full transition-colors duration-200 whitespace-nowrap ${
+            isCombinational
+              ? 'bg-[#fce7f3] text-[#1a1a1a] font-medium border border-[#1a1a1a]'
+              : 'bg-[#e5e7eb] text-[#1a1a1a]/70 hover:bg-[#e5e7eb]/80'
+          }`}
+        >
+          Combinational
+        </button>
+        <button
+          onClick={() => setIsCombinational(false)}
+          className={`px-6 py-2 rounded-full transition-colors duration-200 whitespace-nowrap ${
+            !isCombinational
+              ? 'bg-[#fce7f3] text-[#1a1a1a] font-medium border border-[#1a1a1a]'
+              : 'bg-[#e5e7eb] text-[#1a1a1a]/70 hover:bg-[#e5e7eb]/80'
+          }`}
+        >
+          Sequential
+        </button>
+      </div>
+      
+      <div className="bg-gray-50 rounded-lg p-6 overflow-x-auto border border-gray-200">
+        <pre className="font-mono text-sm leading-relaxed m-0">
+          <code>
+            {formatCode(isCombinational ? combinationalCode : sequentialCode)}
+          </code>
+        </pre>
+      </div>
+      
+      <div className="mt-6 text-center">
+        <p className="text-lg font-semibold text-[#1a1a1a] mb-3">How to read this:</p>
+        <p className="text-lg text-[#1a1a1a] leading-relaxed max-w-3xl mx-auto">
+          {isCombinational ? combinationalExplanation : sequentialExplanation}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const LUTSlideshow = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  
+  // Preload all images on mount
+  useEffect(() => {
+    let loadedCount = 0;
+    const totalImages = LUT_SLIDES.length;
+    const imagePromises = LUT_SLIDES.map((slide) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            setImagesLoaded(true);
+          }
+          resolve();
+        };
+        img.onerror = reject;
+        img.src = slide.image;
+      });
+    });
+
+    Promise.all(imagePromises).catch(() => {
+      // Even if some fail, mark as loaded to prevent infinite loading
+      setImagesLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      setCurrentSlide((prev) => {
+        const nextSlide = prev + 1;
+        if (nextSlide >= LUT_SLIDES.length) {
+          // Reached the end, stop playing and reset to beginning
+          setIsPlaying(false);
+          return 0;
+        }
+        return nextSlide;
+      });
+    }, 1500);
+
+    return () => clearInterval(intervalId);
+  }, [isPlaying]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % LUT_SLIDES.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + LUT_SLIDES.length) % LUT_SLIDES.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <div className="my-12">
+      <div className="relative max-w-4xl mx-auto">
+        {/* Image Container */}
+        <div className="relative mb-6 overflow-hidden">
+          <div className="relative w-full" style={{ minHeight: imagesLoaded ? 'auto' : '400px' }}>
+            {LUT_SLIDES.map((slide, index) => (
+              <img 
+                key={index}
+                src={slide.image} 
+                alt={`LUT diagram ${slide.number}`}
+                className={`w-full h-auto ${
+                  index === currentSlide 
+                    ? 'opacity-100 relative' 
+                    : 'opacity-0 absolute top-0 left-0 pointer-events-none'
+                }`}
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Playback Controls */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+          <button
+            onClick={() => setIsPlaying((prev) => !prev)}
+            className="flex items-center justify-center w-12 h-12 rounded-full border border-[#1a1a1a]/30 text-[#1a1a1a] transition-colors duration-200 hover:bg-[#1a1a1a]/5"
+            aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
+          >
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+          <button
+            onClick={() => {
+              setIsPlaying(false);
+              setCurrentSlide(0);
+            }}
+            className="flex items-center justify-center w-12 h-12 rounded-full border border-[#1a1a1a]/30 text-[#1a1a1a] transition-colors duration-200 hover:bg-[#1a1a1a]/5"
+            aria-label="Replay slideshow from first slide"
+          >
+            <RotateCcw size={18} />
+          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={prevSlide}
+              disabled={isPlaying}
+              className="flex items-center justify-center w-12 h-12 rounded-full border border-[#1a1a1a]/30 text-[#1a1a1a] transition-opacity duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#1a1a1a]/5"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={nextSlide}
+              disabled={isPlaying}
+              className="flex items-center justify-center w-12 h-12 rounded-full border border-[#1a1a1a]/30 text-[#1a1a1a] transition-opacity duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#1a1a1a]/5"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="flex justify-center gap-2 mb-6">
+          {LUT_SLIDES.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide 
+                  ? 'bg-[#1a1a1a] w-8' 
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const articles = [
   {
@@ -31,7 +428,7 @@ const articles = [
           <li className="text-lg"><strong>Seek feedback early:</strong> The next time you work on a project, ask for feedback after your v1. It takes the pressure off always presenting flawless work and I've found that it helps enjoy the process of iteration too!</li>
         </ul>
         <p className="text-lg mb-6">The key to all these practices is shifting the focus away from outcomes and back onto the process.</p>
-        <p className="text-lg mb-6">I also want to mention that <strong>unlearning perfectionism does not mean lowering your standards.</strong> It's about freeing yourself from the fear of not being "enough" and internalizing that <strong>progress > perfection.</strong></p>
+        <p className="text-lg mb-6">I also want to mention that <strong>unlearning perfectionism does not mean lowering your standards.</strong> It's about freeing yourself from the fear of not being "enough" and internalizing that <strong>progress &gt; perfection.</strong></p>
         <p className="text-lg mb-6">Excellence still matters, but it flourishes most when it's rooted in curiosity, growth, and joy instead of fear. By letting go of the need to get everything right, we create space for mistakes, risks, and the kind of progress that actually moves you forward.</p>
         <p className="text-lg mb-6">So the next time you catch yourself hesitating or waiting to be certain you can do it perfectly, take the step anyway. <strong>Progress will always carry you further than perfection ever could, because real growth comes not from flawless execution, but from the courage to begin.</strong></p>
         
@@ -44,6 +441,7 @@ const articles = [
             data-substack-domain="fieldnotesbypriyal.substack.com"
           >
             <iframe 
+              title="Substack embed"
               src="https://fieldnotesbypriyal.substack.com/embed" 
               width="100%" 
               height="320" 
@@ -137,40 +535,916 @@ const articles = [
       </>
     ),
   },
+  {
+    title: 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles',
+    date: null,
+    quote: null,
+    content: (
+      <>
+        <h2 id="introduction" className="text-2xl font-medium mt-8 mb-4">1. Introduction & Prerequisites</h2>
+        <p className="text-lg mb-6">This article provides a technical explanation of the internal architecture and design methodologies of modern <strong>Field-Programmable Gate Arrays (FPGAs)</strong>. The focus is on analyzing how the device is constructed in silicon, how its major components interact at the transistor and signal levels, and how these elements combine to form a digital device that's universally reconfigurable.</p>
+        <p className="text-lg mb-6">To navigate the architectural complexities detailed, it is assumed that the reader is familiar with digital logic design fundamentals, such as:</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>Logic Gates:</strong> The functional behavior of AND, OR, NOT, NAND, NOR, and XOR gates</li>
+          <li className="text-lg"><strong>Truth Tables:</strong> The tabular representation of Boolean logic functions</li>
+          <li className="text-lg"><strong>Boolean Algebra:</strong> The mathematical manipulation of binary variables</li>
+          <li className="text-lg"><strong>Adder Circuits:</strong> The mechanics of binary addition, including half-adders, full-adders, and ripple-carry propagation</li>
+          <li className="text-lg"><strong>Sequential Logic:</strong> The concept of state retention using latches and flip-flops, and the critical role of clock signals in synchronous systems</li>
+        </ul>
+        <p className="text-lg mb-6">No prior experience with Hardware Description Languages (HDL) such as VHDL or Verilog, nor familiarity with specific FPGA vendor toolchains, is required.</p>
+
+        <h2 id="hardware-spectrum" className="text-2xl font-medium mt-8 mb-4">2. The Gap in the Hardware Spectrum</h2>
+        
+        <h3 id="evolution-logic-chips" className="text-xl font-medium mt-6 mb-3">2.1 The Evolution of Logic Chips</h3>
+        <p className="text-lg mb-6">A logic chip is defined as a semiconductor integrated circuit that performs fundamental operations, calculations and processing tasks in electronic systems. From personal smartphones to industrial automation and automotive systems, these chips play an imperative role in today’s digital world.</p>
+        <p className="text-lg mb-6">The most familiar of these is the <strong>Central Processing Unit (CPU)</strong>. Mechanically, a CPU operates on a sequential execution model. In this model, instructions are fetched from memory, decoded, and executed one after another. At the hardware level, a program counter provides the address of the next instruction; the CPU retrieves it, interprets the operation, and activates the appropriate circuitry to execute the command before advancing to the next step.</p>
+        <p className="text-lg mb-6">While this architecture excels at tasks requiring complex decision-making, data-driven branching, and frequent interaction with memory, the demands of emerging workloads in the 1990s exposed a significant limitation: the CPU's constrained capacity for executing massive numbers of computations concurrently. The inherently serial nature of the fetch-decode-execute cycle was unsuited for tasks such as 3D graphics rendering, which required performing identical mathematical operations across thousands of independent pixels simultaneously.</p>
+        <p className="text-lg mb-6">This gap led to the emergence of the <strong>Graphics Processing Unit (GPU)</strong>. Unlike a CPU’s serial approach, a GPU arranges its hardware into arrays of basic arithmetic units that operate in unison. By giving each unit a different piece of data to work on while issuing the same instruction to all of them, the GPU can carry out many identical calculations at once.</p>
+        <p className="text-lg mb-6">Although this structure delivers extensive throughput, it comes with significant limitations. Groups of GPU threads must advance together under a shared instruction, so any divergence in their behavior forces the hardware to serialize parts of the computation and reduces efficiency. Furthermore, the internal circuits are optimized specifically for arithmetic-heavy, data-parallel tasks rather than general-purpose logic. As a result, GPUs excel at uniform numerical workloads but are far less flexible when the computation’s execution path varies according to the data being handled.</p>
+        <p className="text-lg mb-6">Another important class of logic chips is the <strong>Application-Specific Integrated Circuit (ASIC)</strong>. Unlike CPUs and GPUs, which rely on instruction-driven execution, an ASIC implements a fixed hardware design directly in silicon. This means every gate and control path is engineered for a defined purpose.</p>
+        <p className="text-lg mb-6">While this allows the chip to achieve far higher performance, a major drawback is that an ASIC cannot be reprogrammed after fabrication; the logic is permanently fixed. Any change to the algorithm, protocol, or hardware behavior requires a full redesign and an entirely new manufacturing run, which can cost millions of dollars and months of development time. This rigidity makes ASICs impractical for everchanging environments or applications that require post-deployment updates.</p>
+
+        <h3 id="why-fpgas" className="text-xl font-medium mt-6 mb-3">2.2 Why FPGAs? The Need for Reconfigurable Hardware</h3>
+        <p className="text-lg mb-6">By the late 20th century, the hardware landscape had polarized into two categories: flexible, instruction-based processors (CPUs/GPUs) and high-performance, fixed-function hardware (ASICs). A critical void existed for a platform that could offer the performance characteristics of custom hardware while retaining the post-deployment adaptability of software.</p>
+        <p className="text-lg mb-6">Varying industries, like telecommunications and aerospace to name a few, demanded a change. They required hardware capable of processing data at wire speed, yet they also needed the ability to update encryption algorithms, modulation schemes, and communication protocols long after the hardware had been deployed. They could not commit to fixed silicon due to the risk of obsolescence, but they could not afford the inefficiency of serialized software.</p>
+        <p className="text-lg mb-6">This multifaceted demand motivated the novel creation of <strong>Field-Programmable Gate Arrays (FPGAs)</strong>. Instead of running a stream of instructions through a fixed microarchitecture, the user provides a configuration bitstream that rewires the hardware itself. The FPGA is essentially a collection of uncommitted logic resources, including gates, memory blocks, and wiring switches. When programmed, the device physically transforms into a specific digital circuit. The functionality is not expressed as a sequence of commands but as the spatial structure of the hardware. Updating an FPGA means redefining the logic equations, the data paths, and the control behavior implemented active within the chip. So, the device assumes a new functional behavior without the need for new manufacturing.</p>
+
+        <h2 id="fpga-architectural-overview" className="text-2xl font-medium mt-8 mb-4">3. An Overview of an FPGA's Architecture</h2>
+        <p className="text-lg mb-6">Modern FPGAs can be visualized as a two-dimensional matrix of small logic units surrounded by a programmable wiring network. Instead of instruction-driven execution, like those found in CPUs and GPUs, the FPGA contains no predefined instructions. It offers a canvas of logic elements, routing switches, memory structures, and hardwired computational blocks that can be interconnected to form almost any digital circuit.</p>
+        <img src={process.env.PUBLIC_URL + "/images/FPGAOverview.PNG"} alt="FPGA Architectural Overview" className="w-full max-w-4xl mx-auto my-8" />
+        <p className="text-lg mb-6">When a configuration bitstream is loaded, it does not instruct the FPGA how to execute operations serially but rather redefines the structure of the hardware itself. The chip's internal switches are set so that signals flow through logic functions, memory elements, and routing paths. In effect, the FPGA transforms into a custom, application-specific integrated circuit, without requiring new silicon.</p>
+        <p className="text-lg mb-6">It's important to note that the specific implementations differ among vendors and models. However, modern FPGAs share the same top-level structure composed of four major elements:</p>
+
+        <FPGASlideshow />
+
+        <p className="text-lg mb-6">Together, these elements form the foundation of contemporary FPGAs. The sections ahead detail how each component functions and illustrate how they combine to create hardware tailored precisely to the demands of any design.</p>
+
+        <h2 id="clb" className="text-2xl font-medium mt-8 mb-4">4. Configurable Logic Blocks (<span className="font-medium">CLB</span>)</h2>
+        <p className="text-lg mb-6">The <strong>Configurable Logic Block (CLB)</strong>, variously termed <strong>Logic Array Block (LAB)</strong> or <strong>Logic Element (LE)</strong> depending on the vendor, is the fundamental building block that gives an FPGA its ability to form arbitrary digital circuits.</p>
+        <p className="text-lg mb-6">At a high level, a CLB is a cluster of smaller, identical sub-units often called <strong>Slices</strong> or <strong>Adaptive Logic Modules (ALMs)</strong>.</p>
+        <img
+          src={process.env.PUBLIC_URL + "/images/ALM_Diagram.png"}
+          alt="Adaptive Logic Module illustration"
+          className="w-full max-w-3xl mx-auto my-2"
+        />
+        <p className="text-lg mb-6">An individual ALM consists of three essential resources that are the backbone of its capabilities:</p>
+        <ol className="list-decimal ml-8 mb-6 space-y-2">
+          <li className="text-lg">Lookup Tables (LUTs) to implement combinational logic</li>
+          <li className="text-lg">Flip-Flops (FFs) or Registers to implement sequential logic</li>
+          <li className="text-lg">Carry-Chain Circuitry to implement arithmetic operations efficiently</li>
+        </ol>
+
+        <h3 id="luts" className="text-xl font-medium mt-6 mb-3">4.1 Lookup Tables (<span className="font-medium">LUTs</span>)</h3>
+        <p className="text-lg mb-6">The <strong>Lookup Table (LUT)</strong> is the primary combinational logic primitive in an FPGA. Despite the name Field-Programmable <strong>Gate</strong> Array, modern FPGAs do not contain physical AND, OR, or NAND gates in the user-programmable fabric. Instead, logic is implemented using memory.</p>
+        <p className="text-lg mb-6">Physically, a LUT is a small bank of SRAM cells coupled with a multiplexer tree. To implement a logic function, such as <span className="font-mono">Y = (A ∧ B) ∨ C</span>, the synthesis software first calculates the truth table for that function. During device configuration, the output column of this truth table is loaded into the LUT's SRAM cells. During operation, the input signals (<span className="font-mono">A, B, C</span>) act as the address lines to the respective SRAM. The multiplexer uses this address to select the appropriate bit from the memory and drives it to the output.</p>
+        
+        <LUTSlideshow />
+
+        <p className="text-lg mb-6">Because a LUT reads a pre-calculated result from memory rather than evaluating a chain of logic gates, the propagation delay through a LUT is independent of the logical complexity of the function. A simple 2-input AND gate and a complex 6-input Boolean expression take the exact same amount of time to execute, provided they fit within a single LUT. The number of LUT inputs is therefore a key architectural parameter, as it dictates the stages of multiplexers the signal must traverse internally.</p>
+        
+        <h4 className="text-lg font-medium mt-4 mb-2">Architectural Development: The 6-Input LUT</h4>
+        <p className="text-lg mb-6">Early FPGAs utilized 4-input LUTs. However, modern architectures (such as the Xilinx 7-Series, UltraScale, and Intel Stratix 10) have standardized on 6-input LUTs. This design choice represents a complex trade-off between silicon area and system performance.</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>Area Penalty:</strong> A <span className="font-mono">k</span>-input LUT requires 2<sup><span className="font-mono">k</span></sup> configuration bits. Moving from 4 inputs (2<sup>4</sup> = 16 bits) to 6 inputs (2<sup>6</sup> = 64 bits) increases the SRAM area by 4× for only a 1.5× increase in input width.</li>
+          <li className="text-lg"><strong>Performance Increase:</strong> The dominant source of delay in FPGAs is the programmable interconnect (routing), not the logic itself. By moving to larger LUTs, designs require fewer logic levels (LUTs in series) to implement a function. This reduces the number of interconnect hops a signal must travel through, significantly increasing the maximum frequency of the circuit.</li>
+        </ul>
+        <p className="text-lg mb-6">Modern LUTs are also fracturable. A single 6-input LUT can typically be split into two 5-input LUTs (sharing some inputs) or two independent small LUTs. This prevents the waste of silicon resources when implementing simple logic functions, ideally balancing the need for deep logic with the efficiency of granular logic.</p>
+        <img src={process.env.PUBLIC_URL + "/images/Fracturable-LUT.PNG"} alt="Fracturable LUT" className="w-full max-w-4xl mx-auto my-8" />
+
+        <h3 id="flip-flops-registers" className="text-xl font-medium mt-6 mb-3">4.2 Flip-Flops and Registers</h3>
+        <p className="text-lg mb-6">LUTs give an FPGA the ability to implement arbitrary combinational logic, but by itself it cannot hold information. Digital systems require a way to remember intermediate results, synchronize operations, and ensure signals remain stable long enough for downstream logic to evaluate them. Hence, each logic cell includes one or more dedicated flip-flops (FF) that serve as a fundamental storage resource.</p>
+        <p className="text-lg mb-6">At a conceptual level, a flip-flop is a one-bit memory element that updates its stored value only when a clock signal transitions. The FPGA uses D-type edge-triggered flip-flops, where the data input is sampled just before the active clock transition and then transferred to the output at the moment of the edge. Between clock events, the output remains fixed, even if upstream signals continue to fluctuate.</p>
+        <img
+          src={process.env.PUBLIC_URL + "/images/Clock_Cycle.png"}
+          alt="Clock cycle illustration"
+          className="w-full max-w-3xl mx-auto my-2"
+        />
+        <p className="text-lg mb-6">This controlled update behavior creates the foundation of synchronous logic. Instead of allowing signals to ripple through the design without coordination and creating a system that is susceptible to glitches, the circuit advances through a sequence of well-defined states on each clock cycle.</p>
+        <p className="text-lg mb-6">Recall that in each logic cell, the flip-flop sits directly beside the LUT to minimize routing delay between logic and storage. A 2:1 multiplexer then selects whether the LUT’s output is sent out immediately or routed through the flip-flop first, determining whether the logic operates combinationally or as a registered pipeline stage.</p>
+
+        <h3 id="carry-chains" className="text-xl font-medium mt-6 mb-3">4.3 Carry Chains</h3>
+        <p className="text-lg mb-6">Binary addition and subtraction rely on the propagation of a <em>carry</em> bit. In a standard ripple-carry adder, the carry-out from bit <span className="font-mono">N</span> must propagate to the input of bit <span className="font-mono">N</span>+1. If implemented using standard LUTs and general routing, a 32-bit adder would require the signal to traverse 32 LUTs and 32 interconnect segments, resulting in prohibitive delays.</p>
+        <p className="text-lg mb-6">To solve this, FPGAs incorporate dedicated carry logic, a hardwired silicon path that runs vertically between adjacent Slices. This bypasses the general routing fabric entirely. When an adder is synthesized, the LUTs compute the sum bits, while the carry propagation is offloaded to this dedicated high-speed avenue. The carry signal can traverse a Slice in mere picoseconds, allowing FPGAs to implement wide counters and adders (eg. 64-bit or 128-bit) that operate at hundreds of Megahertz.</p>
+        <img src={process.env.PUBLIC_URL + "/images/CarryChainsALM.PNG"} alt="Diagram of ALMs arranged vertically with carry-chain circuitry" className="w-full max-w-4xl mx-auto my-8" />
+
+        <h2 id="programmable-interconnect" className="text-2xl font-medium mt-8 mb-4">5. Programmable Interconnect</h2>
+        <p className="text-lg mb-6">Once the CLBs have been defined to perform specific operations, the next challenge in FPGA design is establishing the pathways that enable communication between these logic units. FPGAs don't simply contain isolated logic blocks; they require interconnections to form functional circuits that facilitate data transfer between logic blocks, memory units, and other specialized resources. This is achieved through a network of pre-fabricated wires and programmable switches.</p>
+
+        <h3 id="routing-channels" className="text-xl font-medium mt-6 mb-3">5.1 Routing Channels</h3>
+        <p className="text-lg mb-6">As previously established, the CLBs are arranged in a grid-like structure, with channels positioned in the rows and columns adjoining them. These channels are made up of fixed wire segments that provide predefined paths for signal transmission across the FPGA. Although the wires themselves remain static, their strategic placement allows for significant routing flexibility.</p>
+        <img src={process.env.PUBLIC_URL + "/images/Interconnect2.png"} alt="Interconnect routing channels" className="w-full max-w-4xl mx-auto my-8" />
+        <p className="text-lg mb-6">To connect one logic block to another, a signal must first exit the logic block pin, then enter the adjacent routing channel and traverse through the network to reach its destination. By leveraging the right combination of horizontal and vertical channels, each logic block is guaranteed a direct path to any other component on the board. When possible, data prioritizes the travel through local wires that connect neighbouring CLBs, to minimize delay. This grid-based layout provides the FPGA with both the reach and adaptability to implement circuits with varying complexity.</p>
+
+        <h3 id="switch-matrices" className="text-xl font-medium mt-6 mb-3">5.2 Switch Matrices</h3>
+        <p className="text-lg mb-6">The mechanism that makes these fixed wires <em>programmable</em> is the <strong>Switch Matrix</strong> located at the intersection of every horizontal and vertical channel. A Switch Matrix is a collection of pass transistors whose states are controlled by SRAM cells.</p>
+        <img src={process.env.PUBLIC_URL + "/images/Switch_Matrix.PNG"} alt="Switch Matrix diagram" className="w-full max-w-4xl mx-auto my-8" />
+        <p className="text-lg mb-6">When a routing path is defined, the configuration bitstream turns on specific transistors within the matrix, creating a conductive 90-degree or 180-degree path for signals to travel through. By default, the transistors remain in an off state, meaning the connection between the vertical and horizontal wires is open and electrically isolated.</p>
+        <img src={process.env.PUBLIC_URL + "/images/Switch_Memory.PNG"} alt="Switch Memory cell" className="w-full max-w-4xl mx-auto my-8" />
+
+        <h3 id="key-parameters" className="text-xl font-medium mt-6 mb-3">5.3 Key Parameters</h3>
+        <p className="text-lg mb-6">The routing network's behaviour is governed by several architectural parameters that determine how many paths exist, how far signals can travel, and how much delay each connection incurs. Understanding these parameters and design trade-offs is essential for appreciating how FPGAs achieve their reconfigurability.</p>
+
+        <h4 className="text-lg mt-4 mb-2" style={{fontWeight: 400}}>1. <span style={{fontWeight: 600, textShadow: '0.15px 0 0 currentColor'}}>Switch Hops</span></h4>
+        <p className="text-lg mb-6">Switch hops are defined as the number of switch matrices a signal travels through. When traversing through a matrix, it experiences a delay due to the pass transistor and the intrinsic wiring capacitance. Designers and tools therefore aim to minimize the number of switch matrices a signal must pass through.</p>
+        <p className="text-lg mb-6">For reference, a direct neighbour-to-neighbour connection is typically 1 hop whereas a long-distance route may entail many hops, depending on the desired result.</p>
+        <p className="text-lg mb-6">Reducing hop count is a foundational optimization objective in FPGA routing, as it directly impacts processing speed and power.</p>
+
+        <h4 className="text-lg mt-4 mb-2" style={{fontWeight: 400}}>2. <span style={{fontWeight: 600, textShadow: '0.15px 0 0 currentColor'}}>Channel Width</span></h4>
+        <p className="text-lg mb-6">Channel width (denoted by <span className="font-mono">W</span>) defines the number of parallel routing tracks available in each channel. It is a critical parameter that dictates the routing capacity of the FPGA fabric.</p>
+        <p className="text-lg mb-6">A greater <span className="font-mono">W</span> value directly translates to several benefits:</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><span className="font-medium">More alternative paths:</span> A higher track count gives the routing algorithms more options for connecting logic block outputs to inputs, making it easier to find efficient, low-latency routes.</li>
+          <li className="text-lg"><span className="font-medium">Reduced routing congestion:</span> As circuits become larger and more complex, they require more connections. A wider channel reduces the likelihood of signals competing for the same limited wires, preventing bottlenecks.</li>
+          <li className="text-lg"><span className="font-medium">Lower likelihood of failed routing:</span> For complex designs, a sufficiently wide channel is necessary to ensure that all required connections can be successfully mapped onto the physical hardware.</li>
+        </ul>
+        <p className="text-lg mb-6">However, increasing <span className="font-mono">W</span> comes with a significant trade-off in terms of silicon area and power consumption. Every additional wire requires extra metal, more switch connections within the switch matrix, and larger transistor structures to manage the increased complexity.</p>
+        <p className="text-lg mb-6">FPGA vendors must therefore tune <span className="font-mono">W</span> to the minimum value that guarantees high routability for the vast majority of practical designs without causing excessive silicon cost. The chosen <span className="font-mono">W</span> value represents a balance point between performance/flexibility and manufacturing cost/power efficiency.</p>
+
+        <h4 className="text-lg mt-4 mb-2" style={{fontWeight: 400}}>3. <span style={{fontWeight: 600, textShadow: '0.15px 0 0 currentColor'}}>Segment Length</span></h4>
+        <p className="text-lg mb-6">An FPGA's channel length (denoted by <span className="font-mono">L</span>) refers to the distance wire segments span in the programmable routing fabric. <span className="font-mono">L</span> is measured by the number of CLBs that span a single continuous wire.</p>
+        <p className="text-lg mb-6">Short segments (<span className="font-mono">L = 1</span>, connecting only adjacent CLBs) offer maximum routing flexibility because a signal can change direction at every CLB boundary. Though, a long-distance connection using only short segments utilizes a high number of switch hops, resulting in a significant signal delay.</p>
+        <p className="text-lg mb-6">Conversely, longer segments (<span className="font-mono">L &gt; 1</span>, spanning multiple CLBs) provide faster long-distance connections by reducing the number of switch matrices a signal must traverse. Yet, these long wires are less flexible for local connections, as they must be used in their entirety, potentially overshooting the target and leading to unnecessary resource consumption.</p>
+        <p className="text-lg mb-6">Modern FPGAs use a hierarchical routing architecture that combines segments of various lengths to balance these trade-offs. This multi-segment approach allows the synthesis tools to select the optimal wire length for each connection; the FPGA will intentionally use short wires for local, granular connections and longer segments for signals stretching across greater distances.</p>
+        <p className="text-lg mb-6">Overall, FPGA vendors must account for the key parameters and achieve the right balance among routing flexibility, timing predictability, and silicon overhead. It's a core design challenge that continues to be explored, to ensure the device offers optimal flexibility and performance for the vast range of circuits FPGAs are designed to implement.</p>
+
+        <h2 id="memory-resources" className="text-2xl font-medium mt-8 mb-4">6. Memory Resources</h2>
+        <p className="text-lg mb-6">While flip-flops provide fast, distributed state retention, they are area-inefficient for bulk data storage. A single flip-flop consumes a relatively large area compared to a dedicated memory unit. To address this, FPGAs employ diverse on-chip memory resources such as block RAM (<span className="font-medium">BRAM</span>), distributed RAM implemented using lookup tables (LUTs), and specialized shift-register memory structures, enabling efficient storage of large volumes of data with reduced area and power consumption.</p>
+        
+        <h3 id="cram" className="text-xl font-medium mt-6 mb-3">6.1 Configuration RAM (<span className="font-medium">CRAM</span>)</h3>
+        <p className="text-lg mb-6">The most fundamental memory in an FPGA is one the user never interacts with directly: the <strong>Configuration RAM (CRAM)</strong>. These are the millions of volatile SRAM cells that store the user's design. The bitstream file loaded at startup is essentially a binary image of this memory.</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>Function:</strong> CRAM bits drive the select lines of multiplexers, the gates of routing pass transistors, and the truth tables of LUTs.</li>
+          <li className="text-lg"><strong>Volatility:</strong> Since CRAM is SRAM-based, it loses its data when power is removed. This is why most FPGAs must be reconfigured from an external flash memory or processor at every power cycle.</li>
+        </ul>
+
+        <h3 id="distributed-ram" className="text-xl font-medium mt-6 mb-3">6.2 Distributed RAM</h3>
+        <p className="text-lg mb-6">The first layer of user-accessible memory is Distributed RAM. As noted in Section 4.1, LUTs are built from a collection of SRAM cells. In standard logic mode, this SRAM is read-only. However, modern FPGA architectures (such as Xilinx's SLICEM) include additional write circuitry that allows the user logic to write to the LUT's SRAM cells during operation.</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>Flexibility:</strong> This allows small memories to be instantiated anywhere in the logic fabric. A single LUT can become a 32 × 1 bit RAM or a 16 × 2 bit RAM.</li>
+          <li className="text-lg"><strong>Use Cases:</strong> Distributed RAM is ideal for small scratchpad memories, register files, and small FIFOs where the overhead of a large memory block is unjustified.</li>
+          <li className="text-lg"><strong>Shift Registers (<span className="font-medium">SRL</span>):</strong> A unique capability of Distributed RAM is the <strong>Shift Register Logic (SRL)</strong> mode. The SRAM cells in the LUT can be chained together to form a variable-length shift register (e.g. up to 32 bits deep) without using a single flip-flop. This is highly efficient for implementing digital delay lines and pipelining in DSP applications.</li>
+        </ul>
+
+        <h3 id="block-ram" className="text-xl font-medium mt-6 mb-3">6.3 Block RAM (<span className="font-medium">BRAM</span>)</h3>
+        <p className="text-lg mb-6">For bulk storage, ranging in kilobytes to megabytes, FPGAs embed columns of dedicated <span className="font-medium">Block RAM (BRAM)</span>. These are hard-macro SRAM arrays (typically 18Kb or 36Kb in size) that exist separately from other core components.</p>
+        <ul className="list-disc ml-8 mb-6 space-y-2">
+          <li className="text-lg"><strong>True Dual-Port:</strong> This allows simultaneous reads and writes from different clock domains, which makes BRAMs ideal for implementing FIFOs that safely transfer data between circuits running on different clocks.</li>
+          <li className="text-lg"><strong>Configurability:</strong> A BRAM is not a fixed shape. A 36Kb block can be configured as a deep, narrow memory (32K × 1), a wide, shallow memory (1K × 36), or various aspect ratios in between. This elasticity allows the memory to match the data path width perfectly.</li>
+          <li className="text-lg"><strong>Performance:</strong> Because BRAMs are hard-wired custom blocks, they are significantly faster and denser than Distributed RAM. They often include built-in features like <strong>Error Correction Code (ECC)</strong> logic and output registers to maximize timing performance.</li>
+        </ul>
+
+        <div className="my-8 overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300 text-lg">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Feature</th>
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Flip-Flops (Registers)</th>
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Distributed RAM (LUT RAM)</th>
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Block RAM (BRAM)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Primary Use</td>
+                <td className="border border-gray-300 px-4 py-2">State machines, pipelines</td>
+                <td className="border border-gray-300 px-4 py-2">Small LUTs, coefficients, delay lines</td>
+                <td className="border border-gray-300 px-4 py-2">Data buffers, large FIFOs, caches</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Bit Density</td>
+                <td className="border border-gray-300 px-4 py-2">Very Low</td>
+                <td className="border border-gray-300 px-4 py-2">Low</td>
+                <td className="border border-gray-300 px-4 py-2">High</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Speed</td>
+                <td className="border border-gray-300 px-4 py-2">Ultra-High</td>
+                <td className="border border-gray-300 px-4 py-2">High</td>
+                <td className="border border-gray-300 px-4 py-2">High (with latency)</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Ports</td>
+                <td className="border border-gray-300 px-4 py-2">Single (D input, Q output)</td>
+                <td className="border border-gray-300 px-4 py-2">Single or Dual (Read/Write)</td>
+                <td className="border border-gray-300 px-4 py-2">True Dual Port (A & B)</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Resource Cost</td>
+                <td className="border border-gray-300 px-4 py-2">Uses Slice Register</td>
+                <td className="border border-gray-300 px-4 py-2">Uses Logic LUTs</td>
+                <td className="border border-gray-300 px-4 py-2">Uses Dedicated BRAM Column</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 font-medium">Ideal Size</td>
+                <td className="border border-gray-300 px-4 py-2">1 bit - 100 bits</td>
+                <td className="border border-gray-300 px-4 py-2">100 bits - 10 Kbits</td>
+                <td className="border border-gray-300 px-4 py-2">10 Kbits - Megabits</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="dsp-slices" className="text-2xl font-medium mt-8 mb-4">7. DSP Slices / Hardened Arithmetic Blocks</h2>
+        <p className="text-lg mb-6">Although Lookup Tables can be configured to perform arithmetic operations, implementing complex mathematical functions purely in general logic is both area-inefficient and slow. For example, an 18×18-bit multiplier synthesized from LUTs would consume hundreds of logic elements and suffer from long carry-propagation delays.</p>
+        <p className="text-lg mb-6">To approach this inefficiency, modern FPGAs integrate DSP slices, which are fixed-function units optimized for high-throughput numerical computation. These blocks form the computational backbone of applications such as digital signal processing, video processing, wireless communication, and machine learning acceleration.</p>
+
+        <h3 id="dsp-internal-structure" className="text-xl font-medium mt-6 mb-3">7.1 Internal Structure of a DSP Slice</h3>
+        <p className="text-lg mb-6">A <strong>DSP slice</strong> is best understood as a pre-built arithmetic pipeline whose main job is to compute a <strong>multiply-accumulate (MAC)</strong>. The canonical operation is:</p>
+        <p className="text-lg mb-6 font-mono text-center py-4 bg-gray-50 rounded">P = A × B + C</p>
+        <p className="text-lg mb-6">This appears constantly in digital signal processing because many algorithms reduce to multiplying some input by a coefficient, then adding it into a running sum. Instead of building this out of LUTs and carry chains, the FPGA provides a hardened block that already contains the required hardware to improve calculation speed.</p>
+        <p className="text-lg mb-6">Internally, the slice contains three main arithmetic stages arranged in a fixed datapath. Many DSP slices include an optional pre-adder. This unit can add or subtract two input values before they reach the multiplier, allowing the slice to compute expressions of the form <span className="font-mono">(A₁ ± A₂) × B</span>. Following is the dedicated multiplier, commonly sized around 25×18 or 27×18 bits depending on the vendor family. The multiplier output feeds into a wide post-adder / accumulator (often 48 bits) which can add an incoming value <span className="font-mono">C</span> and store the result <span className="font-mono">P</span>.</p>
+        <p className="text-lg mb-6">Because these stages are separated by optional pipeline registers, the DSP slice can be clocked at very high frequencies. The trade-off is that the result may appear after a fixed number of cycles of latency, but once the pipeline is full the slice can produce one result per cycle.</p>
+        <p className="text-lg mb-6">Many modern architectures also include auxiliary logic such as a pattern detector, which can compare the output against a programmed value. This feature is typically used for tasks like overflow detection, rounding behavior, or saturation logic, rather than being a core part of the MAC datapath.</p>
+
+        <h3 id="pre-adder" className="text-xl font-medium mt-6 mb-3">7.2 The Role of the Pre-Adder</h3>
+        <p className="text-lg mb-6">At first glance, a pre-adder seems redundant because the DSP slice already contains an adder after the multiplier. The key difference is where the addition occurs. The post-adder combines results after multiplication. The pre-adder combines values before multiplication, which can reduce the number of multiplications required in certain algorithms.</p>
+        <p className="text-lg mb-6">This particularly matters because multipliers are the most expensive arithmetic operation in terms of power and area. If an algorithm can be rearranged to use fewer multiplications, it becomes significantly more efficient.</p>
+        <p className="text-lg mb-6">A common example is the <strong>Finite Impulse Response (FIR)</strong> filter, where symmetric coefficients often occur:</p>
+        <p className="text-lg mb-6 font-mono text-center py-4 bg-gray-50 rounded">h₀ = hₙ, h₁ = hₙ₋₁, …</p>
+        <p className="text-lg mb-6">In a symmetric FIR, two different input samples are multiplied by the same coefficient. Because multiplication distributes over addition, those two multiplications can be rewritten as one multiplication if the inputs are added first:</p>
+        <p className="text-lg mb-6 font-mono text-center py-4 bg-gray-50 rounded">h₀ · x[n] + h₀ · x[n-k] = h₀ · (x[n] + x[n-k])</p>
+        <p className="text-lg mb-6">This is exactly what the pre-adder enables. The DSP slice can add <span className="font-mono">x[n]</span> and <span className="font-mono">x[n-k]</span> in the pre-adder and then multiply the sum by the shared coefficient <span className="font-mono">h₀</span>. In effect, the design computes the contribution of two filter taps using one multiplier, which increases throughput or reduces DSP usage while keeping the same filter behavior.</p>
+        <p className="text-lg mb-6">In practical terms, the pre-adder exists because it matches the structure of real DSP workloads: many systems repeatedly perform the sum of two samples, multiplied by a coefficient, and accumulate into an output. Implementing that pattern directly inside the DSP slice is more efficient than forcing the synthesis tools to build it from general logic.</p>
+
+        <h3 id="cascading-wide-arithmetic" className="text-xl font-medium mt-6 mb-3">7.3 Cascading and Wide Arithmetic</h3>
+        <p className="text-lg mb-6">DSP slices are not intended to operate independently. They are arranged in vertical columns and connected by dedicated cascade paths that allow data to pass directly from one slice to the next without traversing the general routing fabric, in a similar manner to carry-chain circuitry. This architectural choice enables the construction of extremely wide arithmetic structures.</p>
+        <p className="text-lg mb-6">By chaining multiple slices together, designers can build accumulators exceeding 96 or 128 bits while maintaining high clock frequencies. Because the intermediate signals remain on dedicated inter-slice wiring, these wide datapaths avoid the routing delays that would otherwise limit performance.</p>
+        <p className="text-lg mb-6">Some DSP architectures also support SIMD modes, in which the wide arithmetic units are subdivided into multiple smaller lanes. In this configuration, a single DSP slice can operate on several lower-precision data streams simultaneously, making it particularly effective for applications that must be processed in parallel.</p>
+
+        <h2 id="io-transceivers" className="text-2xl font-medium mt-8 mb-4">8. I/O, Transceivers, and High-Speed Interfaces</h2>
+        <p className="text-lg mb-6">The <strong>Input/Output (I/O)</strong> subsystem defines how an FPGA communicates with the external world. While the internal logic of an FPGA may operate at hundreds of megahertz, the adequacy of the device also depends on how efficiently data can enter and leave the chip. As interface speeds have increased from simple GPIO-style signaling to multi-gigabit serial links, the I/O design has evolved into one of the most complex mixed-signal components.</p>
+        <p className="text-lg mb-6">Rather than treating I/O as simple digital buffers, contemporary FPGA designs integrate configurable electrical drivers, on-chip impedance control, differential signaling support, and hardened high-speed transceivers. This allows the same device to interface with low-speed control signals, high-speed memory buses, and multi-gigabit communication protocols all together.</p>
+
+        <h3 id="io-blocks" className="text-xl font-medium mt-6 mb-3">8.1 I/O Blocks and Electrical Standards</h3>
+        <p className="text-lg mb-6">Each physical pin on an FPGA is controlled by an <strong>Input/Output Block (IOB)</strong>. The IOB forms the boundary between the FPGA's internal logic fabric and the external printed circuit board. Unlike fixed-function chips, FPGA IOBs are highly configurable, allowing the same pin to support a wide range of electrical signaling standards through configuration alone.</p>
+        <p className="text-lg mb-6">These standards define voltage levels, termination requirements, and signaling behavior. For example, an IOB may be configured to operate as 3.3 V LVTTL for simple control signals, 1.2 V POD for DDR memory interfaces, or LVDS for high-speed differential communication. This flexibility allows a single FPGA to replace many discrete interface components.</p>
+        <p className="text-lg mb-6">At high signaling speeds, PCB traces behave as transmission lines rather than ideal wires. If the output impedance of the FPGA driver does not match the characteristic impedance of the trace, signal reflections occur. These reflections can cause ringing, overshoot, and data corruption, particularly as edge rates increase.</p>
+        <p className="text-lg mb-6">To handle this, FPGAs implement <strong>Digitally Controlled Impedance (DCI)</strong>. Instead of relying on external termination resistors, the FPGA dynamically adjusts the strength of its output transistors to match a reference impedance. This calibration compensates for variations in manufacturing process, supply voltage, and temperature, maintaining signal integrity while reducing board-level complexity.</p>
+
+        <h3 id="differential-signaling" className="text-xl font-medium mt-6 mb-3">8.2 Differential Signaling and LVDS</h3>
+        <p className="text-lg mb-6">As data rates increase, single-ended signaling becomes increasingly susceptible to noise and electromagnetic interference. To overcome this limitation, FPGAs make extensive use of differential signaling, most commonly in the form of <strong>Low-Voltage Differential Signaling (LVDS)</strong>.</p>
+        <p className="text-lg mb-6">In differential signaling, information is conveyed as the voltage difference between two complementary wires rather than as an absolute voltage relative to ground. When the transmitted logic value changes, one wire increases in voltage while the other decreases. The receiver measures only the difference between the two.</p>
+        <p className="text-lg mb-6">This approach offers two major advantages. First, external noise tends to couple equally onto both wires, appearing as common-mode noise that is rejected by the receiver. Second, as the voltage swing is small, power consumption is reduced and edge transitions can occur more quickly. These properties allow LVDS links to operate reliably at data rates exceeding 1 Gbps per pin pair while maintaining signal integrity.</p>
+
+        <h2 id="clocking-architecture" className="text-2xl font-medium mt-8 mb-4">9. Clocking Architecture</h2>
+        <p className="text-lg mb-6">In synchronous digital systems, the clock signal defines when data is sampled and propagated. Distributing this signal across a large FPGA while maintaining precise timing alignment is one of the most challenging aspects of chip design.</p>
+
+        <h3 id="global-clock-distribution" className="text-xl font-medium mt-6 mb-3">9.1 Global Clock Distribution and Skew</h3>
+        <p className="text-lg mb-6">Clock skew refers to the difference in arrival time of a clock edge at different flip-flops. Excessive skew can lead to data being sampled incorrectly along with hold-time violations and setup failure.</p>
+        <p className="text-lg mb-6">To minimize this effect, FPGAs use a dedicated global clock distribution network that is entirely separate from the general routing system. This network is carefully engineered to provide low resistance, low capacitance paths with highly predictable delays. A common topology is the H-tree, in which the clock signal enters near the center of the chip and branches outward symmetrically. By matching the physical length of each branch, the propagation delay from the source to every endpoint is equalized as much as possible.</p>
+        <p className="text-lg mb-6">Modern FPGAs further divide the device into rectangular clock regions, each with local clocking resources. This structure allows different regions of the chip to operate on different clocks, enabling multiple independent clock domains while maintaining low skew within each region.</p>
+        <p className="text-lg mb-6">It is important to distinguish skew from jitter. Skew is a spatial effect, describing differences in arrival time across the chip, whereas jitter is a temporal effect, describing variation in the clock period from cycle to cycle. Excessive buffering can reduce skew but may introduce jitter, so the clock network must be designed to balance both effects.</p>
+
+        <h3 id="clock-management" className="text-xl font-medium mt-6 mb-3">9.2 Clock Management Blocks</h3>
+        <p className="text-lg mb-6">In addition to distributing clocks, FPGAs must also generate and manipulate them for specific use-cases. For this purpose, devices include dedicated Clock Management Blocks, typically containing <strong>Phase-Locked Loops (PLLs)</strong> and <strong>Mixed-Mode Clock Managers (MMCMs)</strong>.</p>
+        <p className="text-lg mb-6">These blocks allow designers to derive multiple internal clocks from a single external reference. For example, a 100 MHz input clock may be multiplied and divided to generate a 400 MHz clock for logic, a 200 MHz clock for memory interfaces, and a phase-shifted clock for data capture. This capability is essential for systems that combine logic operating at different speeds.</p>
+        <p className="text-lg mb-6">Clock management blocks also support precise phase shifting, which is critical when interfacing with high-speed memory. In these systems, data must be sampled in the center of a narrow valid window, requiring fine-grained control over clock phase. Additionally, PLLs can perform de-skewing by aligning the internal clock network with an external clock, compensating for delays introduced by the FPGA's clock tree.</p>
+        <p className="text-lg mb-6">Together, the global clock network and clock management circuitry ensure that high-speed synchronous designs can operate reliably across a wide range of conditions.</p>
+
+        <h2 id="hdl-to-hardware" className="text-2xl font-medium mt-8 mb-4">10. HDL-to-Hardware Flow</h2>
+        <p className="text-lg mb-6">A common misconception is that FPGAs execute software in the same way as processors. In reality, an FPGA does not <em>run</em> code. Instead, the design process transforms a hardware description into a physical circuit by configuring the programmable resources of the device. The result is not a sequence of instructions, but a spatial arrangement of all the logic, memory, and interconnect components discussed.</p>
+
+        <h3 id="hardware-description-languages" className="text-xl font-medium mt-6 mb-3">10.1 Hardware Description Languages</h3>
+        <p className="text-lg mb-6"><strong>Hardware Description Languages</strong> such as <strong>VHDL</strong> and <strong>Verilog</strong> describe hardware structure and behavior concurrently. Each statement represents a piece of circuitry that exists continuously and operates in parallel with all others. Unlike software languages, where statements execute sequentially, HDL describes how signals are connected and how they respond to changes over time.</p>
+        <p className="text-lg mb-6">From a conceptual standpoint, HDL is best viewed as a textual representation of a schematic. Assignments describe combinational logic, while clocked processes describe sequential elements such as registers and state machines.</p>
+        
+        <HDLCodeExample />
+
+        <h3 id="synthesis" className="text-xl font-medium mt-6 mb-3">10.2 Synthesis</h3>
+        <p className="text-lg mb-6">The first stage of transforming HDL into hardware is synthesis. During synthesis, the tool parses the HDL and translates it into an abstract representation composed of Boolean equations, registers, and memory structures. Logical optimizations are then applied to remove redundancy and simplify expressions using Boolean algebra.</p>
+        <p className="text-lg mb-6">Once optimized to use minimal physical resources, the design is technology-mapped onto the physical resources of the target FPGA. Combinational logic is grouped into functions that fit within Lookup Tables, arithmetic operations are mapped onto carry chains or DSP slices, and memory constructs are implemented using distributed RAM or Block RAM. The result of synthesis is a <strong>register-transfer level (RTL)</strong> netlist that expresses the design in terms of the FPGA's native building blocks.</p>
+
+        <h3 id="placement-routing" className="text-xl font-medium mt-6 mb-3">10.3 Placement and Routing</h3>
+        <p className="text-lg mb-6">After synthesis, the design must be physically fixed on the chip through placement and routing, collectively referred to as implementation. Placement determines which specific logic blocks, memory blocks, and DSP slices on the silicon will implement each part of the theoretical design. A general objective is to minimize wire length and congestion while keeping logically related elements close together.</p>
+        <p className="text-lg mb-6">Routing then selects the exact paths through the programmable interconnect to connect these placed elements. Because routing resources are shared and finite, the router must balance timing requirements against congestion. Critical signals are given priority access to faster routes, while less timing-sensitive connections are detoured as needed. This stage is computationally intensive and often dominates build time for larger designs.</p>
+
+        <h3 id="static-timing-analysis" className="text-xl font-medium mt-6 mb-3">10.4 Static Timing Analysis</h3>
+        <p className="text-lg mb-6">After placement and routing, the designer must determine whether the circuit can operate reliably at the intended clock frequency, for example 200 MHz. Rather than validating this through exhaustive dynamic simulation, FPGA toolchains rely on <strong>Static Timing Analysis (STA)</strong>. STA evaluates the timing behavior of the circuit mathematically by examining every possible data path between sequential elements, specifically from each launching flip-flop to every capturing flip-flop.</p>
+        <p className="text-lg mb-6">For each path, the tool computes the total propagation delay, which is the sum of the clock-to-Q delay of the launching flip-flop, the delay through the intervening combinational logic, and the delay introduced by routing. This value is then compared against the available time defined by the clock period. To satisfy the setup time requirement, the data must arrive at the destination flip-flop before the next active clock edge, reduced by the flip-flop's required setup time:</p>
+        <p className="text-lg mb-6 font-mono text-center py-4 bg-gray-50 rounded">T<sub>arrival</sub> &lt; T<sub>period</sub> - T<sub>setup</sub></p>
+        <p className="text-lg mb-6">If this condition is violated, a setup violation occurs, meaning the data arrives too late to be reliably captured. In such cases, the design cannot operate at the target frequency and must either be optimized or clocked more slowly.</p>
+        <p className="text-lg mb-6">STA also verifies hold time requirements, which ensure that data does not arrive too early. Specifically, the data must remain stable for a minimum duration after the clock edge so that the previous state is not overwritten before it is safely latched:</p>
+        <p className="text-lg mb-6 font-mono text-center py-4 bg-gray-50 rounded">T<sub>arrival</sub> &gt; T<sub>hold</sub></p>
+        <p className="text-lg mb-6">Unlike setup violations, which can often be resolved by reducing the clock frequency, hold violations are independent of clock speed and represent a fundamental timing flaw. FPGA tools address these by intentionally increasing delay on overly fast paths, typically by inserting routing detours, to ensure the minimum hold time is satisfied.</p>
+        <p className="text-lg mb-6">By exhaustively checking both setup and hold conditions across all timing paths, static timing analysis provides a deterministic guarantee that the implemented circuit will function correctly under worst-case conditions, making it a cornerstone of reliable FPGA design.</p>
+
+        <h3 id="bitstream-generation" className="text-xl font-medium mt-6 mb-3">10.5 Bitstream Generation</h3>
+        <p className="text-lg mb-6">The final stage of the design workflow is the bitstream generation. At this point, the fully placed and routed design is converted into a binary configuration file. This file contains the values for every configuration memory cell in the FPGA, defining the LUT's truth tables, routing switch states, memory modes, and I/O standards.</p>
+        <p className="text-lg mb-6">When the FPGA powers up, the bitstream is loaded into the Configuration RAM. This process physically configures the device, instantiating the custom digital circuit described by the HDL. From that moment onward, the FPGA behaves as a dedicated hardware implementation of the design until it is reconfigured or powered down.</p>
+
+        <h2 id="concluding-thoughts" className="text-2xl font-medium mt-8 mb-4">Concluding Thoughts</h2>
+        <p className="text-lg mb-6">Writing this gave me a much deeper appreciation for how FPGAs are engineered at a fundamental level. Rather than viewing them as abstract programmable logic, exploring their internal structure revealed how performance in an FPGA is achieved through deliberate architectural choices that balance flexibility, speed, and silicon cost.</p>
+        <p className="text-lg mb-6">Understanding these trade-offs shifted my perspective from writing logic to analyzing hardware behavior and design intent. I continue to explore this curiosity through ongoing work in machine learning infrastructure, low-level systems, and chip design. See more at <button onClick={() => { window.location.href = '/'; }} className="inline-block px-2 py-0 rounded-full bg-[#fce7f3] text-[#1a1a1a] font-medium hover:bg-[#f9d4e8] transition-colors duration-200 border border-[#1a1a1a]/20 shadow-sm cursor-pointer">priyaltaneja.com</button>.</p>
+        <p className="text-lg mb-6"><strong>Thank you for reading all the way through.</strong> This article is the result of many hours spent learning, researching, and refining my understanding of FPGA architecture, and I appreciate you taking the time to engage with it.</p>
+      </>
+    ),
+  },
   // Placeholder for future articles
 ];
 
 const ArticleDetail = ({ onNavigate }) => {
   
-  // Get article slug from hash, e.g., #article-unlearning-perfectionism
-  const slug = window.location.hash.replace('#article-', '');
+  // Get article slug from pathname, e.g., /article-unlearning-perfectionism or /understanding-field-programmable-gate-arrays-fpgas-from-first-principles
+  const path = window.location.pathname;
+  const pathWithoutSlash = path.startsWith('/') ? path.substring(1) : path;
+  // Remove 'article-' prefix if present (case-insensitive) and normalize to lowercase
+  const slug = pathWithoutSlash.replace(/^article-/i, '').toLowerCase();
   const idx = findArticleBySlug(articles, slug);
   const article = articles[idx];
 
+  // Check if this is the FPGA article
+  const isFPGAArticle = article && slugify(article.title) === slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles');
+
   if (!article) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#121212] transition-colors duration-300">
-        <div className="text-center text-black dark:text-white transition-colors duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#121212] transition-colors duration-200">
+        <div className="text-center text-black dark:text-white transition-colors duration-200">
           <h2 className="text-2xl font-bold mb-4">Article not found</h2>
-          <button onClick={() => onNavigate('writing')} className="text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-300">Back to Writing</button>
+          <button onClick={() => onNavigate('writing')} className="text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200">Back to Writing</button>
         </div>
       </div>
     );
   }
 
+  // Custom theme for FPGA article
+  const bgColor = isFPGAArticle ? 'bg-[#f5efeb]' : 'bg-white dark:bg-[#000000]';
+  const textColor = isFPGAArticle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
+  const titleColor = isFPGAArticle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
+
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-300">
-      <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
-        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-300">
+    <div className={`min-h-screen w-full ${bgColor} transition-colors duration-200`}>
+      <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: isFPGAArticle ? 'Lora, serif' : 'Georgia, serif' }}>
+        {article.quote && (
+        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 text-black dark:text-white hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200">
           <ArrowLeft size={24} /> Back to Writing
         </button>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl mb-4 text-black dark:text-white transition-colors duration-300">{article.title}</h1>
-        <div className="text-gray-500 dark:text-gray-400 text-lg mb-8 transition-colors duration-300">{article.date}</div>
-        <hr className="border-t border-pink-100 dark:border-[#FF69B4] mb-8 transition-colors duration-300" />
+        )}
+        <div className={isFPGAArticle ? 'mt-8' : ''}>
+          <h1 className={`text-xl sm:text-2xl md:text-3xl mb-4 ${titleColor} transition-colors duration-200 ${isFPGAArticle ? 'max-w-5xl' : ''}`}>{article.title}</h1>
+          {isFPGAArticle && (
+            <>
+            <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
+              <span className="text-sm italic">By: Priyal Taneja</span>
+                <span className="text-[#1a1a1a]">|</span>
+                <div className="flex items-center gap-1.5">
+                  <Clock size={14} className="text-[#1a1a1a]" />
+                  <span className="text-sm">30 min read</span>
+                </div>
+              <span className="text-[#1a1a1a]">|</span>
+              <div className="flex items-center space-x-3">
+                <a 
+                  href="https://www.linkedin.com/in/priyaltaneja/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[#1a1a1a] hover:text-[#1a1a1a]/70 transition-colors duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedinIn size={16} />
+                </a>
+                <a 
+                  href="https://x.com/TanejaPriyal" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[#1a1a1a] hover:text-[#1a1a1a]/70 transition-colors duration-200"
+                  aria-label="Twitter"
+                >
+                  <RiTwitterXFill size={16} />
+                </a>
+              </div>
+            </div>
+            </>
+          )}
+        </div>
+        {article.date && (
+        <div className="text-gray-500 dark:text-gray-400 text-lg mb-8 transition-colors duration-200">{article.date}</div>
+        )}
+        {article.quote && (
+          <>
+        <hr className="border-t border-pink-100 dark:border-[#FF69B4] mb-8 transition-colors duration-200" />
         <div className="italic text-xl text-pink-500 dark:text-[#FF69B4] mb-8">{article.quote}</div>
-        <div className="prose prose-lg max-w-none mb-8 text-black dark:text-white transition-colors duration-300">
+          </>
+        )}
+        {isFPGAArticle && (
+          <div className={`mb-12 pb-8 border-b border-gray-300 ${textColor}`}>
+            <h2 className={`text-xl font-medium mb-4 ${textColor}`}>Table of Contents</h2>
+            <ul className="space-y-2">
+              <li>
+                <a 
+                  href="#introduction" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('introduction');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  1. Introduction & Prerequisites
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#hardware-spectrum" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('hardware-spectrum');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  2. The Gap in the Hardware Spectrum
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#evolution-logic-chips" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('evolution-logic-chips');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      2.1  The Evolution of Logic Chips
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#why-fpgas" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('why-fpgas');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      2.2 - Why FPGAs? The Need for Reconfigurable Hardware
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#fpga-architectural-overview" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('fpga-architectural-overview');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  3. An Overview of an FPGA's Architecture
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#clb" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('clb');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  4. Configurable Logic Blocks (CLB)
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#luts" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('luts');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      4.1  Lookup Tables (LUTs)
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#flip-flops-registers" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('flip-flops-registers');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      4.2  Flip-Flops and Registers
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#carry-chains" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('carry-chains');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      4.3  Carry Chains
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#programmable-interconnect" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('programmable-interconnect');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  5. Programmable Interconnect
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#routing-channels" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('routing-channels');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      5.1  Routing Channels
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#switch-matrices" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('switch-matrices');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      5.2 - Switch Matrices
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#key-parameters" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('key-parameters');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      5.3  Key Parameters
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#memory-resources" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('memory-resources');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  6. Memory Resources
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#cram" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('cram');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      6.1 Configuration RAM (CRAM)
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#distributed-ram" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('distributed-ram');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      6.2  Distributed RAM
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#block-ram" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('block-ram');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      6.3 Block RAM (BRAM)
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#dsp-slices" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('dsp-slices');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  7. DSP Slices / Hardened Arithmetic Blocks
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#dsp-internal-structure" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('dsp-internal-structure');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      7.1  Internal Structure of a DSP Slice
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#pre-adder" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('pre-adder');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      7.2 The Role of the Pre-Adder
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#cascading-wide-arithmetic" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('cascading-wide-arithmetic');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      7.3  Cascading and Wide Arithmetic
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#io-transceivers" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('io-transceivers');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  8. I/O, Transceivers, and High-Speed Interfaces
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#io-blocks" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('io-blocks');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      8.1 I/O Blocks and Electrical Standards
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#differential-signaling" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('differential-signaling');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      8.2  Differential Signaling and LVDS
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#clocking-architecture" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('clocking-architecture');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  9. Clocking Architecture
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#global-clock-distribution" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('global-clock-distribution');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      9.1 Global Clock Distribution and Skew
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#clock-management" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('clock-management');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      9.2  Clock Management Blocks
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a 
+                  href="#hdl-to-hardware" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById('hdl-to-hardware');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`hover:underline ${textColor} transition-colors duration-200 cursor-pointer`}
+                >
+                  10. HDL-to-Hardware Flow
+                </a>
+                <ul className="ml-6 mt-2 space-y-1">
+                  <li>
+                    <a 
+                      href="#hardware-description-languages" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('hardware-description-languages');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      10.1 Hardware Description Languages
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#synthesis" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('synthesis');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      10.2  Synthesis
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#placement-routing" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('placement-routing');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      10.3  Placement and Routing
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#static-timing-analysis" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('static-timing-analysis');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      10.4 Static Timing Analysis
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#bitstream-generation" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('bitstream-generation');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className={`hover:underline ${textColor} transition-colors duration-200 text-base cursor-pointer`}
+                    >
+                      10.5  Bitstream Generation
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        )}
+        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-colors duration-200`}>
           {React.cloneElement(article.content, {
-            className: 'text-black dark:text-white transition-colors duration-300'
+            className: `${textColor} transition-colors duration-200`
           })}
         </div>
       </div>
