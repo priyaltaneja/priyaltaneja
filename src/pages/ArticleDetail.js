@@ -632,7 +632,7 @@ const articles = [
 
         <h3 id="routing-channels" className="text-xl font-medium mt-6 mb-3">5.1 Routing Channels</h3>
         <p className="text-lg mb-6">As previously established, the CLBs are arranged in a grid-like structure, with channels positioned in the rows and columns adjoining them. These channels are made up of fixed wire segments that provide predefined paths for signal transmission across the FPGA. Although the wires themselves remain static, their strategic placement allows for significant routing flexibility.</p>
-        <img src={process.env.PUBLIC_URL + "/images/Interconnect2.png"} alt="Interconnect routing channels" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={process.env.PUBLIC_URL + "/images/Interconnect2.PNG"} alt="Interconnect routing channels" className="w-full max-w-4xl mx-auto my-8" />
         <p className="text-lg mb-6">To connect one logic block to another, a signal must first exit the logic block pin, then enter the adjacent routing channel and traverse through the network to reach its destination. By leveraging the right combination of horizontal and vertical channels, each logic block is guaranteed a direct path to any other component on the board. When possible, data prioritizes the travel through local wires that connect neighbouring CLBs, to minimize delay. This grid-based layout provides the FPGA with both the reach and adaptability to implement circuits with varying complexity.</p>
 
         <h3 id="switch-matrices" className="text-xl font-medium mt-6 mb-3">5.2 Switch Matrices</h3>
