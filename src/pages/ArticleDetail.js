@@ -693,53 +693,53 @@ const articles = [
           <li className="text-lg"><strong>Performance:</strong> Because BRAMs are hard-wired custom blocks, they are significantly faster and denser than Distributed RAM. They often include built-in features like <strong>Error Correction Code (ECC)</strong> logic and output registers to maximize timing performance.</li>
         </ul>
 
-        <p className="text-lg mb-4 font-medium">Comparison of FPGA Memory Resources</p>
-        <div className="my-8 overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-300 text-lg">
+        <p className="text-lg mb-4 font-medium text-center">Comparison of Memory Resources</p>
+        <div className="my-8 overflow-x-auto flex justify-center">
+          <table className="border-collapse border border-gray-300 text-lg">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Feature</th>
-                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Flip-Flops (Registers)</th>
-                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Distributed RAM (LUT RAM)</th>
-                <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Block RAM (BRAM)</th>
+                <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Feature</th>
+                <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Flip-Flops (Registers)</th>
+                <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Distributed RAM (LUT RAM)</th>
+                <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Block RAM (BRAM)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Primary Use</td>
-                <td className="border border-gray-300 px-4 py-2">State machines, pipelines</td>
-                <td className="border border-gray-300 px-4 py-2">Small LUTs, coefficients, delay lines</td>
-                <td className="border border-gray-300 px-4 py-2">Data buffers, large FIFOs, caches</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Primary Use</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">State machines, pipelines</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Small LUTs, coefficients, delay lines</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Data buffers, large FIFOs, caches</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Bit Density</td>
-                <td className="border border-gray-300 px-4 py-2">Very Low</td>
-                <td className="border border-gray-300 px-4 py-2">Low</td>
-                <td className="border border-gray-300 px-4 py-2">High</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Bit Density</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Very Low</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Low</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">High</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Speed</td>
-                <td className="border border-gray-300 px-4 py-2">Ultra-High</td>
-                <td className="border border-gray-300 px-4 py-2">High</td>
-                <td className="border border-gray-300 px-4 py-2">High (with latency)</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Speed</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Ultra-High</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">High</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">High (with latency)</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Ports</td>
-                <td className="border border-gray-300 px-4 py-2">Single (D input, Q output)</td>
-                <td className="border border-gray-300 px-4 py-2">Single or Dual (Read/Write)</td>
-                <td className="border border-gray-300 px-4 py-2">True Dual Port (A & B)</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Ports</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Single (D input, Q output)</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Single or Dual (Read/Write)</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">True Dual Port (A & B)</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Resource Cost</td>
-                <td className="border border-gray-300 px-4 py-2">Uses Slice Register</td>
-                <td className="border border-gray-300 px-4 py-2">Uses Logic LUTs</td>
-                <td className="border border-gray-300 px-4 py-2">Uses Dedicated BRAM Column</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Resource Cost</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Uses Slice Register</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Uses Logic LUTs</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">Uses Dedicated BRAM Column</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2 font-medium">Ideal Size</td>
-                <td className="border border-gray-300 px-4 py-2">1 bit - 100 bits</td>
-                <td className="border border-gray-300 px-4 py-2">100 bits - 10 Kbits</td>
-                <td className="border border-gray-300 px-4 py-2">10 Kbits - Megabits</td>
+                <td className="border border-gray-300 px-4 py-2 font-medium text-center">Ideal Size</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">1 bit - 100 bits</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">100 bits - 10 Kbits</td>
+                <td className="border border-gray-300 px-4 py-2 text-center">10 Kbits - Megabits</td>
               </tr>
             </tbody>
           </table>
