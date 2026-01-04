@@ -693,6 +693,7 @@ const articles = [
           <li className="text-lg"><strong>Performance:</strong> Because BRAMs are hard-wired custom blocks, they are significantly faster and denser than Distributed RAM. They often include built-in features like <strong>Error Correction Code (ECC)</strong> logic and output registers to maximize timing performance.</li>
         </ul>
 
+        <p className="text-lg mb-4 font-medium">Comparison of FPGA Memory Resources</p>
         <div className="my-8 overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-300 text-lg">
             <thead>
