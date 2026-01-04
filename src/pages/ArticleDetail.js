@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock, Download } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock, Download, ArrowUp } from 'lucide-react';
 import { FaLinkedinIn } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { findArticleBySlug, slugify } from '../utils/slugify';
@@ -1471,6 +1471,18 @@ const ArticleDetail = ({ onNavigate }) => {
           {React.cloneElement(article.content, {
             className: `${textColor} transition-colors duration-200`
           })}
+        </div>
+        <div className="flex justify-center mt-12 mb-8">
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className={`flex items-center gap-2 text-lg ${textColor} hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200 cursor-pointer`}
+            aria-label="Back to the top"
+          >
+            <ArrowUp size={16} />
+            <span>Back to the Top</span>
+          </button>
         </div>
       </div>
     </div>
