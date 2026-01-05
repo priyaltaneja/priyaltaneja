@@ -176,11 +176,11 @@ const Portfolio = ({ onNavigate, currentPage }) => {
                       <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 text-black dark:text-white transition-colors duration-200" style={{...georgiaStyle, lineHeight: '1.2'}}>
             <div className="whitespace-nowrap mb-2">
                               <span>engineer exploring </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">human-centered AI</span>
+                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">ml systems</span>
             </div>
-            <div>
-                              <span>and designing meaningful </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">products</span>
+            <div className="whitespace-nowrap">
+                <span>and </span>
+                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">hardware / software codesign</span>
             </div>
           </p>
           
