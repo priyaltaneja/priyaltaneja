@@ -14,6 +14,9 @@ const Projects = ({ onNavigate }) => {
 
   useEffect(() => {
     setIsLoaded(true);
+    // Preload the first project image (FPGA image)
+    const fpgaImage = new Image();
+    fpgaImage.src = process.env.PUBLIC_URL + "/images/FPGA.png";
   }, []);
 
   // Close dropdown on outside click
@@ -264,6 +267,8 @@ const Projects = ({ onNavigate }) => {
                       src={project.image}
                       alt={project.title}
                       className="w-full h-48 object-cover rounded-t-2xl"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
                     />
                     {/* Subtle overlay */}
                     <div className="absolute inset-0 rounded-t-2xl" style={{ background: 'rgba(0,0,0,0.18)' }} />
