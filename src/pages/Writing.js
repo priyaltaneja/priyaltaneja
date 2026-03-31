@@ -41,12 +41,13 @@ const articles = [
             data-substack-embed="https://fieldnotesbypriyal.substack.com/embed"
             data-substack-domain="fieldnotesbypriyal.substack.com"
           >
-            <iframe 
-              src="https://fieldnotesbypriyal.substack.com/embed" 
-              width="100%" 
-              height="320" 
+            <iframe
+              title="Subscribe to Field Notes by Priyal"
+              src="https://fieldnotesbypriyal.substack.com/embed"
+              width="100%"
+              height="320"
               style={{border: '1px solid #EEE', background: 'white', borderRadius: '8px'}}
-              frameBorder="0" 
+              frameBorder="0"
               scrolling="no"
             />
           </div>

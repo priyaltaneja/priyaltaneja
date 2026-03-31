@@ -116,10 +116,11 @@ const GalleryStrip = ({ isVertical }) => {
 
   useEffect(() => {
     if (!ready) return;
-    scrollState.current.rafId = requestAnimationFrame(animate);
+    const s = scrollState.current;
+    s.rafId = requestAnimationFrame(animate);
     return () => {
-      if (scrollState.current.rafId) {
-        cancelAnimationFrame(scrollState.current.rafId);
+      if (s.rafId) {
+        cancelAnimationFrame(s.rafId);
       }
     };
   }, [animate, ready]);

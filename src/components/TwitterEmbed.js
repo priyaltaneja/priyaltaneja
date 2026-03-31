@@ -18,7 +18,7 @@ const TwitterEmbed = ({ tweetUrl }) => {
   return (
     <div ref={ref} className="flex justify-center">
       <blockquote className="twitter-tweet">
-        <a href={tweetUrl}></a>
+        <a href={tweetUrl} aria-label="View tweet">Tweet</a>
       </blockquote>
     </div>
   );
