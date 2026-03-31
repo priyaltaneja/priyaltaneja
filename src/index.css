@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -12,10 +16,6 @@ code {
     monospace;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 html, body {
   overflow-x: hidden;
   overflow-y: auto;
@@ -29,11 +29,11 @@ html, body {
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
   --border-color: #e5e7eb;
-  --accent-pink: #ec4899;
-  --accent-pink-light: #fce7f3;
-  --accent-pink-hover: #be185d;
+  --accent: #9ca3af;
+  --accent-light: #f3f4f6;
+  --accent-hover: #6b7280;
   --social-bg: #f3f4f6;
-  --social-hover: #fce7f3;
+  --social-hover: #e5e7eb;
 }
 
 .dark {
@@ -43,40 +43,142 @@ html, body {
   --text-secondary: #cccccc;
   --text-muted: #9ca3af;
   --border-color: #374151;
-  --accent-pink: #ec4899;
-  --accent-pink-light: #831843;
-  --accent-pink-hover: #be185d;
+  --accent: #9ca3af;
+  --accent-light: rgba(255, 255, 255, 0.1);
+  --accent-hover: #d1d5db;
   --social-bg: #374151;
-  --social-hover: #831843;
+  --social-hover: rgba(255, 255, 255, 0.1);
 }
 
 /* Apply theme colors */
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  /* Optimized transitions for Safari */
-  transition: background-color 0.2s ease-out, color 0.2s ease-out;
-  /* Safari-specific optimizations */
-  -webkit-transition: background-color 0.2s ease-out, color 0.2s ease-out;
-  /* Force hardware acceleration for smoother transitions */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Remove global transitions to prevent Safari performance issues */
-/* Individual components will handle their own transitions */
 
-/* Safari-specific optimizations for theme switching */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .dark {
-    /* Force repaint for Safari */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-  
-  /* Optimize text rendering during transitions */
-  body, * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+/* Glass gradient text effect for hover/active states */
+.glass-text {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(255, 255, 255, 0.05);
 }
+
+/* Glassmorphism highlight */
+.glass-highlight {
+  position: relative;
+  display: inline;
+  padding: 1px 5px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  font-size: inherit;
+  line-height: inherit;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.glass-highlight::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 8px;
+  background: radial-gradient(circle at 20% 0%, rgba(0, 0, 0, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.dark .glass-highlight {
+  background:
+    linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 65%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 100% 0, 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 8px 16px -4px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  animation: glass-shimmer 5s ease-in-out infinite;
+}
+
+.dark .glass-highlight::before {
+  display: none;
+}
+
+@keyframes glass-shimmer {
+  0% { background-position: 100% 0, 0 0; }
+  50% { background-position: 0% 0, 0 0; }
+  100% { background-position: 100% 0, 0 0; }
+}
+
+/* Sweep hover: color sweeps left-to-right */
+.text-sweep {
+  background: linear-gradient(to right, rgba(255,255,255,1) 50%, rgba(255,255,255,0.6) 50%);
+  background-size: 200% 100%;
+  background-position: right;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.35s ease;
+}
+.text-sweep:hover {
+  background-position: left;
+}
+
+/* Sweep triggered by parent .group hover */
+.text-sweep-group {
+  background: linear-gradient(to right, rgba(255,255,255,1) 50%, rgba(255,255,255,0.6) 50%);
+  background-size: 200% 100%;
+  background-position: right;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.35s ease;
+}
+.group:hover .text-sweep-group {
+  background-position: left;
+}
+
+/* Sweep for glass-text links (glow base → full white) */
+.text-sweep-glass {
+  background: linear-gradient(to right, rgba(255,255,255,1) 50%, rgba(255,255,255,0.6) 50%);
+  background-size: 200% 100%;
+  background-position: right;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(255, 255, 255, 0.05);
+  transition: background-position 0.35s ease;
+}
+.text-sweep-glass:hover {
+  background-position: left;
+}
+
+/* Sweep for icons (opacity mask slide) */
+.icon-sweep {
+  color: rgba(255,255,255,0.6);
+  mask-image: linear-gradient(to right, white 50%, rgba(255,255,255,0.6) 50%);
+  -webkit-mask-image: linear-gradient(to right, white 50%, rgba(255,255,255,0.6) 50%);
+  mask-size: 200% 100%;
+  -webkit-mask-size: 200% 100%;
+  mask-position: right;
+  -webkit-mask-position: right;
+  transition: mask-position 0.35s ease, -webkit-mask-position 0.35s ease, color 0.35s ease;
+}
+.icon-sweep:hover {
+  color: white;
+  mask-position: left;
+  -webkit-mask-position: left;
+}
+

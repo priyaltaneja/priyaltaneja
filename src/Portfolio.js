@@ -1,264 +1,388 @@
-import { useState } from 'react';
-import {FaLinkedinIn,FaGithub} from 'react-icons/fa';
-import {MdOutlineEmail} from 'react-icons/md';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
+import { MdOutlineEmail } from 'react-icons/md';
 import { RiTwitterXFill } from "react-icons/ri";
+import { ArrowUpRight } from 'lucide-react';
 
-const Portfolio = ({ onNavigate, currentPage }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [exitingSlide, setExitingSlide] = useState(null);
+const IMAGES = [
+  "/images/Priyal3.jpeg",
+  "/images/SF.jpeg",
+  "/images/Circuit.jpeg",
+  "/images/Robot.jpeg",
+  "/images/BearWithMe.jpeg",
+  "/images/Arizona.jpeg",
+];
 
-  const georgiaStyle = {
-    fontFamily: 'Georgia, serif'
-  };
+const CARD_WIDTH = 200;
+const CARD_HEIGHT = 265;
+const AUTO_SCROLL_SPEED = 0.5;
 
-  const handleClick = () => {
-    if (!isAnimating) {
-      setIsAnimating(true);
-      
-      if (currentSlide === 2) {
-        // Reset animation with smooth sliding for first two polaroids only
-        document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
-          if (index < 2) { // Only move first two polaroids
-            polaroid.style.transform = 'translate(-120%, 120%) rotate(-15deg)';
-            polaroid.style.transition = 'none';
-            polaroid.style.opacity = '0';
-          }
-        });
-        
-        // Force reflow
-        void document.body.offsetHeight;
-        
-        // Clear exiting state and update current slide
-        setExitingSlide(null);
-        setCurrentSlide(0);
-        
-        // Animate back to original positions
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
-            if (index < 2) { // Only animate first two polaroids
-              polaroid.style.transition = 'all 0.5s cubic-bezier(0.2, 0, 0.1, 1)';
-              polaroid.style.transitionDelay = `${index * 100}ms`;
-              polaroid.style.transform = '';
-              polaroid.style.opacity = '1';
-            }
-          });
-        });
+const useIsDesktop = () => {
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 768);
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  return isDesktop;
+};
 
-        // Cleanup
-        setTimeout(() => {
-          document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
-            if (index < 2) { // Only cleanup first two polaroids
-              polaroid.style.transition = '';
-              polaroid.style.transitionDelay = '';
-              polaroid.style.transform = '';
-              polaroid.style.opacity = '';
-            }
-          });
-          setIsAnimating(false);
-        }, 800);
+const GalleryStrip = ({ isVertical }) => {
+  const stripRef = useRef(null);
+  const viewportRef = useRef(null);
+  const isVerticalRef = useRef(isVertical);
+  const [ready, setReady] = useState(false);
+  const firstFrameDone = useRef(false);
+
+  useEffect(() => {
+    let loaded = 0;
+    IMAGES.forEach((src) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loaded++;
+        if (loaded === IMAGES.length) setReady(true);
+      };
+      img.src = process.env.PUBLIC_URL + src;
+    });
+  }, []);
+
+  const scrollState = useRef({
+    currentScroll: 0,
+    targetScroll: 0,
+    isDragging: false,
+    lastPos: 0,
+    velocity: 0,
+    rafId: null,
+  });
+
+  // Reset scroll state when orientation changes
+  useEffect(() => {
+    if (isVerticalRef.current !== isVertical) {
+      isVerticalRef.current = isVertical;
+      const s = scrollState.current;
+      s.currentScroll = 0;
+      s.targetScroll = 0;
+      s.velocity = 0;
+    }
+  }, [isVertical]);
+
+  const animate = useCallback(() => {
+    const s = scrollState.current;
+    const vertical = isVerticalRef.current;
+
+    if (!s.isDragging) {
+      s.targetScroll += s.velocity;
+      s.velocity *= 0.95;
+      s.targetScroll += AUTO_SCROLL_SPEED;
+    }
+
+    s.currentScroll += (s.targetScroll - s.currentScroll) * 0.1;
+
+    const cards = stripRef.current?.children;
+    if (!cards) return;
+
+    const CARD_SIZE = vertical ? CARD_HEIGHT : CARD_WIDTH;
+    const totalSetSize = IMAGES.length * CARD_SIZE;
+    const viewDimension = vertical ? window.innerHeight : window.innerWidth;
+
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      let virtualIndex = i * CARD_SIZE - s.currentScroll;
+
+      while (virtualIndex < -totalSetSize / 2) virtualIndex += totalSetSize;
+      while (virtualIndex > totalSetSize / 2) virtualIndex -= totalSetSize;
+
+      if (Math.abs(virtualIndex) < viewDimension) {
+        card.style.display = 'block';
+        const progress = virtualIndex / (viewDimension / 1.5);
+        const depth = -Math.pow(Math.abs(progress), 2) * (vertical ? 350 : 500);
+        const rotation = progress * (vertical ? 35 : 45);
+        const opacity = String(Math.max(0, 1 - Math.pow(Math.abs(progress), 1.8)));
+
+        if (vertical) {
+          card.style.transform = `translateY(${virtualIndex}px) translateZ(${depth}px) rotateX(${-rotation}deg)`;
+        } else {
+          card.style.transform = `translateX(${virtualIndex}px) translateZ(${depth}px) rotateY(${rotation}deg)`;
+        }
+        card.style.opacity = opacity;
       } else {
-        // Normal progression
-        const newSlide = (currentSlide + 1) % 3;
-        setExitingSlide(currentSlide);
-        
-        requestAnimationFrame(() => {
-          setCurrentSlide(newSlide);
-        });
-
-        setTimeout(() => {
-          setExitingSlide(null);
-          setIsAnimating(false);
-        }, 500);
+        card.style.display = 'none';
       }
     }
-  };
 
+    if (!firstFrameDone.current) firstFrameDone.current = true;
+    s.rafId = requestAnimationFrame(animate);
+  }, []);
 
+  useEffect(() => {
+    if (!ready) return;
+    scrollState.current.rafId = requestAnimationFrame(animate);
+    return () => {
+      if (scrollState.current.rafId) {
+        cancelAnimationFrame(scrollState.current.rafId);
+      }
+    };
+  }, [animate, ready]);
+
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    const s = scrollState.current;
+
+    const getPos = (e) => isVerticalRef.current ? e.clientY : e.clientX;
+    const getTouchPos = (e) => isVerticalRef.current ? e.touches[0].clientY : e.touches[0].clientX;
+
+    const onMouseDown = (e) => {
+      s.isDragging = true;
+      s.lastPos = getPos(e);
+      s.velocity = 0;
+      vp.style.cursor = 'grabbing';
+    };
+    const onMouseUp = () => {
+      s.isDragging = false;
+      if (vp) vp.style.cursor = 'grab';
+    };
+    const onMouseMove = (e) => {
+      if (!s.isDragging) return;
+      const pos = getPos(e);
+      const delta = pos - s.lastPos;
+      s.lastPos = pos;
+      s.targetScroll -= delta * 1.5;
+      s.velocity = -delta * 0.5;
+    };
+    const onTouchStart = (e) => {
+      s.isDragging = true;
+      s.lastPos = getTouchPos(e);
+      s.velocity = 0;
+    };
+    const onTouchEnd = () => { s.isDragging = false; };
+    const onTouchMove = (e) => {
+      if (!s.isDragging) return;
+      const pos = getTouchPos(e);
+      const delta = pos - s.lastPos;
+      s.lastPos = pos;
+      s.targetScroll -= delta * 1.5;
+      s.velocity = -delta * 0.5;
+    };
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      const delta = isVerticalRef.current ? e.deltaY : (e.deltaY || e.deltaX);
+      s.targetScroll += delta * 1.2;
+      s.velocity = delta * 0.3;
+    };
+
+    vp.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('mousemove', onMouseMove);
+    vp.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    vp.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => {
+      vp.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      vp.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchmove', onTouchMove);
+      vp.removeEventListener('wheel', onWheel);
+    };
+  }, []);
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-white dark:bg-[#000000] overflow-hidden transition-colors duration-200">
-      <style>
-        {`
-          .carousel-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-            position: relative;
+    <div
+      ref={viewportRef}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        perspective: '1200px',
+        overflow: 'visible',
+        cursor: 'grab',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...(isVertical ? {} : { width: '100vw', marginLeft: 'calc(-50vw + 50%)' }),
+      }}
+    >
+      <style>{`
+        .gallery-card {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 140px;
+          height: 180px;
+          margin-left: -70px;
+          margin-top: -90px;
+          opacity: 0;
+          background: transparent;
+          border-radius: 6px;
+          transform-style: preserve-3d;
+          will-change: transform, opacity;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+          transition: box-shadow 0.4s ease;
+        }
+        @media (min-width: 640px) {
+          .gallery-card {
+            width: 160px;
+            height: 205px;
+            margin-left: -80px;
+            margin-top: -102px;
           }
+        }
+        @media (min-width: 768px) {
+          .gallery-card {
+            width: 165px;
+            height: 220px;
+            margin-left: -82px;
+            margin-top: -110px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .gallery-card {
+            width: 180px;
+            height: 240px;
+            margin-left: -90px;
+            margin-top: -120px;
+          }
+        }
+        .gallery-card:hover {
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+          z-index: 1000 !important;
+        }
+        .gallery-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          border-radius: 6px;
+          filter: grayscale(20%) contrast(95%);
+          pointer-events: none;
+          user-select: none;
+        }
+      `}</style>
+      <div
+        ref={stripRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
+        }}
+      >
+        {IMAGES.map((src, index) => (
+          <div key={src} className="gallery-card" data-index={index}>
+            <img
+              src={process.env.PUBLIC_URL + src}
+              alt=""
+              draggable={false}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-          .carousel-wrapper {
-            position: relative;
-            width: 300px;
-            height: 480px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-          }
+const Portfolio = ({ onNavigate, animateIntro = false }) => {
+  const isDesktop = useIsDesktop();
+  const [isLoaded, setIsLoaded] = useState(() => !animateIntro);
 
-          .polaroid {
-            position: absolute;
-            width: 100%;
-            height: auto;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: center;
-            will-change: transform, opacity;
-          }
+  useEffect(() => {
+    if (animateIntro) {
+      setIsLoaded(true);
+    }
+  }, [animateIntro]);
 
-          /* Initial stacked position */
-          .polaroid:nth-child(1) {
-            transform: rotate(-5deg) translateY(-8px);
-            z-index: 2;
-          }
+  return (
+    <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
 
-          .polaroid:nth-child(2) {
-            transform: rotate(0deg);
-            z-index: 1;
-          }
+      {/* Main content area — absolute to fill entire viewport, centered ignoring nav */}
+      <div className="absolute inset-0 z-10 flex flex-col md:flex-row">
+        {/* Left column — identity + about */}
+        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col justify-center px-8 sm:px-12 md:px-14 lg:px-20 py-12 md:py-0 md:-mt-12">
+          {/* Name */}
+          <h1
+            className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          >
+            Priyal Taneja
+          </h1>
 
-          .polaroid:nth-child(3) {
-            transform: rotate(5deg) translateY(8px);
-            z-index: 0;
-          }
-
-          /* Active states */
-          .polaroid.exit {
-            transform: translate(-120%, 120%) rotate(-15deg);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 30;
-          }
-
-          .polaroid.top {
-            transform: rotate(0deg) translateY(0);
-            z-index: 20;
-          }
-
-          .polaroid.middle {
-            transform: rotate(-3deg) translateY(-4px);
-            z-index: 10;
-          }
-
-          .polaroid.bottom {
-            transform: rotate(3deg) translateY(4px);
-            z-index: 0;
-          }
-
-          /* Quick transition for reset */
-          .polaroid.quick-reset {
-            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-          }
-
-          .polaroid img {
-            width: 100%;
-            height: auto;
-            display: block;
-            image-rendering: -webkit-optimize-contrast;
-          }
-
-          @media (max-width: 768px) {
-            .carousel-wrapper {
-              width: 240px;
-              height: 384px;
-            }
-          }
-        `}
-      </style>
-      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gap-8 md:gap-0 py-8 md:py-0">
-        {/* Left side content */}
-        <div className="flex flex-col items-center justify-center text-center w-full md:w-1/2 md:pl-12 lg:pl-16">
-          <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl italic mb-6 md:mb-8 whitespace-nowrap text-black dark:text-white transition-colors duration-200" style={georgiaStyle}>Priyal Taneja</h1>
-          
-                      <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mb-6 text-black dark:text-white transition-colors duration-200" style={{...georgiaStyle, lineHeight: '1.2'}}>
-            <div className="whitespace-nowrap mb-2">
-                              <span>engineer exploring </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">ml systems</span>
-            </div>
-            <div className="whitespace-nowrap">
-                <span>and </span>
-                <span className="bg-pink-100 dark:bg-[#FF69B4]/60 px-1 rounded transition-colors duration-200 text-black dark:text-white">hardware / software codesign</span>
-            </div>
+          {/* Tagline */}
+          <p
+            className={`text-sm md:text-base text-zinc-400 font-light leading-relaxed mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          >
+            systems thinker curious about{' '}
+            <span className="glass-highlight text-black dark:text-white">ml infrastructure</span>{' '}
+            and{' '}
+            <span className="glass-highlight text-black dark:text-white">hardware / software codesign</span>
           </p>
-          
-          {/* Navigation */}
-          <nav className="mb-2">
-            <ul className="flex space-x-8 md:space-x-10 text-lg sm:text-xl md:text-xl lg:text-2xl justify-center text-black dark:text-white" style={georgiaStyle}>
+
+          {/* Social icons */}
+          <div
+            className={`flex space-x-2 mt-5 transition-opacity duration-700 delay-[250ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="GitHub">
+              <FaGithub size={18} />
+            </a>
+            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="Twitter">
+              <RiTwitterXFill size={18} />
+            </a>
+            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="LinkedIn">
+              <FaLinkedinIn size={18} />
+            </a>
+            <a href="mailto:priyaltaneja15@gmail.com" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="Email">
+              <MdOutlineEmail size={20} />
+            </a>
+          </div>
+
+          {/* Thin separator */}
+          <div
+            className={`w-10 h-px bg-white/20 mt-7 mb-7 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'} origin-left`}
+          />
+
+          {/* Currently up to */}
+          <div
+            className={`transition-opacity duration-700 delay-[350ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <h2 className="text-lg font-serif italic tracking-tight leading-tight mb-3 text-black dark:text-white">
+              currently...
+            </h2>
+            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-sm md:text-base font-light leading-relaxed">
               <li>
-                <button 
-                  onClick={() => onNavigate('about')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
-                >
-                  about
-                </button>
+                <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
+                <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
+                  mcmaster university <ArrowUpRight size={12} className="text-white/25" />
+                </a>
               </li>
               <li>
-                <button 
-                  onClick={() => onNavigate('projects')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
-                >
-                  projects
-                </button>
+                <span className="glass-highlight text-black dark:text-white">research engineer</span> @{' '}
+                <a href="https://e3group.ai" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
+                  e3 <ArrowUpRight size={12} className="text-white/25" />
+                </a>
               </li>
               <li>
-                <button 
-                  onClick={() => onNavigate('writing')}
-                  className="hover:text-pink-500 dark:hover:text-[#FF69B4] transition-colors duration-200"
-                >
-                  writing
-                </button>
+                writing about the <span className="glass-highlight text-black dark:text-white">startup / VC ecosystem</span> @{' '}
+                <a href="http://thecollectiveny.com/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
+                  the collective <ArrowUpRight size={12} className="text-white/25" />
+                </a>
               </li>
             </ul>
-          </nav>
-          
-          {/* Social Icons */}
-          <div className="flex space-x-4 mt-2 justify-center">
-            <a href="mailto:priyaltaneja15@gmail.com" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="Email">
-              <MdOutlineEmail size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
-            </a>
-            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="LinkedIn">
-              <FaLinkedinIn size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
-            </a>
-            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="Twitter">
-              <RiTwitterXFill size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
-            </a>
-            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="bg-gray-200 dark:bg-gray-700 p-2.5 md:p-3 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200" aria-label="GitHub">
-              <FaGithub size={18} className="md:w-5 md:h-5 text-gray-700 dark:text-gray-300 transition-colors duration-200" />
-            </a>
           </div>
         </div>
-        
-        {/* Right side image carousel */}
-        <div className="w-full md:w-1/2 flex justify-center items-center h-full">
-          <div className="relative w-[220px] h-[290px] sm:w-[260px] sm:h-[330px] md:w-[340px] md:h-[410px] flex items-center justify-center">
-            <div className="carousel-container">
-              <div className="carousel-wrapper" onClick={handleClick}>
-                <div className={`polaroid ${
-                  exitingSlide === 0 ? 'exit' :
-                  currentSlide === 0 ? 'top' : 'exit'
-                } ${currentSlide === 2 ? 'quick-reset' : ''}`}>
-                  <img src="/images/polaroid1.png" alt="Polaroid 1" />
-                </div>
-                <div className={`polaroid ${
-                  exitingSlide === 1 ? 'exit' :
-                  currentSlide === 0 ? 'middle' :
-                  currentSlide === 1 ? 'top' : 'exit'
-                } ${currentSlide === 2 ? 'quick-reset' : ''}`}>
-                  <img src="/images/polaroid2.png" alt="Polaroid 2" />
-                </div>
-                <div className={`polaroid ${
-                  currentSlide === 0 ? 'bottom' :
-                  currentSlide === 1 ? 'middle' :
-                  currentSlide === 2 ? 'top' : ''
-                } ${currentSlide === 2 ? 'quick-reset' : ''}`}>
-                  <img src="/images/polaroid3.png" alt="Polaroid 3" />
-                </div>
-              </div>
-            </div>
-          </div>
+
+        {/* Right column — carousel */}
+        <div
+          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'h-[300px] sm:h-[350px]'} relative overflow-hidden`}
+          style={{
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+          }}
+        >
+          <GalleryStrip isVertical={isDesktop} />
         </div>
       </div>
     </div>

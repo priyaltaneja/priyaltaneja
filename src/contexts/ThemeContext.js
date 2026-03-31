@@ -11,52 +11,13 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Check localStorage first
-    const saved = localStorage.getItem('theme');
-    if (saved) {
-      return saved === 'dark';
-    }
-    // Default to light mode regardless of system preference
-    return false;
-  });
+  const isDarkMode = true;
 
   useEffect(() => {
-    // Update localStorage when theme changes
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    
-    // Update document class for CSS custom properties
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
-  // Listen for system preference changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => {
-      // Only update if user hasn't manually set a preference
-      if (!localStorage.getItem('theme')) {
-        setIsDarkMode(e.matches);
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    document.documentElement.classList.add('dark');
   }, []);
 
-  const toggleTheme = () => {
-    // Safari optimization: Use requestAnimationFrame for smoother transitions
-    if (window.requestAnimationFrame) {
-      requestAnimationFrame(() => {
-        setIsDarkMode(prev => !prev);
-      });
-    } else {
-      setIsDarkMode(prev => !prev);
-    }
-  };
+  const toggleTheme = () => {};
 
   const value = {
     isDarkMode,

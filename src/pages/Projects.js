@@ -1,345 +1,157 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, X, Info, FileText } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { PenLine } from 'lucide-react';
 import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
-import { LuPresentation } from 'react-icons/lu';
-import { slugify } from '../utils/slugify';
+
+const PROJECTS = [
+  {
+    title: "Understanding FPGAs from First Principles",
+    description: "a deep dive into how FPGAs work â€” from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
+    image: process.env.PUBLIC_URL + "/images/FPGA.jpg",
+    links: [
+      {
+        url: `/understanding-fpgas-from-first-principles`,
+        icon: PenLine,
+        label: "Read",
+        internal: true,
+      }
+    ]
+  },
+  {
+    title: "NextScholar",
+    description: "a chrome extension that helps students find and compare universities. full-stack app with a focus on clean UX and fast search.",
+    image: process.env.PUBLIC_URL + "/images/NextScholarImage.png",
+    links: [
+      {
+        url: "https://chromewebstore.google.com/detail/nextscholar/ndohegljfodihdiaopgalhlinaamcfbj",
+        icon: FaChrome,
+        label: "Chrome Store",
+      }
+    ]
+  },
+  {
+    title: "Semantic Search Engine",
+    description: "built a search engine that understands meaning, not just keywords. uses embeddings and cosine similarity to rank results by semantic relevance.",
+    image: process.env.PUBLIC_URL + "/images/SemanticSearchImage.png",
+    links: [
+      {
+        url: "https://priyaltaneja.medium.com/from-query-to-meaning-reshaping-the-landscape-of-google-search-results-through-semantic-search-7f5aa02ebc65",
+        icon: FaMediumM,
+        label: "Medium",
+      }
+    ]
+  },
+  {
+    title: "Grover's Algorithm",
+    description: "implemented Grover's quantum search algorithm to optimize unstructured database searching. explored quantum speedup over classical approaches.",
+    image: process.env.PUBLIC_URL + "/images/GroversImage.png",
+    links: [
+      {
+        url: "https://priyaltaneja.medium.com/optimizing-database-searching-with-grovers-algorithm-cad50a603494",
+        icon: FaMediumM,
+        label: "Medium",
+      },
+      {
+        url: "https://youtu.be/HeYGWe20yqc?si=Eng6hl0LRjsoO7jv",
+        icon: FaYoutube,
+        label: "Video",
+      }
+    ]
+  }
+];
+
+const ProjectImage = ({ src, alt, onLoad }) => {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="eager"
+      decoding="sync"
+      onLoad={onLoad}
+      onError={onLoad}
+      className="w-full h-full object-cover brightness-[0.7] group-hover:brightness-100 transition-all duration-300 hover:scale-[1.03]"
+    />
+  );
+};
 
 const Projects = ({ onNavigate }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [search, setSearch] = useState('');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const [hoveredLearnMore, setHoveredLearnMore] = useState(null);
-
-  useEffect(() => {
-    setIsLoaded(true);
-    // Preload the first project image (FPGA image)
-    const fpgaImage = new Image();
-    fpgaImage.src = process.env.PUBLIC_URL + "/images/FPGA.png";
-  }, []);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [dropdownOpen]);
-
-  const projects = [
-    {
-      title: "Understanding FPGAs from First Principles",
-      description: "a technical explanation of the internal architecture of modern FPGAs, exploring how the device is constructed in silicon and how its major components interact to form a digital circuit that is reconfigurable.",
-      tech: ["Technical Writing", "Hardware"],
-      image: process.env.PUBLIC_URL + "/images/FPGA.png",
-      links: [
-        {
-          url: `/understanding-fpgas-from-first-principles`,
-          icon: FileText,
-          label: "Read Article"
-        }
-      ]
-    },
-    {
-      title: "NextScholar - Chrome Extension for Scholarship Progress Tracking",
-      description: "a chrome extension designed to help students conquer scholarship applications – track deadlines, requirements, and personal progress, all in one place.",
-      tech: ["Full-Stack", "UX/UI"],
-      image: process.env.PUBLIC_URL + "/images/NextScholarImage.png",
-      links: [
-        {
-          url: "https://chromewebstore.google.com/detail/nextscholar/ndohegljfodihdiaopgalhlinaamcfbj",
-          icon: FaChrome,
-          label: "Chrome Store"
-        }
-      ]
-    },
-    {
-      title: "QSVM for Cardiovascular Disease Risk",
-      description: "translating high-dimensional classical health data into quantum states to power quantum support vector machines for early-stage heart disease detection. presented at World Summit AI 2023 in Montreal.",
-      tech: ["Research", "Quantum Computing"],
-      image: process.env.PUBLIC_URL + "/images/QSVMImage.webp",
-      links: [
-        {
-          url: "https://priyaltaneja.medium.com/predicting-early-heart-diseases-with-quantum-support-vector-machines-2f2c678e80b7",
-          icon: FaMediumM,
-          label: "Read on Medium"
-        }
-      ]
-    },
-    {
-      title: "Reshaping Search Results With Semantic Search",
-      description: "built a semantic search engine that understands meaning, not just syntax, through advanced text embeddings.",
-      tech: ["Machine Learning"],
-      image: process.env.PUBLIC_URL + "/images/SemanticSearchImage.png",
-      links: [
-        {
-          url: "https://priyaltaneja.medium.com/from-query-to-meaning-reshaping-the-landscape-of-google-search-results-through-semantic-search-7f5aa02ebc65",
-          icon: FaMediumM,
-          label: "Read on Medium"
-        }
-      ]
-    },
-    {
-      title: "Optimizing Database Searching with Grover's Algorithm",
-      description: "demonstrating quantum advantage through grover's algorithm accelerating unstructured search.",
-      tech: ["Quantum Computing"],
-      image: process.env.PUBLIC_URL + "/images/GroversImage.png",
-      links: [
-        {
-          url: "https://priyaltaneja.medium.com/optimizing-database-searching-with-grovers-algorithm-cad50a603494",
-          icon: FaMediumM,
-          label: "Read on Medium"
-        },
-        {
-          url: "https://youtu.be/HeYGWe20yqc?si=Eng6hl0LRjsoO7jv",
-          icon: FaYoutube,
-          label: "Watch Video"
-        }
-      ]
-    },
-    {
-      title: "Creating Digital Touchpoints for Walmart Blue Labs",
-      description: "redesigned Walmart into a seamless omni-channel retailer by integrating real-time personalization, queue management, and community engagement. selected as a top 5 global finalist by Walmart c-suite executives.",
-      tech: ["Consulting", "UX/UI"],
-      image: process.env.PUBLIC_URL + "/images/WalmartImage.png",
-      links: [
-        {
-          url: "https://firebasestorage.googleapis.com/v0/b/tks-life-prod.appspot.com/o/items%2Fpriyal.taneja%2FTanvi%2C%20Priyal%2C%20Krish%2C%20Zara%2C%20Vinaya.pptx%20(1).pdf?alt=media&token=536326ab-a32b-4995-b684-72cf188822ce",
-          icon: LuPresentation,
-          label: "View Presentation"
-        }
-      ]
-    }
-  ];
-
-  // Get all unique tags
-  const allTags = Array.from(new Set(projects.flatMap(p => p.tech)));
-
-  // Filter tags for dropdown search
-  const filteredTags = allTags.filter(tag => tag.toLowerCase().includes(search.toLowerCase()));
-
-  // Filter projects by selected tags (OR logic)
-  const filteredProjects =
-    selectedTags.length === 0
-      ? projects
-      : projects.filter(p => p.tech.some(tag => selectedTags.includes(tag)));
-
-  // Add or remove tag from selectedTags
-  const toggleTag = (tag) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
-
-  // Remove tag from selectedTags
-  const removeTag = (tag) => {
-    setSelectedTags((prev) => prev.filter(t => t !== tag));
-  };
+  const [imagesReady, setImagesReady] = useState(false);
+  const loadedCount = useRef(0);
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-[#000000] transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8" style={{ fontFamily: 'Georgia, serif' }}>
-        {/* Navigation */}
-        <nav className={`mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>
-          <ul className="flex space-x-8 text-lg sm:text-xl md:text-2xl justify-center items-center text-black dark:text-white">
-            <li>
-              <button 
-                onClick={() => onNavigate('home')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4] flex items-center gap-2"
-                aria-label="Back to home"
-              >
-                <ArrowLeft size={24} />
-                <span className="sr-only">Back to home</span>
-              </button>
-            </li>
-            <li>
-              <button 
-                onClick={() => onNavigate('about')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
-              >
-                about
-              </button>
-            </li>
-            <li>
-              <button 
-                className="text-pink-500 dark:text-[#FF69B4]"
-              >
-                projects
-              </button>
-            </li>
-            <li>
-              <button 
-                onClick={() => onNavigate('writing')}
-                className="hover:text-pink-500 dark:hover:text-[#FF69B4]"
-              >
-                writing
-              </button>
-            </li>
-          </ul>
-        </nav>
+    <div className="min-h-screen w-full bg-black transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 pt-6 pb-16 sm:px-6 lg:px-8">
 
-        <div className={`transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl italic mb-12 text-center text-black dark:text-white transition-colors duration-200">Projects</h1>
-          {/* Multi-select dropdown for filtering (now below the title) */}
-          <div className="flex justify-center mb-10 relative">
-            <div className="w-full max-w-xs" ref={dropdownRef}>
-              <div
-                className="w-full px-3 py-2 rounded-full border border-pink-200 dark:border-[#FF69B4] bg-white dark:bg-[#121212] text-black dark:text-white text-left font-medium flex flex-wrap gap-2 items-center min-h-[44px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-[#FF69B4] transition-colors duration-200"
-                style={{ fontFamily: 'Georgia, serif' }}
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                tabIndex={0}
-              >
-                {selectedTags.length === 0 && <span className="text-gray-400 dark:text-gray-500 transition-colors duration-200">filter by skill...</span>}
-                {selectedTags.map(tag => (
-                  <span key={tag} className="flex items-center bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-sm font-medium mr-1 mb-1 transition-colors duration-200">
-                    {tag}
-                    <button
-                      className="ml-1 text-black dark:text-white hover:text-pink-500 focus:outline-none transition-colors duration-200"
-                      onClick={e => { e.stopPropagation(); removeTag(tag); }}
-                      tabIndex={-1}
-                    >
-                      <X size={14} />
-                    </button>
-                  </span>
-                ))}
-                <span className="ml-auto text-black dark:text-white transition-colors duration-200">▾</span>
-              </div>
-              {dropdownOpen && (
-                <div className="absolute left-0 w-full mt-2 bg-white dark:bg-[#121212] border border-pink-200 dark:border-[#FF69B4] rounded-xl shadow-lg z-10 transition-colors duration-200" style={{ minWidth: '100%' }}>
-                  <input
-                    type="text"
-                    placeholder="Search tags..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full px-4 py-3 border-b border-pink-200 dark:border-[#FF69B4] bg-transparent text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none transition-colors duration-200"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  />
-                  <div className="max-h-48 overflow-y-auto">
-                    {filteredTags.length > 0 ? (
-                      filteredTags.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={() => toggleTag(tag)}
-                          className={`w-full px-4 py-3 text-left hover:bg-pink-100/50 dark:hover:bg-[#FF69B4]/25 transition-colors duration-200 ${
-                            selectedTags.includes(tag) 
-                              ? 'bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white' 
-                              : 'text-black dark:text-white'
-                          }`}
-                          style={{ fontFamily: 'Georgia, serif' }}
-                        >
-                          {tag}
-                        </button>
-                      ))
-                    ) : (
-                      <div className="px-5 py-2 text-gray-400 dark:text-gray-500 transition-colors duration-200">No tags found</div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+        <div className={`transition-opacity duration-500 ${imagesReady ? 'opacity-100' : 'opacity-0'}`}>
+          <h1 className="text-5xl font-serif italic tracking-tight leading-tight mb-12 text-center text-black dark:text-white transition-colors duration-200">Projects</h1>
 
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
-            {filteredProjects.map((project, index) => (
-              <div 
-                key={project.title}
-                className={`
-                  bg-white dark:bg-[#121212] rounded-2xl shadow-md border border-pink-100 dark:border-[#FF69B4]
-                  transition-all duration-200
-                  hover:shadow-pink-100 dark:hover:shadow-pink-900/50 hover:shadow-lg 
-                  flex flex-col overflow-hidden
-                  ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
-                `}
-                style={{ transitionDelay: isLoaded ? '0ms' : `${150 + index * 100}ms` }}
-              >
-                {/* Image on top */}
-                {project.image && (
-                  <div className="relative w-full">
-                    <img
+          <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+            {PROJECTS.map((project, index) => {
+              const primaryLink = project.links[0];
+
+              const handleClick = (e) => {
+                if (primaryLink.internal) {
+                  e.preventDefault();
+                  onNavigate(primaryLink.url.replace('/', ''));
+                }
+              };
+
+              const handleImageLoad = () => {
+                loadedCount.current += 1;
+                if (loadedCount.current === PROJECTS.length) {
+                  setImagesReady(true);
+                }
+              };
+
+              return (
+                <div
+                  key={project.title}
+                  className="flex flex-col group"
+                >
+                  <a
+                    href={primaryLink.url}
+                    {...(primaryLink.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                    onClick={primaryLink.internal ? handleClick : undefined}
+                    className="w-full aspect-[16/10] rounded-lg overflow-hidden bg-black cursor-pointer block"
+                  >
+                    <ProjectImage
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-48 object-cover rounded-t-2xl"
-                      loading={index === 0 ? "eager" : "lazy"}
-                      fetchPriority={index === 0 ? "high" : "auto"}
+                      onLoad={handleImageLoad}
                     />
-                    {/* Subtle overlay */}
-                    <div className="absolute inset-0 rounded-t-2xl" style={{ background: 'rgba(0,0,0,0.18)' }} />
-                    {/* Tooltip overlay filling the image area */}
-                    {project.description && hoveredLearnMore === index && (
-                      <div className="absolute inset-0 flex items-center justify-center rounded-t-2xl z-40 backdrop-blur-md" style={{ background: 'rgba(30,41,59,0.65)' }}>
-                        <div className="text-base text-white text-center px-6" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 8px rgba(0,0,0,0.25)' }}>
-                          {project.description}
-                        </div>
-                      </div>
-                    )}
-                    {/* Question mark icon in bottom right */}
-                    {project.description && (
-                      <div className="absolute bottom-3 right-3 z-50">
-                        <button
-                          className="flex items-center justify-center w-7 h-7 rounded-full focus:outline-none p-0 m-0 transition-colors"
-                          style={{ background: 'rgba(255,255,255,0.9)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', color: '#4B5563' }}
-                          onMouseEnter={e => { setHoveredLearnMore(index); e.currentTarget.style.color = '#EC4899'; }}
-                          onMouseLeave={e => { setHoveredLearnMore(null); e.currentTarget.style.color = '#4B5563'; }}
-                          onFocus={e => { setHoveredLearnMore(index); e.currentTarget.style.color = '#EC4899'; }}
-                          onBlur={e => { setHoveredLearnMore(null); e.currentTarget.style.color = '#4B5563'; }}
-                          type="button"
-                          aria-label="Show project description"
-                        >
-                          <Info size={22} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {/* Content section below image */}
-                <div className="flex flex-col gap-2 px-6 py-5 relative">
-                  <div className="flex flex-row items-start justify-between w-full">
-                    <div>
-                      <div className="text-xl md:text-xl font-medium text-black dark:text-white mb-1 transition-colors duration-200" style={{ fontFamily: 'Georgia, serif' }}>{project.title}</div>
+                  </a>
+
+                  <div className="flex items-start justify-between mt-4">
+                    <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
+                      {project.title}
+                    </h3>
+                    <div className="flex items-center gap-3 ml-4">
+                      {project.links.map((link, i) => {
+                        const isInternal = link.internal;
+                        return (
+                          <a
+                            key={i}
+                            href={link.url}
+                            {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                            onClick={isInternal ? (e) => {
+                              e.preventDefault();
+                              onNavigate(link.url.replace('/', ''));
+                            } : undefined}
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                            aria-label={link.label}
+                          >
+                            {React.createElement(link.icon, { size: 18 })}
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
-                  {/* Tags and links row */}
-                  <div className="flex flex-row flex-wrap gap-2 items-center -mt-1">
-                    {project.links.map((link, i) => {
-                      const isInternalLink = link.url.startsWith('#') || (!link.url.startsWith('http') && !link.url.startsWith('//'));
-                      return (
-                        <a
-                          key={i}
-                          href={link.url}
-                          {...(isInternalLink ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                          onClick={isInternalLink ? (e) => {
-                            e.preventDefault();
-                            const path = link.url.startsWith('#') ? link.url.replace('#', '') : link.url.replace('/', '');
-                            onNavigate(path);
-                          } : undefined}
-                          className="flex items-center justify-center bg-gray-200 dark:bg-gray-700 p-1.5 rounded-full hover:bg-pink-100 dark:hover:bg-[#FF69B4]/70 transition-colors duration-200 group cursor-pointer"
-                          aria-label={link.label}
-                        >
-                          {React.createElement(link.icon, { size: 16, className: "md:w-4 md:h-4 text-gray-700 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200" })}
-                        </a>
-                      );
-                    })}
-                    {project.tech.map(tech => (
-                      <span 
-                        key={tech}
-                        className="bg-pink-100 dark:bg-[#FF69B4]/70 text-black dark:text-white px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200"
-                        style={{ fontFamily: 'Georgia, serif' }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+
+                  <p className="mt-2 text-zinc-400 text-sm leading-relaxed font-light">
+                    {project.description}
+                  </p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -347,4 +159,4 @@ const Projects = ({ onNavigate }) => {
   );
 };
 
-export default Projects; 
+export default Projects;

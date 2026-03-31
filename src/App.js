@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import Portfolio from './Portfolio';
-import About from './pages/About';
 import Projects from './pages/Projects';
 import Writing from './pages/Writing';
 import ArticleDetail from './pages/ArticleDetail';
-import Footer from './components/Footer';
-import PageContainer from './components/PageContainer';
+import PageContainer, { DURATION } from './components/PageContainer';
 import { ThemeProvider } from './contexts/ThemeContext';
-import ThemeToggle from './components/ThemeToggle';
-import { slugify } from './utils/slugify';
 
 // Helper function to get page from pathname
 const getPageFromPath = () => {
@@ -16,70 +13,154 @@ const getPageFromPath = () => {
   if (path === '/' || path === '') {
     return 'home';
   }
-  // Remove leading slash
   return path.substring(1);
 };
 
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+};
+
 function App() {
-  const [currentPage, setCurrentPage] = useState(() => {
-    // Get initial page from URL pathname or default to home
-    return getPageFromPath();
-  });
+  const [displayPage, setDisplayPage] = useState(() => getPageFromPath());
+  const [visible, setVisible] = useState(true);
+  const [appReady, setAppReady] = useState(false);
+  const pendingPage = useRef(null);
+  const timerRef = useRef(null);
+  const hasVisitedHomeRef = useRef(getPageFromPath() === 'home');
 
-  const handleNavigate = (page) => {
-    // Add a small delay specifically for Safari page transitions
-    setTimeout(() => {
-      setCurrentPage(page);
-      // Use pushState for browser history routing
-      const path = page === 'home' ? '/' : `/${page}`;
-      window.history.pushState(null, '', path);
-    }, 10);
-  };
-
-  // Listen for browser back/forward navigation
   useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPage(getPageFromPath());
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    requestAnimationFrame(() => setAppReady(true));
   }, []);
 
-  // Check if current page is the FPGA article (with or without "article-" prefix)
+  // Transition to a new page: fade out -> swap -> fade in
+  const transitionTo = useCallback((page) => {
+    if (page === displayPage && !pendingPage.current) return;
+
+    pendingPage.current = page;
+    setVisible(false);
+
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      const next = pendingPage.current;
+      pendingPage.current = null;
+      setDisplayPage(next);
+      requestAnimationFrame(() => setVisible(true));
+    }, DURATION);
+  }, [displayPage]);
+
+  const handleNavigate = useCallback((page) => {
+    const path = page === 'home' ? '/' : `/${page}`;
+    window.history.pushState(null, '', path);
+    transitionTo(page);
+  }, [transitionTo]);
+
+  useEffect(() => {
+    const handlePopState = () => transitionTo(getPageFromPath());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [transitionTo]);
+
+  useEffect(() => {
+    if (!('scrollRestoration' in window.history)) return undefined;
+
+    const previousValue = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+
+    return () => {
+      window.history.scrollRestoration = previousValue;
+    };
+  }, []);
+
+  // Reset scroll before paint so route changes never flash at the previous scroll position.
+  useLayoutEffect(() => {
+    scrollToTop();
+  }, [displayPage]);
+
+  useEffect(() => {
+    if (displayPage === 'home') {
+      hasVisitedHomeRef.current = true;
+    }
+  }, [displayPage]);
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
   const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
-  const currentPageLower = currentPage.toLowerCase();
-  const isFPGAPage = currentPageLower === fpgaArticleSlug;
-  const isFPGAArticle = isFPGAPage || 
-    (currentPageLower.startsWith('article-') && currentPageLower.replace(/^article-/, '') === fpgaArticleSlug);
+  const rgbLedArticleSlug = 'rtl-design-of-a-rgb-led-mixer';
+  const displayPageLower = displayPage.toLowerCase();
+  const isFPGAPage = displayPageLower === fpgaArticleSlug;
+  const isRGBLedPage = displayPageLower === rgbLedArticleSlug;
+  const isArticlePage = /^article-/.test(displayPage) || isFPGAPage || isRGBLedPage;
+  const isSubPage = displayPage === 'projects' || displayPage === 'writing';
+  const showSharedNav = !isArticlePage;
 
   const renderPage = () => {
-    // Check if it's an article page (either with "article-" prefix or the FPGA article without prefix)
-    if (/^article-/.test(currentPage) || isFPGAPage) {
+    if (isArticlePage) {
       return <ArticleDetail onNavigate={handleNavigate} />;
     }
-    switch (currentPage) {
-      case 'about':
-        return <About onNavigate={handleNavigate} />;
+
+    switch (displayPage) {
       case 'projects':
         return <Projects onNavigate={handleNavigate} />;
       case 'writing':
         return <Writing onNavigate={handleNavigate} />;
       default:
-        return <Portfolio onNavigate={handleNavigate} currentPage={currentPage} />;
+        return <Portfolio onNavigate={handleNavigate} animateIntro={!hasVisitedHomeRef.current} />;
     }
   };
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col">
-        {!isFPGAArticle && <ThemeToggle />}
+      <div
+        className={`min-h-screen flex flex-col relative z-10 transition-opacity duration-500 ${!isSubPage && !isArticlePage ? 'h-screen overflow-hidden' : ''}`}
+        style={{ opacity: appReady ? 1 : 0 }}
+      >
+        {showSharedNav && (
+          <header className="relative z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+            <nav className="relative">
+              <button
+                onClick={() => handleNavigate('home')}
+                className={`icon-sweep absolute left-0 top-1/2 flex -translate-y-1/2 items-center transition-all duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+                  isSubPage ? 'translate-x-0 opacity-100 pointer-events-auto' : '-translate-x-4 opacity-0 pointer-events-none'
+                }`}
+                aria-label="Back to home"
+              >
+                <ArrowLeft size={18} />
+              </button>
+
+              <ul
+                className="flex items-center text-base sm:text-lg font-light text-white/60 transition-transform duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                style={{
+                  transform: isSubPage ? 'translateX(44px)' : 'translateX(0px)',
+                }}
+              >
+                <li className="mr-8">
+                  <button
+                    onClick={() => handleNavigate('projects')}
+                    className={displayPage === 'projects' ? 'glass-text' : 'text-sweep'}
+                  >
+                    projects
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleNavigate('writing')}
+                    className={displayPage === 'writing' ? 'glass-text' : 'text-sweep'}
+                  >
+                    writing
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </header>
+        )}
+
         <div className="flex-grow">
-          <PageContainer key={currentPage} pageKey={currentPage}>
+          <PageContainer visible={visible}>
             {renderPage()}
           </PageContainer>
         </div>
-        <Footer isFPGAArticle={isFPGAArticle} isArticlePage={/^article-/.test(currentPage) || isFPGAPage} />
       </div>
     </ThemeProvider>
   );

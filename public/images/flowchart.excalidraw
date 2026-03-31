@@ -1,0 +1,761 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "rzTXgcYuBICFP0wKHhOab",
+      "type": "rectangle",
+      "x": 507.14285714285717,
+      "y": 23.761893136160722,
+      "width": 139.33334350585938,
+      "height": 78,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#fff9db",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2J",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 371809735,
+      "version": 171,
+      "versionNonce": 1254412839,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "DiKkksHpV1msayziGKKE4"
+        },
+        {
+          "id": "Rwoo7Ejl-Vgv5srHXyaQz",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375699209,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "DiKkksHpV1msayziGKKE4",
+      "type": "text",
+      "x": 549.3495450701032,
+      "y": 50.26189313616072,
+      "width": 54.91996765136719,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2JV",
+      "roundness": null,
+      "seed": 1701307175,
+      "version": 118,
+      "versionNonce": 1665916679,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375233562,
+      "link": null,
+      "locked": false,
+      "text": "Start",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "rzTXgcYuBICFP0wKHhOab",
+      "originalText": "Start",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "Mrz-pQFXSQuEeLHHcIMEf",
+      "type": "rectangle",
+      "x": 383.33331298828125,
+      "y": 175.66668701171875,
+      "width": 373.3333129882813,
+      "height": 234.66665649414062,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2L",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 848314567,
+      "version": 130,
+      "versionNonce": 1170409127,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "x0sUUk61TZHuhbipYxkiJ"
+        },
+        {
+          "id": "Rwoo7Ejl-Vgv5srHXyaQz",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375705303,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "x0sUUk61TZHuhbipYxkiJ",
+      "type": "text",
+      "x": 392.4400634765625,
+      "y": 193.00001525878906,
+      "width": 355.11981201171875,
+      "height": 200,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2M",
+      "roundness": null,
+      "seed": 1716283241,
+      "version": 235,
+      "versionNonce": 610702503,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375131603,
+      "link": null,
+      "locked": false,
+      "text": "Step 1: Enable Clock to Port M\n\nRegister: SYSCTL_RCGCGPIO\n\nAddress: 0x400FE608\n\nAction: Set bit 11 (0x800) to enable\nclock for Port M",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "Mrz-pQFXSQuEeLHHcIMEf",
+      "originalText": "Step 1: Enable Clock to Port M\n\nRegister: SYSCTL_RCGCGPIO\n\nAddress: 0x400FE608\n\nAction: Set bit 11 (0x800) to enable clock for Port M",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "umHHaNTVGTOHLqRHdkqCh",
+      "type": "rectangle",
+      "x": 833.3333347865513,
+      "y": 176.33336312430242,
+      "width": 406.6666463216148,
+      "height": 232.22223917643234,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2N",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 288327975,
+      "version": 280,
+      "versionNonce": 1149885705,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "b5CJ2vlktvS0GYZpWmG8y"
+        },
+        {
+          "id": "xXNvq-wukta8jy6-jRyrD",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375712681,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "b5CJ2vlktvS0GYZpWmG8y",
+      "type": "text",
+      "x": 853.7767653692337,
+      "y": 204.9444827125186,
+      "width": 365.77978515625,
+      "height": 175,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2O",
+      "roundness": null,
+      "seed": 1557253191,
+      "version": 401,
+      "versionNonce": 1768178569,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1769375326814,
+      "link": null,
+      "locked": false,
+      "text": "Step 2: Wait for Port M to be Ready\n\nRegister: SYSCTL_PRGPIO\n\nAddress: 0x400FEA08\n\nAction: Poll bit 11 until it equals 1",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "umHHaNTVGTOHLqRHdkqCh",
+      "originalText": "Step 2: Wait for Port M to be Ready\n\nRegister: SYSCTL_PRGPIO\n\nAddress: 0x400FEA08\n\nAction: Poll bit 11 until it equals 1",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "eIGV_NIPMEtaVHgNa-t8i",
+      "type": "rectangle",
+      "x": 383.80959211077015,
+      "y": 474.5238494873048,
+      "width": 373.3333129882813,
+      "height": 245.55552164713535,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2R",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1879797513,
+      "version": 596,
+      "versionNonce": 472317511,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "uV49RuXP46X7JnBSOkyDR"
+        },
+        {
+          "id": "xXNvq-wukta8jy6-jRyrD",
+          "type": "arrow"
+        },
+        {
+          "id": "DFnVKLL27WhmRCYbBcMll",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375717771,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "DFnVKLL27WhmRCYbBcMll",
+      "type": "arrow",
+      "x": 768.1429050990513,
+      "y": 580.4286208379838,
+      "width": 68.99998110816603,
+      "height": 1.1368683772161603e-13,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2RV",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 927277607,
+      "version": 165,
+      "versionNonce": 1484604041,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375601329,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          68.99998110816603,
+          -1.1368683772161603e-13
+        ]
+      ],
+      "startBinding": {
+        "elementId": "eIGV_NIPMEtaVHgNa-t8i",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.5687135412786003,
+          0.4312864587214005
+        ]
+      },
+      "endBinding": {
+        "elementId": "UGLKFVMBQemuZN1AZY1_9",
+        "mode": "inside",
+        "fixedPoint": [
+          1.9308776763236302e-7,
+          0.43087574899401154
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "uV49RuXP46X7JnBSOkyDR",
+      "type": "text",
+      "x": 412.4563358851842,
+      "y": 497.3016103108725,
+      "width": 316.0398254394531,
+      "height": 200,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2S",
+      "roundness": null,
+      "seed": 1018865129,
+      "version": 761,
+      "versionNonce": 1734935497,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1769375386127,
+      "link": null,
+      "locked": false,
+      "text": "Step 3: Set Pin Direction\n\nRegister: GPIO_PORTM_DIR\n\nAddress: 0x40063400\n\nAction: Set bits to 1 for output\npins, 0 for input pins",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "eIGV_NIPMEtaVHgNa-t8i",
+      "originalText": "Step 3: Set Pin Direction\n\nRegister: GPIO_PORTM_DIR\n\nAddress: 0x40063400\n\nAction: Set bits to 1 for output pins, 0 for input pins",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "EKkHreuybeUgmAXfLUZXc",
+      "type": "rectangle",
+      "x": 975.2539244152254,
+      "y": 806.6666652134486,
+      "width": 139.33334350585938,
+      "height": 78,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#fff9db",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2T",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 493659015,
+      "version": 287,
+      "versionNonce": 1065714697,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "CA_RwWUeiqiA9XUAJ_SQi"
+        },
+        {
+          "id": "gOvx8u615sG9BoJjZkDjf",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375725915,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "CA_RwWUeiqiA9XUAJ_SQi",
+      "type": "text",
+      "x": 993.5906401134675,
+      "y": 820.6666652134486,
+      "width": 102.659912109375,
+      "height": 50,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2U",
+      "roundness": null,
+      "seed": 1799133863,
+      "version": 255,
+      "versionNonce": 782840233,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1769375516705,
+      "link": null,
+      "locked": false,
+      "text": "Port M is\nConfigured",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "EKkHreuybeUgmAXfLUZXc",
+      "originalText": "Port M is Configured",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "Rwoo7Ejl-Vgv5srHXyaQz",
+      "type": "arrow",
+      "x": 570.2783927570262,
+      "y": 112.76189313616072,
+      "width": 1.034263756931864,
+      "height": 51.90479387555803,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 685110985,
+      "version": 43,
+      "versionNonce": 473698503,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375693688,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1.034263756931864,
+          51.90479387555803
+        ]
+      ],
+      "startBinding": {
+        "elementId": "rzTXgcYuBICFP0wKHhOab",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.4465712705600564,
+          0.5534287294399431
+        ]
+      },
+      "endBinding": {
+        "elementId": "Mrz-pQFXSQuEeLHHcIMEf",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.5125558635300342,
+          0.4874441364699658
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "moveMidPointsWithElement": false
+    },
+    {
+      "id": "PSP5nkaDXoYkCWlv9OIft",
+      "type": "arrow",
+      "x": 761.5873645600818,
+      "y": 300.42862083798366,
+      "width": 66.30149187360485,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2W",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 885213127,
+      "version": 59,
+      "versionNonce": 1735494151,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375486750,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          66.30149187360485,
+          0
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "xXNvq-wukta8jy6-jRyrD",
+      "type": "arrow",
+      "x": 979.5178537029527,
+      "y": 419.5556023007348,
+      "width": 221.04634388800218,
+      "height": 56.84883559242837,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2X",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 740160583,
+      "version": 68,
+      "versionNonce": 1574592711,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375492905,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -221.04634388800218,
+          56.84883559242837
+        ]
+      ],
+      "startBinding": {
+        "elementId": "umHHaNTVGTOHLqRHdkqCh",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.8309123895071221,
+          0.830912389507122
+        ]
+      },
+      "endBinding": {
+        "elementId": "eIGV_NIPMEtaVHgNa-t8i",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.28759992728954853,
+          0.2875999272895487
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "UGLKFVMBQemuZN1AZY1_9",
+      "type": "rectangle",
+      "x": 837.1428091866627,
+      "y": 473.57143947056363,
+      "width": 398.88883463541674,
+      "height": 247.99998982747383,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2a",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 73337767,
+      "version": 448,
+      "versionNonce": 1563531113,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "HTpuccA_c0v3eBJjhPV_H"
+        },
+        {
+          "id": "DFnVKLL27WhmRCYbBcMll",
+          "type": "arrow"
+        },
+        {
+          "id": "gOvx8u615sG9BoJjZkDjf",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1769375721675,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "HTpuccA_c0v3eBJjhPV_H",
+      "type": "text",
+      "x": 849.0973278227304,
+      "y": 497.5714343843006,
+      "width": 374.97979736328125,
+      "height": 200,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2b",
+      "roundness": null,
+      "seed": 1944911559,
+      "version": 597,
+      "versionNonce": 787473897,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1769375535813,
+      "link": null,
+      "locked": false,
+      "text": "Step 4: Enable Digital Function\n\nRegister: GPIO_PORTM_DEN\n\nAddress: 0x4006351C\n\nAction: Set bits to 1 for pins that will\nbe used as digital I/O",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "UGLKFVMBQemuZN1AZY1_9",
+      "originalText": "Step 4: Enable Digital Function\n\nRegister: GPIO_PORTM_DEN\n\nAddress: 0x4006351C\n\nAction: Set bits to 1 for pins that will be used as digital I/O",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "gOvx8u615sG9BoJjZkDjf",
+      "type": "arrow",
+      "x": 1040.4762195405508,
+      "y": 721.5397149948848,
+      "width": 0.9883888953163478,
+      "height": 74.12695021856382,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b2c",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 341168423,
+      "version": 48,
+      "versionNonce": 999645191,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1769375549420,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.9883888953163478,
+          74.12695021856382
+        ]
+      ],
+      "startBinding": {
+        "elementId": "UGLKFVMBQemuZN1AZY1_9",
+        "mode": "inside",
+        "fixedPoint": [
+          0.5097495660407098,
+          0.9998721197401067
+        ]
+      },
+      "endBinding": {
+        "elementId": "EKkHreuybeUgmAXfLUZXc",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.47983054220751487,
+          0.479830542207514
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    }
+  ],
+  "appState": {
+    "gridSize": 20,
+    "gridStep": 5,
+    "gridModeEnabled": false,
+    "viewBackgroundColor": "#ffffff",
+    "lockedMultiSelections": {}
+  },
+  "files": {}
+}
