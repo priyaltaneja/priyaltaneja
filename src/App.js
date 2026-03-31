@@ -113,7 +113,7 @@ function App() {
   return (
     <ThemeProvider>
       <div
-        className={`min-h-screen flex flex-col relative z-10 transition-opacity duration-500 ${!isSubPage && !isArticlePage ? 'h-screen overflow-hidden' : ''}`}
+        className={`min-h-screen flex flex-col relative z-10 transition-opacity duration-500 ${!isSubPage && !isArticlePage ? 'md:h-screen md:overflow-hidden' : ''}`}
         style={{ opacity: appReady ? 1 : 0 }}
       >
         {showSharedNav && (

@@ -290,31 +290,29 @@ const GalleryStrip = ({ isVertical }) => {
 
 const Portfolio = ({ onNavigate, animateIntro = false }) => {
   const isDesktop = useIsDesktop();
-  const [isLoaded, setIsLoaded] = useState(() => !animateIntro);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (animateIntro) {
-      setIsLoaded(true);
-    }
-  }, [animateIntro]);
+    requestAnimationFrame(() => setIsLoaded(true));
+  }, []);
 
   return (
-    <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
+    <div className="w-full min-h-screen md:h-screen md:overflow-hidden transition-colors duration-200 relative">
 
-      {/* Main content area — absolute to fill entire viewport, centered ignoring nav */}
-      <div className="absolute inset-0 z-10 flex flex-col md:flex-row">
+      {/* Main content area */}
+      <div className="min-h-screen md:absolute md:inset-0 z-10 flex flex-col justify-center md:flex-row">
         {/* Left column — identity + about */}
-        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col justify-center px-8 sm:px-12 md:px-14 lg:px-20 py-12 md:py-0 md:-mt-12">
+        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col md:justify-center px-8 sm:px-12 md:px-14 lg:px-20 md:py-0 md:-mt-12">
           {/* Name */}
           <h1
-            className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             Priyal Taneja
           </h1>
 
           {/* Tagline */}
           <p
-            className={`text-sm md:text-base text-zinc-400 font-light leading-relaxed mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`text-sm md:text-base text-zinc-400 font-light leading-relaxed mt-3 md:mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             systems thinker curious about{' '}
             <span className="glass-highlight text-black dark:text-white">ml infrastructure</span>{' '}
@@ -324,7 +322,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
           {/* Social icons */}
           <div
-            className={`flex space-x-2 mt-5 transition-opacity duration-700 delay-[250ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`flex space-x-2 mt-3 md:mt-5 transition-opacity duration-700 delay-[250ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="GitHub">
               <FaGithub size={18} />
@@ -342,14 +340,14 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
           {/* Thin separator */}
           <div
-            className={`w-10 h-px bg-white/20 mt-7 mb-7 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'} origin-left`}
+            className={`w-10 h-px bg-white/20 mt-4 mb-4 md:mt-7 md:mb-7 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'} origin-left`}
           />
 
           {/* Currently up to */}
           <div
             className={`transition-opacity duration-700 delay-[350ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
-            <h2 className="text-lg font-serif italic tracking-tight leading-tight mb-3 text-black dark:text-white">
+            <h2 className="text-base md:text-lg font-serif italic tracking-tight leading-tight mb-2 md:mb-3 text-black dark:text-white">
               currently...
             </h2>
             <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-sm md:text-base font-light leading-relaxed">
@@ -377,10 +375,13 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
         {/* Right column — carousel */}
         <div
-          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'h-[300px] sm:h-[350px]'} relative overflow-hidden`}
-          style={{
+          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'h-[40vh] -mt-8'} relative overflow-hidden`}
+          style={isDesktop ? {
             maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+          } : {
+            maskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
           }}
         >
           <GalleryStrip isVertical={isDesktop} />
