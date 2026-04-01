@@ -203,6 +203,7 @@ const GalleryStrip = ({ isVertical }) => {
         width: '100%',
         height: '100%',
         perspective: isVertical ? '1200px' : '600px',
+        transformStyle: 'preserve-3d',
         overflow: 'visible',
         cursor: 'grab',
         display: 'flex',
@@ -303,7 +304,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
     <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
 
       {/* Main content area */}
-      <div className="h-full md:absolute md:inset-0 z-10 flex flex-col md:flex-row overflow-hidden">
+      <div className="h-full md:absolute md:inset-0 z-10 flex flex-col md:flex-row">
         {/* Left column — identity + about */}
         <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col justify-end md:justify-center shrink px-8 sm:px-12 md:px-14 lg:px-20 pt-16 pb-4 md:py-0 md:-mt-12">
           {/* Name */}
@@ -353,11 +354,11 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
             <h2 className="text-base md:text-lg font-serif italic tracking-tight leading-tight mb-2 md:mb-3 text-black dark:text-white">
               currently...
             </h2>
-            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-xs md:text-base font-light leading-relaxed">
+            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-sm md:text-base font-light leading-relaxed">
               <li>
                 <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
                 <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
-                  mcmaster university <ArrowUpRight size={12} className="text-white/25" />
+                  <span className="hidden md:inline">mcmaster university</span><span className="md:hidden">mcmaster</span> <ArrowUpRight size={12} className="text-white/25" />
                 </a>
               </li>
               <li>
@@ -378,14 +379,11 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
         {/* Right column — carousel */}
         <div
-          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'shrink-0 h-[35vh]'} relative overflow-hidden`}
+          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'shrink-0 h-[35vh]'} relative`}
           style={isDesktop ? {
             maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
-          } : {
-            maskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
-          }}
+          } : {}}
         >
           <GalleryStrip isVertical={isDesktop} />
         </div>
