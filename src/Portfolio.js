@@ -85,6 +85,9 @@ const GalleryStrip = ({ isVertical }) => {
     const totalSetSize = IMAGES.length * CARD_SIZE;
     const viewDimension = vertical ? window.innerHeight : window.innerWidth;
 
+    // On mobile (horizontal), use a tighter range so rotation kicks in sooner
+    const normRange = vertical ? viewDimension / 1.5 : CARD_SIZE * 2.5;
+
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];
       let virtualIndex = i * CARD_SIZE - s.currentScroll;
@@ -94,10 +97,10 @@ const GalleryStrip = ({ isVertical }) => {
 
       if (Math.abs(virtualIndex) < viewDimension) {
         card.style.display = 'block';
-        const progress = virtualIndex / (viewDimension / 1.5);
-        const depth = -Math.pow(Math.abs(progress), 2) * (vertical ? 350 : 500);
-        const rotation = progress * (vertical ? 35 : 45);
-        const opacity = String(Math.max(0, 1 - Math.pow(Math.abs(progress), 1.8)));
+        const progress = virtualIndex / normRange;
+        const depth = -Math.pow(Math.abs(progress), 2) * (vertical ? 350 : 300);
+        const rotation = progress * (vertical ? 35 : 55);
+        const opacity = String(Math.max(0, 1 - Math.pow(Math.abs(progress), 1.5)));
 
         if (vertical) {
           card.style.transform = `translateY(${virtualIndex}px) translateZ(${depth}px) rotateX(${-rotation}deg)`;
