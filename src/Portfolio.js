@@ -297,10 +297,10 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen md:h-screen md:overflow-hidden transition-colors duration-200 relative">
+    <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
 
       {/* Main content area */}
-      <div className="min-h-screen md:absolute md:inset-0 z-10 flex flex-col justify-center md:flex-row">
+      <div className="h-screen md:absolute md:inset-0 z-10 flex flex-col justify-center md:flex-row">
         {/* Left column — identity + about */}
         <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col md:justify-center px-8 sm:px-12 md:px-14 lg:px-20 md:py-0 md:-mt-12">
           {/* Name */}
@@ -312,7 +312,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
           {/* Tagline */}
           <p
-            className={`text-sm md:text-base text-zinc-400 font-light leading-relaxed mt-3 md:mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`text-sm md:text-base text-zinc-400 font-light leading-loose md:leading-relaxed mt-3 md:mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             systems thinker curious about{' '}
             <span className="glass-highlight text-black dark:text-white">ml infrastructure</span>{' '}
