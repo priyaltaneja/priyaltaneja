@@ -13,7 +13,7 @@ const IMAGES = [
   "/images/Arizona.jpeg",
 ];
 
-const CARD_WIDTH = 200;
+const CARD_WIDTH = 160;
 const CARD_HEIGHT = 265;
 const AUTO_SCROLL_SPEED = 0.5;
 
