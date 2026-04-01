@@ -202,7 +202,7 @@ const GalleryStrip = ({ isVertical }) => {
         position: 'relative',
         width: '100%',
         height: '100%',
-        perspective: '1200px',
+        perspective: isVertical ? '1200px' : '600px',
         overflow: 'visible',
         cursor: 'grab',
         display: 'flex',
@@ -357,7 +357,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
               <li>
                 <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
                 <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
-                  mcmaster university <ArrowUpRight size={12} className="text-white/25" />
+                  <span className="hidden md:inline">mcmaster university</span><span className="md:hidden">mcmaster</span> <ArrowUpRight size={12} className="text-white/25" />
                 </a>
               </li>
               <li>
