@@ -353,11 +353,11 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
             <h2 className="text-base md:text-lg font-serif italic tracking-tight leading-tight mb-2 md:mb-3 text-black dark:text-white">
               currently...
             </h2>
-            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-sm md:text-base font-light leading-relaxed">
+            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-xs md:text-base font-light leading-relaxed">
               <li>
                 <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
                 <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
-                  <span className="hidden md:inline">mcmaster university</span><span className="md:hidden">mcmaster</span> <ArrowUpRight size={12} className="text-white/25" />
+                  mcmaster university <ArrowUpRight size={12} className="text-white/25" />
                 </a>
               </li>
               <li>
