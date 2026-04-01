@@ -303,9 +303,9 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
     <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
 
       {/* Main content area */}
-      <div className="h-full md:absolute md:inset-0 z-10 flex flex-col justify-center md:flex-row overflow-hidden">
+      <div className="h-full md:absolute md:inset-0 z-10 flex flex-col md:flex-row overflow-hidden">
         {/* Left column — identity + about */}
-        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col md:justify-center shrink-0 px-8 sm:px-12 md:px-14 lg:px-20 md:py-0 md:-mt-12">
+        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col justify-end md:justify-center shrink px-8 sm:px-12 md:px-14 lg:px-20 pt-16 pb-4 md:py-0 md:-mt-12">
           {/* Name */}
           <h1
             className={`text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -378,7 +378,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
         {/* Right column — carousel */}
         <div
-          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'h-[40vh] -mt-8'} relative overflow-hidden`}
+          className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'shrink-0 h-[35vh]'} relative overflow-hidden`}
           style={isDesktop ? {
             maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
