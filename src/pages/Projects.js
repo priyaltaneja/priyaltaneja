@@ -5,7 +5,7 @@ import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
 const PROJECTS = [
   {
     title: "Understanding FPGAs from First Principles",
-    description: "a deep dive into how FPGAs work â€” from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
+    description: "a deep dive into how FPGAs work — from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
     image: process.env.PUBLIC_URL + "/images/FPGA.jpg",
     links: [
       {
