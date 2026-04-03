@@ -142,10 +142,12 @@ const Writing = ({ onNavigate }) => {
     setIsLoaded(true);
   }, []);
 
+  const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
+  const isFPGA = (article) => slugify(article.title) === slugify(fpgaTitle);
+
   const getArticleHref = (article) => {
     const slug = slugify(article.title);
-    const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
-    return slugify(article.title) === slugify(fpgaTitle)
+    return isFPGA(article)
       ? '/understanding-fpgas-from-first-principles'
       : `/article-${slug}`;
   };
@@ -166,6 +168,10 @@ const Writing = ({ onNavigate }) => {
       }
 
       e.preventDefault();
+      if (isFPGA(article)) {
+        window.open(href, '_blank', 'noopener,noreferrer');
+        return;
+      }
       onNavigate(href.replace(/^\//, ''));
     };
   };
@@ -206,6 +212,7 @@ const Writing = ({ onNavigate }) => {
                 <a
                   key={article.title}
                   href={articleHref}
+                  {...(isFPGA(article) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={`flex flex-col group pb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30 rounded-sm ${idx !== 0 ? 'pt-8 border-t border-gray-100 dark:border-gray-800' : ''}`}
                   onClick={handleArticleClick(article)}
                   onKeyDown={handleArticleKeyDown(article)}

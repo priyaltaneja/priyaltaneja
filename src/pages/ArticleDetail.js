@@ -990,6 +990,13 @@ const ArticleDetail = ({ onNavigate }) => {
   const isRGBLedArticle = article && slugify(article.title) === slugify('RTL Design of a RGB LED Mixer');
   const useFPGAStyle = isFPGAArticle || isRGBLedArticle;
 
+  useEffect(() => {
+    if (isFPGAArticle) {
+      document.body.style.backgroundColor = '#f5efeb';
+      return () => { document.body.style.backgroundColor = ''; };
+    }
+  }, [isFPGAArticle]);
+
   if (!article) {
     return null;
   }
@@ -1001,14 +1008,16 @@ const ArticleDetail = ({ onNavigate }) => {
 
   return (
     <div className={`min-h-screen w-full ${bgColor} transition-colors duration-200`}>
-      <div className={`max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`} style={useFPGAStyle ? { fontFamily: 'Lora, serif' } : undefined}>
-        {article.quote && (
-        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 mb-8 icon-sweep">
-          <ArrowLeft size={24} /> Back to Writing
+      {article.quote && (
+      <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-base sm:text-lg font-light icon-sweep">
+          <ArrowLeft size={18} /> back to writing
         </button>
-        )}
+      </div>
+      )}
+      <div className={`max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`} style={useFPGAStyle ? { fontFamily: 'Lora, serif' } : undefined}>
         <div className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 ${useFPGAStyle ? 'text-xl sm:text-2xl md:text-3xl max-w-5xl' : 'text-4xl font-serif italic tracking-tight leading-tight'}`}>{article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 ${useFPGAStyle ? 'text-xl sm:text-2xl md:text-3xl max-w-5xl' : 'text-3xl sm:text-4xl font-serif italic tracking-tight leading-tight'}`}>{article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>

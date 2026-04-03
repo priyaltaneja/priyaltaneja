@@ -12,7 +12,7 @@ const PROJECTS = [
         url: `/understanding-fpgas-from-first-principles`,
         icon: PenLine,
         label: "Read",
-        internal: true,
+        internal: false,
       }
     ]
   },
