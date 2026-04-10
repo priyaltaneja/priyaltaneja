@@ -1007,7 +1007,7 @@ const ArticleDetail = ({ onNavigate }) => {
   const titleColor = useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
 
   return (
-    <div className={`min-h-screen w-full ${bgColor} transition-colors duration-200`}>
+    <div className={`min-h-dvh w-full ${bgColor} transition-colors duration-200`}>
       {article.quote && (
       <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
         <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-base sm:text-lg font-light icon-sweep">

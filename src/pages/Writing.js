@@ -199,7 +199,7 @@ const Writing = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-transparent transition-colors duration-200">
+    <div className="min-h-dvh w-full bg-transparent transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-16 sm:px-6 lg:px-8">
 
         <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>

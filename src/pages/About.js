@@ -9,7 +9,7 @@ const About = ({ onNavigate }) => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-transparent transition-colors duration-200">
+    <div className="min-h-dvh w-full bg-transparent transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         {/* Navigation */}
         <nav className={`mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} text-center`}>

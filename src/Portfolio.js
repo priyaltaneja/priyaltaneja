@@ -295,7 +295,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
   }, []);
 
   return (
-    <div className="w-full h-screen overflow-hidden transition-colors duration-200 relative">
+    <div className="w-full h-dvh overflow-hidden transition-colors duration-200 relative">
 
       {/* Main content area */}
       <div className="h-full md:absolute md:inset-0 z-10 flex flex-col md:flex-row">
