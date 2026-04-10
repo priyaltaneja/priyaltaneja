@@ -79,10 +79,10 @@ const Projects = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen w-full bg-transparent transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 pt-6 pb-16 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-16 sm:px-6 lg:px-8">
 
         <div className={`transition-opacity duration-500 ${imagesReady ? 'opacity-100' : 'opacity-0'}`}>
-          <h1 className="text-3xl sm:text-5xl font-serif italic tracking-tight leading-tight mb-12 text-center text-black dark:text-white transition-colors duration-200">Projects</h1>
+          <h1 className="text-3xl sm:text-5xl font-serif italic tracking-tight leading-tight mb-12 text-center text-black dark:text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] transition-colors duration-200">Projects</h1>
 
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
             {PROJECTS.map((project, index) => {

@@ -117,7 +117,7 @@ function App() {
         style={{ opacity: appReady ? 1 : 0 }}
       >
         {showSharedNav && (
-          <header className="relative z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+          <header className="absolute top-0 left-0 right-0 z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
             <nav className="relative">
               <button
                 onClick={() => handleNavigate('home')}

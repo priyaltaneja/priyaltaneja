@@ -70,9 +70,18 @@ body::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.3;
+  opacity: 0.4;
   pointer-events: none;
   z-index: -1; /* Puts texture behind text/elements but above the body background color */
+}
+
+@media (max-width: 768px) {
+  body::before {
+    /* Shifts the background image on mobile (where it gets cropped horizontally)
+       so the interesting parts (like the curve) stay visible. */
+    background-position: 60% center; 
+    opacity: 0.5;
+  }
 }
 
 

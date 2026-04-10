@@ -14,7 +14,7 @@ const IMAGES = [
 ];
 
 const CARD_WIDTH = 160;
-const CARD_HEIGHT = 265;
+const CARD_HEIGHT = 255;
 const AUTO_SCROLL_SPEED = 0.5;
 
 const useIsDesktop = () => {
@@ -97,19 +97,16 @@ const GalleryStrip = ({ isVertical }) => {
 
       if (Math.abs(virtualIndex) < viewDimension) {
         card.style.display = 'block';
-        const progress = virtualIndex / normRange;
-        const depth = -Math.pow(Math.abs(progress), 2) * (vertical ? 350 : 300);
-        const rotation = progress * (vertical ? 35 : 55);
-        const opacity = String(Math.max(0, 1 - Math.pow(Math.abs(progress), 1.5)));
 
         if (vertical) {
-          card.style.transform = `translateY(${virtualIndex}px) translateZ(${depth}px) rotateX(${-rotation}deg)`;
+          card.style.transform = `translateY(${virtualIndex}px)`;
         } else {
-          card.style.transform = `translateX(${virtualIndex}px) translateZ(${depth}px) rotateY(${rotation}deg)`;
+          card.style.transform = `translateX(${virtualIndex}px)`;
         }
-        card.style.opacity = opacity;
-      } else {
-        card.style.display = 'none';
+
+        // Keep cards opaque to prevent the global background texture from showing through them
+        card.style.opacity = 1;
+      } else {        card.style.display = 'none';
       }
     }
 
@@ -306,10 +303,10 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
       {/* Main content area */}
       <div className="h-full md:absolute md:inset-0 z-10 flex flex-col md:flex-row">
         {/* Left column — identity + about */}
-        <div className="w-full md:w-[55%] lg:w-[58%] flex flex-col justify-end md:justify-center shrink px-8 sm:px-12 md:px-14 lg:px-20 pt-16 pb-4 md:py-0 md:-mt-12">
+        <div className="w-full md:w-[55%] lg:w-[58%] flex-grow flex flex-col justify-center px-8 sm:px-12 md:px-14 lg:px-20 pt-24 pb-4 md:pb-0 md:pt-16">
           {/* Name */}
           <h1
-            className={`text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-serif italic tracking-tight leading-tight text-black dark:text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             Priyal Taneja
           </h1>
@@ -381,8 +378,8 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
         <div
           className={`w-full md:w-[45%] lg:w-[42%] ${isDesktop ? 'h-full' : 'shrink-0 h-[35vh]'} relative`}
           style={isDesktop ? {
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0px, black 30px, black 80%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0px, black 30px, black 80%, transparent 100%)',
           } : {}}
         >
           <GalleryStrip isVertical={isDesktop} />
