@@ -62,7 +62,11 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  /* Overscan the background to prevent black bars during overscroll/UI shifts on mobile */
+  top: -10vh;
+  left: -10vw;
+  right: -10vw;
+  bottom: -10vh;
   background-image: url('./texture-bg-small.jpg');
   background-size: cover;
   background-position: center;
