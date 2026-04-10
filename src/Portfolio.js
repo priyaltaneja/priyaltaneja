@@ -85,9 +85,6 @@ const GalleryStrip = ({ isVertical }) => {
     const totalSetSize = IMAGES.length * CARD_SIZE;
     const viewDimension = vertical ? window.innerHeight : window.innerWidth;
 
-    // On mobile (horizontal), use a tighter range so rotation kicks in sooner
-    const normRange = vertical ? viewDimension / 1.5 : CARD_SIZE * 2.5;
-
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];
       let virtualIndex = i * CARD_SIZE - s.currentScroll;
