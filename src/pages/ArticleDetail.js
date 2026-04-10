@@ -1002,7 +1002,7 @@ const ArticleDetail = ({ onNavigate }) => {
   }
 
   // Custom theme for FPGA-style articles
-  const bgColor = isFPGAArticle ? 'bg-[#f5efeb]' : 'bg-white dark:bg-[#000000]';
+  const bgColor = isFPGAArticle ? 'bg-[#f5efeb]/90' : 'bg-transparent';
   const textColor = useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
   const titleColor = useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
 
