@@ -38,15 +38,15 @@ const articles = [
         <div className="mt-8">
           <div 
             className="substack-embed" 
-            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed"
+            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
             data-substack-domain="fieldnotesbypriyal.substack.com"
           >
             <iframe
               title="Subscribe to Field Notes by Priyal"
-              src="https://fieldnotesbypriyal.substack.com/embed"
+              src="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
               width="100%"
               height="320"
-              style={{border: '1px solid #EEE', background: 'white', borderRadius: '8px'}}
+              style={{border: '1px solid #333', background: '#111', borderRadius: '8px', colorScheme: 'dark', filter: 'invert(1) hue-rotate(180deg)'}}
               frameBorder="0"
               scrolling="no"
             />

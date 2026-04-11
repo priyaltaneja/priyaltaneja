@@ -437,15 +437,15 @@ const articles = [
         <div className="mt-8">
           <div 
             className="substack-embed" 
-            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed"
+            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
             data-substack-domain="fieldnotesbypriyal.substack.com"
           >
             <iframe 
               title="Substack embed"
-              src="https://fieldnotesbypriyal.substack.com/embed" 
-              width="100%" 
-              height="320" 
-              style={{border: '1px solid #EEE', background: 'white', borderRadius: '8px'}}
+              src="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
+              width="100%"
+              height="320"
+              style={{border: '1px solid #333', background: '#111', borderRadius: '8px', colorScheme: 'dark', filter: 'invert(1) hue-rotate(180deg)'}}
               frameBorder="0" 
               scrolling="no"
             />
@@ -990,6 +990,12 @@ const ArticleDetail = ({ onNavigate }) => {
   const isRGBLedArticle = article && slugify(article.title) === slugify('RTL Design of a RGB LED Mixer');
   const useFPGAStyle = isFPGAArticle || isRGBLedArticle;
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setIsLoaded(true));
+  }, []);
+
   useEffect(() => {
     if (isFPGAArticle) {
       document.body.style.backgroundColor = '#f5efeb';
@@ -1009,7 +1015,7 @@ const ArticleDetail = ({ onNavigate }) => {
   return (
     <div className={`min-h-dvh w-full ${bgColor} transition-colors duration-200`}>
       {article.quote && (
-      <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+      <div className={`px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10 transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-base sm:text-lg font-light icon-sweep">
           <ArrowLeft size={18} /> back to writing
         </button>
@@ -1017,7 +1023,7 @@ const ArticleDetail = ({ onNavigate }) => {
       )}
       <div className={`max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`} style={useFPGAStyle ? { fontFamily: 'Lora, serif' } : undefined}>
         <div className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 ${useFPGAStyle ? 'text-xl sm:text-2xl md:text-3xl max-w-5xl' : 'text-3xl sm:text-4xl font-serif italic tracking-tight leading-tight'}`}>{article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? 'text-xl sm:text-2xl md:text-3xl max-w-5xl' : 'text-3xl sm:text-4xl font-serif italic tracking-tight leading-tight'}`}>{article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
@@ -1070,13 +1076,13 @@ const ArticleDetail = ({ onNavigate }) => {
           )}
         </div>
         {article.date && !useFPGAStyle && (
-        <div className="text-gray-500 dark:text-gray-400 text-lg mb-8 transition-colors duration-200">{article.date}</div>
+        <div className={`text-gray-500 dark:text-gray-400 text-lg mb-8 transition-opacity duration-700 delay-150 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
         )}
         {article.quote && (
-          <>
+          <div className={`transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <hr className="border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
         <div className="italic text-xl text-white/50 mb-8">{article.quote}</div>
-          </>
+          </div>
         )}
         {isFPGAArticle && (
           <div className={`mb-12 pb-8 border-b border-gray-300 ${textColor}`}>
@@ -1596,7 +1602,7 @@ const ArticleDetail = ({ onNavigate }) => {
             </ul>
           </div>
         )}
-        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-colors duration-200`}>
+        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           {React.cloneElement(article.content, {
             className: `${textColor} transition-colors duration-200`
           })}
@@ -1606,11 +1612,11 @@ const ArticleDetail = ({ onNavigate }) => {
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`flex items-center gap-2 text-lg ${textColor} hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-200 cursor-pointer`}
+            className="flex items-center gap-2 text-lg font-light cursor-pointer group"
             aria-label="Back to the top"
           >
-            <ArrowUp size={16} />
-            <span>Back to the Top</span>
+            <ArrowUp size={16} className="text-white/60 group-hover:text-white transition-colors duration-200" />
+            <span className="text-sweep-group">back to the top</span>
           </button>
         </div>
       </div>
