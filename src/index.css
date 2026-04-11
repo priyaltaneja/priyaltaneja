@@ -16,6 +16,10 @@ code {
     monospace;
 }
 
+html {
+  background-color: var(--bg-primary);
+}
+
 html, body {
   overflow-x: hidden;
   overflow-y: auto;
@@ -37,7 +41,7 @@ html, body {
 }
 
 .dark {
-  --bg-primary: #000000;
+  --bg-primary: #0a0a0e;
   --bg-secondary: #1e1e1e;
   --text-primary: #ffffff;
   --text-secondary: #cccccc;
@@ -62,25 +66,24 @@ body {
 body::before {
   content: "";
   position: fixed;
-  /* Overscan the background to prevent black bars during overscroll/UI shifts on mobile */
-  top: -10vh;
-  left: -10vw;
-  right: -10vw;
-  bottom: -10vh;
+  /* Large overscan prevents black bars during iOS Safari overscroll bounce
+     and browser-chrome show/hide transitions */
+  top: -50vh;
+  left: -20vw;
+  right: -20vw;
+  bottom: -50vh;
   background-image: url('./texture-bg-small.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.4;
   pointer-events: none;
-  z-index: -1; /* Puts texture behind text/elements but above the body background color */
+  z-index: -1;
 }
 
 @media (max-width: 768px) {
   body::before {
-    /* Shifts the background image on mobile (where it gets cropped horizontally)
-       so the interesting parts (like the curve) stay visible. */
-    background-position: 60% center; 
+    background-position: 60% center;
     opacity: 0.5;
   }
 }
