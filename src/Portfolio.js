@@ -310,7 +310,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
 
           {/* Tagline */}
           <p
-            className={`text-sm md:text-base text-zinc-400 font-light leading-loose md:leading-relaxed mt-3 md:mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`text-sm md:text-base text-zinc-300 font-light leading-loose md:leading-relaxed mt-3 md:mt-5 transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
             systems thinker curious about{' '}
             <span className="glass-highlight text-black dark:text-white">ml infrastructure</span>{' '}
@@ -348,7 +348,7 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
             <h2 className="text-base md:text-lg font-serif italic tracking-tight leading-tight mb-2 md:mb-3 text-black dark:text-white">
               currently...
             </h2>
-            <ul className="list-disc ml-5 space-y-2 text-zinc-400 text-sm md:text-base font-light leading-relaxed">
+            <ul className="list-disc ml-5 space-y-2 text-zinc-300 text-sm md:text-base font-light leading-relaxed">
               <li>
                 <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
                 <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">

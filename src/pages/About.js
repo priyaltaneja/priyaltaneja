@@ -53,7 +53,7 @@ const About = ({ onNavigate }) => {
         <div className={`max-w-4xl mx-auto transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <h1 className="text-5xl font-serif italic tracking-tight leading-tight mb-12 text-center text-black dark:text-white transition-colors duration-200">About Me</h1>
           
-          <div className="space-y-8 text-zinc-400 text-lg leading-relaxed font-light transition-colors duration-200">
+          <div className="space-y-8 text-zinc-300 text-lg leading-relaxed font-light transition-colors duration-200">
             <div>
               <h2 className="text-3xl font-serif italic tracking-tight leading-tight mb-4 text-black dark:text-white">
                 hey, i'm <span className="decoration-white/40 decoration-3 underline decoration-solid [text-decoration-skip-ink:none]">priyal</span>!

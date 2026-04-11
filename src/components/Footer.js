@@ -13,10 +13,10 @@ const Footer = ({ isFPGAArticle = false, isArticlePage = false }) => {
   return (
     <footer className={`w-full py-8 ${footerBgColor} border-t ${footerBorderColor} transition-colors duration-200`}>
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center gap-2 text-center">
-        <p className="text-zinc-400 text-sm leading-relaxed font-light transition-colors duration-200">
+        <p className="text-zinc-300 text-sm leading-relaxed font-light transition-colors duration-200">
           Made with 🩷 by Priyal – fueled by coffee & creativity.
         </p>
-        <p className="text-zinc-400 text-xs leading-relaxed font-light transition-colors duration-200">
+        <p className="text-zinc-300 text-xs leading-relaxed font-light transition-colors duration-200">
           Last Updated March 2026
         </p>
       </div>

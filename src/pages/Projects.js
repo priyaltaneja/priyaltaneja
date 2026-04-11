@@ -136,7 +136,7 @@ const Projects = ({ onNavigate }) => {
                               e.preventDefault();
                               onNavigate(link.url.replace('/', ''));
                             } : undefined}
-                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                            className="text-zinc-300 hover:text-white transition-colors duration-200"
                             aria-label={link.label}
                           >
                             {React.createElement(link.icon, { size: 18 })}
@@ -146,7 +146,7 @@ const Projects = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  <p className="mt-2 text-zinc-400 text-sm leading-relaxed font-light">
+                  <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
                     {project.description}
                   </p>
                 </div>
