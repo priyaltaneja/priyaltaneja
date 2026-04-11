@@ -18,12 +18,16 @@ code {
 
 html {
   overflow-x: hidden;
-  scrollbar-gutter: stable;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 body {
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 /* CSS Custom Properties for Theming */
