@@ -234,7 +234,7 @@ const Writing = ({ onNavigate }) => {
               );
             })}
           </div>
-          <div className="text-center text-gray-400 dark:text-gray-500 italic mt-16 transition-colors duration-200">more articles coming soon...</div>
+          <div className="text-center text-gray-400 dark:text-gray-500 italic mt-4 text-sm font-light transition-colors duration-200">more articles coming soon...</div>
         </div>
       </div>
     </div>
