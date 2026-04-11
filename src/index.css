@@ -16,7 +16,12 @@ code {
     monospace;
 }
 
-html, body {
+html {
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+body {
   overflow-x: hidden;
   overflow-y: auto;
 }
