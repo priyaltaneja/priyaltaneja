@@ -20,14 +20,7 @@ html {
   background-color: var(--bg-primary);
 }
 
-html {
-  overflow-x: hidden;
-  /* Always reserve scrollbar gutter so the background doesn't shift
-     when navigating between scrollable and non-scrollable pages */
-  scrollbar-gutter: stable;
-}
-
-body {
+html, body {
   overflow-x: hidden;
   overflow-y: auto;
 }
