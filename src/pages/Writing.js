@@ -223,11 +223,11 @@ const Writing = ({ onNavigate }) => {
                     {article.date}
                   </span>
 
-                  <h2 className="text-lg sm:text-2xl font-serif italic tracking-tight leading-tight text-sweep-group">
+                  <h2 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
                     {article.title}
                   </h2>
 
-                  <p className="mt-3 text-zinc-300 text-sm md:text-lg leading-relaxed font-light italic">
+                  <p className="mt-3 text-zinc-300 text-sm leading-relaxed font-light italic">
                     {article.quote}
                   </p>
                 </a>
