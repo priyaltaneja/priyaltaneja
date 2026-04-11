@@ -220,7 +220,7 @@ const GalleryStrip = ({ isVertical }) => {
           border-radius: 6px;
           transform-style: preserve-3d;
           will-change: transform, opacity;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+          box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
           transition: box-shadow 0.4s ease;
         }
         @media (min-width: 640px) {
@@ -248,7 +248,7 @@ const GalleryStrip = ({ isVertical }) => {
           }
         }
         .gallery-card:hover {
-          box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 6px 16px rgba(0,0,0,0.3);
           z-index: 1000 !important;
         }
         .gallery-card img {

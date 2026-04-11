@@ -121,7 +121,7 @@ const Projects = ({ onNavigate }) => {
                   </a>
 
                   <div className="flex items-start justify-between mt-4">
-                    <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
+                    <h3 className="text-lg sm:text-2xl font-serif italic tracking-tight leading-tight text-sweep-group">
                       {project.title}
                     </h3>
                     <div className="flex items-center gap-3 ml-4">
@@ -146,7 +146,7 @@ const Projects = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
+                  <p className="mt-2 text-zinc-300 text-sm md:text-lg leading-relaxed font-light">
                     {project.description}
                   </p>
                 </div>
