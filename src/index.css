@@ -19,9 +19,6 @@ code {
 html, body {
   overflow-x: hidden;
   overflow-y: auto;
-  /* Prevent the "rubber band" effect from revealing empty black space */
-  overscroll-behavior-y: none;
-  background-color: transparent !important;
 }
 
 /* CSS Custom Properties for Theming */
@@ -65,18 +62,18 @@ body {
 body::before {
   content: "";
   position: fixed;
-  /* Extreme overscan to ensure no black bars even with dynamic UI shifts or deep overscrolls */
-  top: -30vh;
-  left: -30vw;
-  right: -30vw;
-  bottom: -30vh;
+  /* Overscan the background to prevent black bars during overscroll/UI shifts on mobile */
+  top: -10vh;
+  left: -10vw;
+  right: -10vw;
+  bottom: -10vh;
   background-image: url('./texture-bg-small.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.4;
   pointer-events: none;
-  z-index: -1;
+  z-index: -1; /* Puts texture behind text/elements but above the body background color */
 }
 
 @media (max-width: 768px) {
@@ -212,3 +209,4 @@ body::before {
   mask-position: left;
   -webkit-mask-position: left;
 }
+
