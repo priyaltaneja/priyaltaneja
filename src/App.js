@@ -158,7 +158,7 @@ function App() {
 
         {/* Dark scrim – fades in on subpages to boost contrast against the texture */}
         <div
-          className="fixed inset-0 bg-black pointer-events-none transition-opacity duration-300 z-0"
+          className="fixed inset-0 bg-black pointer-events-none transition-opacity duration-100 z-0"
           style={{ opacity: isSubPage || isArticlePage ? 0.35 : 0 }}
         />
 

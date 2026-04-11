@@ -322,16 +322,16 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
           <div
             className={`flex space-x-2 mt-3 md:mt-5 transition-opacity duration-700 delay-[250ms] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           >
-            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="GitHub">
+            <a href="https://github.com/priyaltaneja" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-100" aria-label="GitHub">
               <FaGithub size={18} />
             </a>
-            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="Twitter">
+            <a href="https://x.com/TanejaPriyal" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-100" aria-label="Twitter">
               <RiTwitterXFill size={18} />
             </a>
-            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/priyaltaneja/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors duration-100" aria-label="LinkedIn">
               <FaLinkedinIn size={18} />
             </a>
-            <a href="mailto:priyaltaneja15@gmail.com" className="text-white/50 hover:text-white transition-colors duration-200" aria-label="Email">
+            <a href="mailto:priyaltaneja15@gmail.com" className="text-white/50 hover:text-white transition-colors duration-100" aria-label="Email">
               <MdOutlineEmail size={20} />
             </a>
           </div>

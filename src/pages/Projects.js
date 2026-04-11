@@ -84,7 +84,7 @@ const Projects = ({ onNavigate }) => {
         <div className={`transition-opacity duration-500 ${imagesReady ? 'opacity-100' : 'opacity-0'}`}>
           <h1 className="text-3xl sm:text-5xl font-serif italic tracking-tight leading-tight mb-12 text-center text-black dark:text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] transition-colors duration-200">Projects</h1>
 
-          <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
             {PROJECTS.map((project, index) => {
               const primaryLink = project.links[0];
 
@@ -105,13 +105,13 @@ const Projects = ({ onNavigate }) => {
               return (
                 <div
                   key={project.title}
-                  className="flex flex-col group"
+                  className="flex flex-col sm:flex-row gap-4 sm:gap-5 group"
                 >
                   <a
                     href={primaryLink.url}
                     {...(primaryLink.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
                     onClick={primaryLink.internal ? handleClick : undefined}
-                    className="w-full aspect-[16/10] rounded-lg overflow-hidden bg-black cursor-pointer block"
+                    className="w-full sm:w-48 aspect-[16/10] sm:aspect-auto sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black cursor-pointer block"
                   >
                     <ProjectImage
                       src={project.image}
@@ -120,35 +120,37 @@ const Projects = ({ onNavigate }) => {
                     />
                   </a>
 
-                  <div className="flex items-start justify-between mt-4">
-                    <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center gap-3 ml-4">
-                      {project.links.map((link, i) => {
-                        const isInternal = link.internal;
-                        return (
-                          <a
-                            key={i}
-                            href={link.url}
-                            {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                            onClick={isInternal ? (e) => {
-                              e.preventDefault();
-                              onNavigate(link.url.replace('/', ''));
-                            } : undefined}
-                            className="text-zinc-300 hover:text-white transition-colors duration-200"
-                            aria-label={link.label}
-                          >
-                            {React.createElement(link.icon, { size: 18 })}
-                          </a>
-                        );
-                      })}
+                  <div className="flex flex-col justify-center min-w-0">
+                    <div className="flex items-start justify-between">
+                      <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
+                        {project.title}
+                      </h3>
+                      <div className="flex items-center gap-3 ml-3 flex-shrink-0">
+                        {project.links.map((link, i) => {
+                          const isInternal = link.internal;
+                          return (
+                            <a
+                              key={i}
+                              href={link.url}
+                              {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                              onClick={isInternal ? (e) => {
+                                e.preventDefault();
+                                onNavigate(link.url.replace('/', ''));
+                              } : undefined}
+                              className="text-zinc-300 hover:text-white transition-colors duration-200"
+                              aria-label={link.label}
+                            >
+                              {React.createElement(link.icon, { size: 18 })}
+                            </a>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
 
-                  <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
-                    {project.description}
-                  </p>
+                    <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
+                      {project.description}
+                    </p>
+                  </div>
                 </div>
               );
             })}
