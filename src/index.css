@@ -68,31 +68,6 @@ body {
   z-index: 0;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  /* Overscan the background to prevent black bars during overscroll/UI shifts on mobile */
-  top: -10vh;
-  left: -10vw;
-  right: -10vw;
-  bottom: -10vh;
-  background-image: url('./texture-bg-small.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.4;
-  pointer-events: none;
-  z-index: -1; /* Puts texture behind text/elements but above the body background color */
-}
-
-@media (max-width: 768px) {
-  body::before {
-    /* Shifts the background image on mobile (where it gets cropped horizontally)
-       so the interesting parts (like the curve) stay visible. */
-    background-position: 60% center; 
-    opacity: 0.5;
-  }
-}
 
 
 /* Glass gradient text effect for hover/active states */
