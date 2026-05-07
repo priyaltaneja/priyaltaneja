@@ -3,6 +3,12 @@ import { slugify } from '../utils/slugify';
 
 const articles = [
   {
+    title: 'Under the Hood — A Collection of Technical Breakdowns on Emerging Tech',
+    date: 'The Collective Community',
+    quote: '"A series of weekly columns on how new technologies actually work, written for a startup-centered publication."',
+    externalUrl: 'https://thecollectivecommunity.substack.com/',
+  },
+  {
     title: 'Unlearning Perfectionism',
     date: 'September 17, 2025',
     quote: '"Perfectionism doesn\'t drive success, it hinders it."',
@@ -144,8 +150,10 @@ const Writing = ({ onNavigate }) => {
 
   const fpgaTitle = 'Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles';
   const isFPGA = (article) => slugify(article.title) === slugify(fpgaTitle);
+  const isExternal = (article) => article.externalUrl || isFPGA(article);
 
   const getArticleHref = (article) => {
+    if (article.externalUrl) return article.externalUrl;
     const slug = slugify(article.title);
     return isFPGA(article)
       ? '/understanding-fpgas-from-first-principles'
@@ -168,7 +176,7 @@ const Writing = ({ onNavigate }) => {
       }
 
       e.preventDefault();
-      if (isFPGA(article)) {
+      if (isExternal(article)) {
         window.open(href, '_blank', 'noopener,noreferrer');
         return;
       }
@@ -182,6 +190,10 @@ const Writing = ({ onNavigate }) => {
     return (e) => {
       if (e.key === ' ') {
         e.preventDefault();
+        if (isExternal(article)) {
+          window.open(href, '_blank', 'noopener,noreferrer');
+          return;
+        }
         onNavigate(href.replace(/^\//, ''));
       }
     };
@@ -212,7 +224,7 @@ const Writing = ({ onNavigate }) => {
                 <a
                   key={article.title}
                   href={articleHref}
-                  {...(isFPGA(article) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...(isExternal(article) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={`flex flex-col group pb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30 rounded-sm ${idx !== 0 ? 'pt-8 border-t border-gray-100 dark:border-gray-800' : ''}`}
                   onClick={handleArticleClick(article)}
                   onKeyDown={handleArticleKeyDown(article)}
