@@ -356,13 +356,13 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
                 </a>
               </li>
               <li>
-                <span className="glass-highlight text-black dark:text-white">research engineer</span> @{' '}
+                <span className="glass-highlight text-black dark:text-white">member of technical staff</span> @{' '}
                 <a href="https://e3group.ai" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
                   e3 <ArrowUpRight size={12} className="text-white/25" />
                 </a>
               </li>
               <li>
-                <span className="glass-highlight text-black dark:text-white">founding writing fellow</span> @{' '}
+                <span className="glass-highlight text-black dark:text-white">founding fellow</span> @{' '}
                 <a href="http://thecollectiveny.com/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
                   the collective <ArrowUpRight size={12} className="text-white/25" />
                 </a>
