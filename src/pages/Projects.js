@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { PenLine } from 'lucide-react';
-import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
+import { FaMediumM, FaYoutube, FaChrome, FaGithub } from 'react-icons/fa';
 
 const PROJECTS = [
   {
@@ -11,6 +11,7 @@ const PROJECTS = [
       { url: '/mechanics-of-lora', label: 'Part 1' },
       { url: '/multi-lora-at-scale', label: 'Part 2' },
     ],
+    repo: 'https://github.com/priyaltaneja/multi-lora-serving-benchmark',
     links: [
       {
         url: `/mechanics-of-lora`,
@@ -144,17 +145,30 @@ const Projects = ({ onNavigate }) => {
                       </h3>
                       <div className="flex items-center gap-2 ml-3 flex-shrink-0">
                         {project.parts ? (
-                          project.parts.map((part, i) => (
-                            <a
-                              key={i}
-                              href={part.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-2.5 py-0.5 text-xs font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
-                            >
-                              {part.label}
-                            </a>
-                          ))
+                          <>
+                            {project.parts.map((part, i) => (
+                              <a
+                                key={i}
+                                href={part.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-0.5 text-xs font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
+                              >
+                                {part.label}
+                              </a>
+                            ))}
+                            {project.repo && (
+                              <a
+                                href={project.repo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="ml-1 text-zinc-300 hover:text-white transition-colors duration-200"
+                                aria-label="GitHub repository"
+                              >
+                                <FaGithub size={16} />
+                              </a>
+                            )}
+                          </>
                         ) : (
                           project.links.map((link, i) => {
                             const isInternal = link.internal;
