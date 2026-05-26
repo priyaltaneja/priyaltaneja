@@ -350,12 +350,6 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
             </h2>
             <ul className="list-disc ml-5 space-y-2 text-zinc-300 text-sm md:text-base font-light leading-relaxed">
               <li>
-                <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
-                <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
-                  <span className="hidden md:inline">mcmaster university</span><span className="md:hidden">mcmaster</span> <ArrowUpRight size={12} className="text-white/25" />
-                </a>
-              </li>
-              <li>
                 <span className="glass-highlight text-black dark:text-white">member of technical staff</span> @{' '}
                 <a href="https://e3group.ai" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
                   e3 <ArrowUpRight size={12} className="text-white/25" />
@@ -365,6 +359,12 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
                 <span className="glass-highlight text-black dark:text-white">founding fellow</span> @{' '}
                 <a href="http://thecollectiveny.com/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
                   the collective <ArrowUpRight size={12} className="text-white/25" />
+                </a>
+              </li>
+              <li>
+                <span className="glass-highlight text-black dark:text-white">computer engineering</span> @{' '}
+                <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noopener noreferrer" className="text-sweep-glass inline-flex items-center gap-0.5">
+                  <span className="hidden md:inline">mcmaster university</span><span className="md:hidden">mcmaster</span> <ArrowUpRight size={12} className="text-white/25" />
                 </a>
               </li>
             </ul>
