@@ -1426,7 +1426,7 @@ const ArticleDetail = ({ onNavigate }) => {
         }
       >
         <div ref={headerRef} className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-xl sm:text-2xl md:text-3xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-semibold italic tracking-tight leading-tight'}`}>{article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-semibold italic tracking-tight leading-tight'}`}>{article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
