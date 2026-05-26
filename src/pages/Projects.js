@@ -5,7 +5,7 @@ import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
 const PROJECTS = [
   {
     title: "LoRA Serving: A Two-Part Series",
-    description: "the mechanics of LoRA fine-tuning, followed by an empirical study of vLLM's multi-tenant serving range — 1,000 adapters benchmarked on a single 80 GB GPU.",
+    description: "the mechanics of LoRA fine-tuning, followed by an empirical study of vLLM's multi-tenant serving range, with 1,000 adapters benchmarked on a single 80 GB GPU.",
     image: process.env.PUBLIC_URL + "/images/LoRA.jpeg",
     parts: [
       { url: '/mechanics-of-lora', label: 'Part 1' },
@@ -22,7 +22,7 @@ const PROJECTS = [
   },
   {
     title: "Understanding FPGAs from First Principles",
-    description: "a deep dive into how FPGAs work — from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
+    description: "a deep dive into how FPGAs work, from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
     image: process.env.PUBLIC_URL + "/images/FPGA.jpg",
     links: [
       {
