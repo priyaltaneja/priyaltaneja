@@ -4,6 +4,23 @@ import { FaMediumM, FaYoutube, FaChrome } from 'react-icons/fa';
 
 const PROJECTS = [
   {
+    title: "LoRA Serving: A Two-Part Series",
+    description: "the mechanics of LoRA fine-tuning, followed by an empirical study of vLLM's multi-tenant serving range — 1,000 adapters benchmarked on a single 80 GB GPU.",
+    image: process.env.PUBLIC_URL + "/images/LoRA.jpeg",
+    parts: [
+      { url: '/mechanics-of-lora', label: 'Part 1' },
+      { url: '/multi-lora-at-scale', label: 'Part 2' },
+    ],
+    links: [
+      {
+        url: `/mechanics-of-lora`,
+        icon: PenLine,
+        label: "Read",
+        internal: false,
+      }
+    ]
+  },
+  {
     title: "Understanding FPGAs from First Principles",
     description: "a deep dive into how FPGAs work — from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
     image: process.env.PUBLIC_URL + "/images/FPGA.jpg",
@@ -125,25 +142,39 @@ const Projects = ({ onNavigate }) => {
                       <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
                         {project.title}
                       </h3>
-                      <div className="flex items-center gap-3 ml-3 flex-shrink-0">
-                        {project.links.map((link, i) => {
-                          const isInternal = link.internal;
-                          return (
+                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                        {project.parts ? (
+                          project.parts.map((part, i) => (
                             <a
                               key={i}
-                              href={link.url}
-                              {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                              onClick={isInternal ? (e) => {
-                                e.preventDefault();
-                                onNavigate(link.url.replace('/', ''));
-                              } : undefined}
-                              className="text-zinc-300 hover:text-white transition-colors duration-200"
-                              aria-label={link.label}
+                              href={part.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-2.5 py-0.5 text-xs font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
                             >
-                              {React.createElement(link.icon, { size: 18 })}
+                              {part.label}
                             </a>
-                          );
-                        })}
+                          ))
+                        ) : (
+                          project.links.map((link, i) => {
+                            const isInternal = link.internal;
+                            return (
+                              <a
+                                key={i}
+                                href={link.url}
+                                {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                                onClick={isInternal ? (e) => {
+                                  e.preventDefault();
+                                  onNavigate(link.url.replace('/', ''));
+                                } : undefined}
+                                className="text-zinc-300 hover:text-white transition-colors duration-200"
+                                aria-label={link.label}
+                              >
+                                {React.createElement(link.icon, { size: 18 })}
+                              </a>
+                            );
+                          })
+                        )}
                       </div>
                     </div>
 

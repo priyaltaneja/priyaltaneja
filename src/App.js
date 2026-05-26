@@ -88,10 +88,14 @@ function App() {
 
   const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
   const rgbLedArticleSlug = 'rtl-design-of-a-rgb-led-mixer';
+  const loraArticleSlug = 'mechanics-of-lora';
+  const multiLoraArticleSlug = 'multi-lora-at-scale';
   const displayPageLower = displayPage.toLowerCase();
   const isFPGAPage = displayPageLower === fpgaArticleSlug;
   const isRGBLedPage = displayPageLower === rgbLedArticleSlug;
-  const isArticlePage = /^article-/.test(displayPage) || isFPGAPage || isRGBLedPage;
+  const isLoRAPage = displayPageLower === loraArticleSlug;
+  const isMultiLoRAPage = displayPageLower === multiLoraArticleSlug;
+  const isArticlePage = /^article-/.test(displayPage) || isFPGAPage || isRGBLedPage || isLoRAPage || isMultiLoRAPage;
   const isSubPage = displayPage === 'projects' || displayPage === 'writing';
   const showSharedNav = !isArticlePage;
 
@@ -159,7 +163,7 @@ function App() {
         {/* Dark scrim – fades in on subpages to boost contrast against the texture */}
         <div
           className="fixed inset-0 bg-black pointer-events-none transition-opacity duration-100 z-0"
-          style={{ opacity: isSubPage || isArticlePage ? 0.35 : 0 }}
+          style={{ opacity: (isSubPage || isArticlePage) && !isLoRAPage && !isMultiLoRAPage ? 0.35 : 0 }}
         />
 
         <div className="flex-grow relative z-10">

@@ -1,9 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock, Download, ArrowUp } from 'lucide-react';
-import { FaLinkedinIn } from 'react-icons/fa';
+import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { findArticleBySlug, slugify } from '../utils/slugify';
 import TwitterEmbed from '../components/TwitterEmbed';
+import {
+  ScalingDiagram,
+  StructuredChangeDiagram,
+  DecompositionDiagram,
+  AttentionTargetsDiagram,
+  MultiLoRAServingDiagram,
+} from '../components/LoRADiagrams';
+import {
+  MemoryHierarchyDiagram,
+  ThroughputByAdapterCountDiagram,
+  UniformVsZipfDiagram,
+  ThroughputHeatmapDiagram,
+  MaxLorasUCurveDiagram,
+  TTFTHeatmapDiagram,
+} from '../components/MultiLoRADiagrams';
 
 const FPGA_SLIDES = [
   {
@@ -187,7 +202,7 @@ The clock does not sequence the operations; it only defines the moment when both
       
       if (isBlockComment) {
         return (
-          <div key={index} className="text-[#6a737d]">
+          <div key={index} className="text-[#5c677d]">
             {line || '\u00A0'}
           </div>
         );
@@ -198,7 +213,7 @@ The clock does not sequence the operations; it only defines the moment when both
         return (
           <div key={index} className="text-[#1a1a1a]">
             <span>{codePart}</span>
-            <span className="text-[#6a737d]">{commentPart}</span>
+            <span className="text-[#5c677d]">{commentPart}</span>
           </div>
         );
       } else {
@@ -954,7 +969,285 @@ const articles = [
       </>
     ),
   },
+  {
+    title: 'The mechanics of LoRA: adapters, rank, and multi-tenant serving',
+    subtitle: 'A first-principles understanding of LoRA fine-tuning and multi-tenant adapter serving.',
+    date: 'May 26, 2026',
+    quote: null,
+    content: (
+      <>
+        <h2 id="starting-from-the-problem" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">The economics that motivated LoRA</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A pre-trained large language model is <strong className="font-medium">general-purpose by design</strong>. Models like Llama-3.1-8B are trained once on an enormous corpus of internet text, and they have a broad but shallow competence across many subjects, from writing code to summarizing documents to answering trivia.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">While this generality is useful for assistants and exploratory tools, the demands of real production deployments expose a significant limitation. A generalist model is rarely the best fit for any specific business problem. A system designed to draft legal contracts, classify medical records, or write a particular company's SQL benefits enormously from being shown what "good" looks like for the exact task at hand. The model needs a form of <strong className="font-medium">specialization</strong>.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The standard approach to achieving that specialization is fine-tuning, in which a pre-trained base model is trained further on a smaller, more focused dataset that represents the target task. Every training step nudges the model's parameters toward values that perform better on that data, and after enough fine-tuning, the result is a specialized version of the original model that handles the new task more competently than the generalist could.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A core bottleneck arises when this process needs to be repeated for many tasks at once.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">When Llama-3.1-8B is fine-tuned in the standard way, all 8 billion of its parameters are adjusted during training. The architecture and parameter count remain the same, but every numerical value shifts, and the result is a brand-new full-sized model. In half-precision floating point, that is roughly <strong className="font-medium">16 GB on disk, per task</strong>.</p>
+
+        <ScalingDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">For organizations deploying a single fine-tuned model, this is a manageable cost. For ten customers, the storage requirement reaches 160 GB and the serving requirement reaches ten dedicated GPU allocations. For a hundred, the figures grow to a terabyte and a half of model weights and a hundred GPUs of dedicated capacity. Each model is a fully independent artifact, and they cannot easily share hardware because each one demands the full 16 GB of GPU memory to itself.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The economics of full fine-tuning at scale is what made a parameter-efficient alternative necessary, and the practice that emerged is now formally known as <strong className="font-medium">Low-Rank Adaptation, or LoRA</strong>.</p>
+
+        <h2 id="what-fine-tuning-does" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Inside the fine-tuning process</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Before LoRA can be properly motivated, it is worth being precise about what fine-tuning is doing mechanically. A neural network, heavily simplified for our purpose, is a <strong className="font-medium">collection of numbers organized into matrices</strong>. Llama-3.1-8B contains roughly 8 billion such numbers, each one a parameter. These were set during pre-training, and together they encode everything the model "knows," from how the immune system fights infection to which year a particular film won an Oscar.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">When the model is fine-tuned, training continues on a smaller, more focused dataset. Each training step nudges the parameters in a direction that improves performance on the new task, and after sufficient training the parameters have all moved, most by a tiny amount, some by more, others by almost nothing. The architecture is unchanged and the parameter count is unchanged, but the internal numerical contents are different, and that difference is what produces a specialized behavior.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The key principle that motivates LoRA is that <strong className="font-medium">this change has structure</strong>.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Fine-tuning does not move 8 billion parameters in 8 billion independent random directions. It moves them in coordinated patterns, because the model is being adjusted toward a single coherent task. Many parameters move together, and many move in directions that are similar to other parameters' movements. The shape of the change is simpler than the change itself.</p>
+
+        <StructuredChangeDiagram />
+
+        <h2 id="lora-insight" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">The LoRA insight: low intrinsic rank</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The LoRA paper made an empirical claim about this structure: the change matrix produced by fine-tuning has <strong className="font-medium">low intrinsic rank</strong>. The phrase is a precise mathematical statement, but the underlying intuition is straightforward. When a matrix has low intrinsic rank, even though the matrix itself may be large, the actual information it contains lives in a much smaller subspace. The matrix can therefore be reconstructed, or closely approximated, from a representation that is far smaller than its full dimensions would suggest. If a complicated object can be described by a simple structure, <strong className="font-medium">it can be stored with very little data</strong>.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The way LoRA captures this is through a specific decomposition trick. Consider a single weight matrix inside the model, for example an attention matrix of shape <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(4096, 4096)</code>. That matrix contains <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">4096 × 4096 = 16,777,216</code> numbers. The change to that matrix from fine-tuning is also a <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(4096, 4096)</code> matrix, and it also contains 16.7 million numbers. LoRA approximates that change as the product of two much smaller matrices: a column-shaped matrix <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">B</code> of shape <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(4096, r)</code> and a row-shaped matrix <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">A</code> of shape <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(r, 4096)</code>. The number <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">r</code>, called the rank of the decomposition, governs how much of the original matrix's structure the approximation can capture. It is intentionally small, with common choices being 8, 16, 32, or 64.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">When the two matrices are multiplied together, the result has the original <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(4096, 4096)</code> shape, but it has been reconstructed from <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">2 × r × 4096</code> numbers rather than <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">4096²</code>. For <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">r = 16</code>, that is <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">2 × 16 × 4096 = 131,072</code> parameters in place of 16.7 million, a compression ratio of <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">16,777,216 / 131,072 = 128×</code>.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The magnitude of this compression depends on the rank. At <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">r = 16</code> it is roughly 128×, and at <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">r = 4</code> it exceeds 500×.</p>
+
+        <DecompositionDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A defining fundamental is that <strong className="font-medium">the base model itself is never modified</strong>. The original 8 billion parameters of Llama-3.1-8B remain frozen, exactly as they emerged from pre-training. What is learned during LoRA fine-tuning is the two small matrices, which constitute new parameters attached alongside the frozen base.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At inference time, when the model uses one of its weight matrices, it computes <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">W + B·A</code> rather than <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">W</code> alone. The base model's behavior is preserved, augmented by the adapter's contribution. Different adapters, trained for different tasks, produce different <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(B, A)</code> pairs, all of which attach to the same frozen base: a single fixed model with many small additions.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Rank should be treated as a substantive design choice rather than an arbitrary hyperparameter. A smaller rank yields a smaller adapter and faster inference, but provides less capacity to capture what the fine-tuning was meant to teach. A larger rank affords the adapter more representational room at the cost of size. There are tasks that a rank-64 adapter can learn that a rank-8 adapter cannot, and there are tasks for which rank-8 is more than sufficient. Put simply, the selection of rank is a <strong className="font-medium">quality-versus-cost tradeoff</strong>, and the appropriate value is dependent on the task.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A second hyperparameter, alpha, scales the strength with which the adapter modifies the base. The computation is <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">W + (alpha/r) × B·A</code>, with alpha conventionally set to twice the rank. Its purpose is to provide a stable mechanism for controlling adapter influence independently of <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">r</code>, since the magnitudes of <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">B·A</code> would otherwise vary considerably with the choice of rank.</p>
+
+        <h2 id="adapter-on-disk" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">The shape of an adapter on disk</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The discussion thus far has been largely abstract, so it is worth grounding it in something concrete. When a practitioner refers to an adapter for a particular task, what they actually obtain is a directory containing two files.</p>
+
+        <pre className="bg-[#EDF1F7] rounded-lg p-5 overflow-x-auto my-6 border border-black/10 font-mono text-sm leading-[1.6] text-[#000000]"><code>{`my_sql_adapter/
+├── adapter_config.json     (~200 bytes)
+└── adapter_model.safetensors  (~13 MB)`}</code></pre>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The configuration file is small and human-readable. It specifies which base model the adapter targets, the rank used during training, and which weight matrices inside the model the adapter modifies. The accompanying safetensors file holds the majority of the artifact: it contains the actual <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">A</code> and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">B</code> matrices in their entirety, stored as tensors in a standardized binary format. Together, these two files compose a complete adapter: a brief specification of its shape and a tensor file containing its values.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A few practical considerations affect how adapters are sized in production. A LoRA adapter does not necessarily modify every weight matrix in the model; in most cases it adapts only a chosen subset. The conventional choice, and the one used in the companion experiment, is to apply LoRA exclusively to the query and value projections inside the attention mechanism, the matrices generally referred to as <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">q_proj</code> and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">v_proj</code>.</p>
+
+        <AttentionTargetsDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">This was the configuration recommended in the original LoRA paper, and it has remained the default in most production setups because it offers a favorable balance of quality per parameter. Llama-3.1-8B has 32 layers, so an adapter targeting <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">q_proj</code> and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">v_proj</code> contains 64 individual <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(B, A)</code> pairs in total, one pair per targeted matrix per layer. Each pair contributes on the order of 100,000 parameters at rank 16, so the full adapter contains a few million parameters and occupies approximately 13 MB on disk in fp16. Compared against the 16 GB required to store a fully fine-tuned copy of the same base model, the ratio is roughly 1,200 to 1.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">An important implementation detail worth noting is that modern Llama models employ a technique called Grouped-Query Attention (GQA), under which the value matrix is smaller than the query matrix. As a result, the <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">B</code> matrix on <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">v_proj</code> has shape <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(1024, 16)</code> rather than <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">(4096, 16)</code>, which is why the adapter occupies 13 MB rather than the rounder 32 MB that naive shape arithmetic would suggest.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A final property worth emphasizing is that an adapter is <strong className="font-medium">permanently bound to a specific base model</strong>. A LoRA trained on Llama-3.1-8B will function only with Llama-3.1-8B, because the shapes of <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">B</code> and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">A</code> are determined by the base model's weight matrix dimensions. A Llama adapter cannot be applied to Qwen, nor even to a different size of Llama. This constraint is what makes multi-tenant serving coherent as a strategy.</p>
+
+        <h2 id="serving-and-vllm" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">The infrastructure that serves a model</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Training a model is a one-time activity that produces a set of weights. <strong className="font-medium">Serving</strong> a model is the ongoing activity of accepting user requests, running them through those weights, and returning results, at scale, to many users at once, fast enough that none of them experience meaningful latency.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Most users of large language models interact with them through serving without consciously distinguishing it from training. Calls to the OpenAI API, conversations with Claude, and any other commercial LLM interaction all reach an inference server, which receives requests, runs them through frozen weights, and streams output back to the client. The weights are not being modified during these interactions; they are being applied. The infrastructure that performs this application is what is collectively referred to as an <strong className="font-medium">inference server</strong>.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Inference servers handle a substantial amount of unglamorous infrastructure work. They load model weights into GPU memory, accept HTTP requests, batch concurrent requests together so that the GPU operates efficiently (since GPUs are designed for parallel rather than serial work), stream output tokens back to clients as those tokens are generated, and manage the GPU's limited memory across competing demands. Without one of these systems in place, anyone attempting to serve a large language model would end up reimplementing the same plumbing themselves, typically with worse results.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">vLLM is one such inference server. It originated at UC Berkeley in 2023 and has rapidly become the default choice for teams operating their own LLMs in production. It's open source, performant, and supports multi-tenant LoRA serving.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">On one side, LoRA, which provides a means of specializing a base model into many small task-specific adapters, each only a few megabytes in size. On the other side, an inference server such as vLLM, which provides the infrastructure to take a request and produce output. The natural design that follows is one in which the inference server <strong className="font-medium">hosts a single base model alongside many adapters</strong>, routing each incoming request through the base model with its appropriate adapter applied.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">This is the conceptual picture of multi-LoRA serving:</p>
+
+        <MultiLoRAServingDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">From the perspective of the server, this arrangement establishes a resource-allocation problem. The base model is fixed and easy to manage: it is loaded once and remains in place. The adapters, by contrast, are numerous, small, and must be available to the GPU at the precise moments they are required. The total weight of all adapters substantially exceeds what can fit in the fastest tier of memory: a thousand adapters at 13 MB each amounts to 13 GB, which is more space than the GPU has available after the base model and the working memory for in-flight requests have been accounted for. The server must therefore decide which adapters to keep close to the GPU and which to demote to slower storage, and these decisions have substantial performance consequences.</p>
+
+        <h2 id="wrapping-up" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Where this goes next</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Overall, the picture to retain from this article is the following. A base model, expensive to produce and 16 GB to store, sits permanently on a GPU. Surrounding it, a network of much smaller adapters, each a few megabytes of parameters that capture what fine-tuning would have changed for a single task or customer. An inference server holds the base model, retains as many adapters as it can keep close at hand, and answers user requests by combining the two. The economic case is straightforward: <strong className="font-medium">a single GPU, a single base model, many specializations</strong>, and substantially less hardware than full fine-tuning would have demanded.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The interesting questions, from this point forward, are operational. Where do adapters physically live when they are not in active use? What occurs when a request arrives for an adapter that is not immediately available? How many concurrent users can the system accommodate before performance begins to degrade? Which configuration parameters does the operator control, and which of those parameters meaningfully affect outcomes?</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">I answered these questions empirically with a 80 GB GPU and 1,000 LoRA adapters and stress-testing the entire picture developed here. It works through the memory accounting required to fit many adapters into limited capacity, sweeps the operator-facing configuration knobs, and reports four empirical findings about what actually limits multi-LoRA serving in practice.</p>
+      </>
+    ),
+  },
+  {
+    title: 'Multi-LoRA at scale: an empirical map of vLLM\'s operating range',
+    subtitle: 'An empirical investigation of vLLM\'s multi-tenant adapter serving, conducted on a single 80 GB GPU with 1,000 LoRA adapters served alongside Llama-3.1-8B.',
+    date: 'May 26, 2026',
+    quote: null,
+    content: (
+      <>
+        <h2 id="a-question-worth-measuring" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">A question worth measuring</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5"><a href="/mechanics-of-lora" onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/mechanics-of-lora'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline decoration-[#0B1120]/30 underline-offset-2 hover:decoration-[#0B1120] transition-colors"><em>The Mechanics of LoRA</em></a> developed the conceptual machinery of LoRA fine-tuning and multi-tenant adapter serving: one frozen base model on a GPU, a constellation of small adapters in supporting memory, an inference server routing each request through the base with its associated adapter applied. The system is appealing in theory, and the economic argument is straightforward. What remains unclear is what happens when this system is actually pushed to production.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Two predictions about this system are worth distinguishing. The first, which arises naturally from the conceptual picture, treats <strong className="font-medium">adapter inventory as the dominant constraint</strong>: more adapters produce more memory pressure, which should degrade throughput once some capacity threshold is exceeded. The second, drawn from the recent serving literature, treats multi-LoRA serving as a <strong className="font-medium">working-set and scheduling problem</strong> in which inventory itself is largely irrelevant and the bottlenecks lie elsewhere. The vLLM, S-LoRA, and Punica papers consistently advance the second view, and the more recent LoRAServe work extends it by locating the next frontier in heterogeneous rank serving, where rank diversity rather than adapter count is the operative variable.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The question this article addresses is which of these predictions holds up under measurement on the upstream vLLM release, and what specifically limits throughput when the system is stressed.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">This was not a full-factorial sweep. What follows is a report on <strong className="font-medium">63 throughput benchmark runs across three focused sweeps</strong>, varying adapter pool size, concurrency, traffic shape, and vLLM's <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> parameter only where each variable answered a specific question. The variables tracked are throughput, latency tail behavior, and the actual memory accounting of loading 1,000 adapters into a single server. The measurement produces four findings, which together support the working-set framing and identify the specific mechanisms that drive performance.</p>
+
+        <h2 id="how-adapters-fit" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">How adapters fit on a GPU</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Before the results can be interpreted, it is worth working through the memory accounting that determines what can and cannot fit on a single GPU. The numbers below are for a single 80 GB device serving Llama-3.1-8B in half-precision floating point, which is the configuration used throughout the experiment.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The base model itself occupies approximately <strong className="font-medium">16 GB</strong> of GPU memory. The KV cache, vLLM's working memory for in-flight requests, conventionally reserves an additional fraction, typically <strong className="font-medium">40 to 50 GB</strong> depending on the configured utilization target. What remains after these two allocations is <strong className="font-medium">10 to 15 GB</strong> of headroom for adapter slots, kernel scratch space, activations, and various forms of slack.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">This means that the available space for adapters is much smaller than the GPU's total memory suggests. A thousand adapters at 13 MB each amounts to 13 GB, which exceeds what the GPU has available after the base model and KV cache have been accounted for. At face value, the system appears not to fit at all, but the resolution lies in the arrangement of vLLM's adapter management.</p>
+
+        <MemoryHierarchyDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">vLLM distributes adapters across <strong className="font-medium">three tiers of memory</strong>, and the access cost of each tier differs by roughly an order of magnitude from the one above it. The fastest tier is the GPU's adapter region, where adapters resident on the GPU are available to the model immediately, with access costs measured in microseconds. The middle tier is CPU memory, where loaded adapters wait when they are not currently resident on the GPU. Moving an adapter from CPU to GPU requires a copy across the PCIe bus, which takes a few milliseconds. The slowest tier is disk, from which an adapter not yet loaded into the CPU pool must be read into memory before it can be used at all, a process that requires hundreds of milliseconds at minimum.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The implication is that the system's performance is determined almost entirely by how often a request can be served from the fastest tier, and how often it must instead wait for a transfer from a slower one. This in turn is governed by three vLLM configuration parameters, two of which interact with traffic patterns in ways that are not obvious until they are measured.</p>
+
+        <ol className="list-decimal list-outside pl-6 space-y-4 text-[17px] leading-[1.7] text-[#000000] mb-5">
+          <li><code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">--enable-lora</code> simply activates the multi-LoRA serving path. Without it, vLLM ignores LoRA functionality entirely and serves only the base model.</li>
+          <li><code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">--max-loras</code> is the most consequential and the most frequently misunderstood. <strong className="font-medium">It is not a cache size in the conventional sense, but a per-batch limit on the number of distinct adapters that can appear together in a single in-flight batch on the GPU.</strong> When 32 concurrent requests arrive for 20 distinct adapters and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> is set to 16, vLLM cannot accommodate all 20 in a single batch. It must either split the work across multiple batch steps or page adapters in and out between steps. This per-batch constraint, rather than memory capacity, is what produces the steep latency cliffs and throughput peaks that the findings document.</li>
+          <li><code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">--max-cpu-loras</code> controls the size of the CPU adapter pool, that is, the number of adapters that vLLM keeps loaded in host memory and therefore available for fast transfer to the GPU. When this pool is full and a new adapter must be loaded, the least recently used adapter is evicted, and any subsequent request must pay the cost of a disk read.</li>
+        </ol>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">These two adjustable parameters interact with traffic patterns and concurrency in ways that the rest of this article works through empirically.</p>
+
+        <h2 id="experimental-setup" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">The experimental setup</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The benchmark ran on a single 80 GB GPU, with Llama-3.1-8B in fp16 served by vLLM ≥ 0.15.0 through its OpenAI-compatible API. An asynchronous aiohttp benchmark client running in the same container as the server issued requests to localhost, which eliminated network noise as a confounding factor.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">One thousand structurally valid LoRA adapters were generated for the experiment. Each adapter targets <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">q_proj</code> and <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">v_proj</code> at rank 16 across all 32 layers of Llama-3.1-8B, occupying approximately 13 MB on disk. The adapter weights are random rather than trained, since the experiment measures serving mechanics rather than model quality. vLLM reads the tensor shapes and dtypes from the safetensors files and processes the adapters identically to trained ones; from the server's perspective, the synthetic and trained cases are indistinguishable. The outputs the adapters produce are not coherent, but the throughput and latency measurements are real.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Four independent variables were varied across the benchmark. The adapter pool size <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">N</code> ranged across {'{'}{`1, 10, 50, 100, 250, 500, 1000`}{'}'}. Concurrency <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">c</code>, the maximum number of in-flight requests allowed at any moment, ranged across {'{'}{`1, 8, 32`}{'}'}. The <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> parameter ranged across {'{'}{`4, 8, 16, 32, 64, 128`}{'}'}. Two traffic distributions were tested: <strong className="font-medium">uniform</strong>, in which each adapter is equally likely to receive any given request, and <strong className="font-medium">Zipf with skew parameter s = 1.5</strong>, under which roughly half of all requests concentrate on the top 5% of adapters. The uniform distribution represents a worst-case scenario for adapter caching, and the Zipf distribution approximates the kind of traffic that real production workloads typically exhibit.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Each measured cell was run in a fresh vLLM subprocess, with adapters loaded before measurement and the server terminated afterward. This isolation assured that no state, including KV cache occupancy, leaked between cells. Each cell ran 50 warmup requests followed by 1,000 measured requests, with prompts and outputs both fixed at 128 tokens. The measurements collected were throughput in tokens per second, time-to-first-token (TTFT) at the 50th and 99th percentiles, and total request latency at the same percentiles. A separate memory-decomposition phase, conducted on an H100, recorded per-stage snapshots of GPU memory and process RSS as adapters were loaded into the server.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The findings below treat each parameter in turn: first concurrency, then traffic distribution, then <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code>, and finally the memory accounting.</p>
+
+        <h2 id="finding-1" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Finding 1: At low concurrency, none of this matters</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At low concurrency, the multi-LoRA serving path imposes no measurable performance cost regardless of how many adapters are loaded.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Throughput at concurrency 1 under uniform traffic moves from 70.9 tokens per second when only one adapter is loaded to 70.2 tokens per second when 1,000 adapters are loaded. This is a one-percent change across a thousand-fold change in adapter inventory. So, throughput is constant within measurement noise.</p>
+
+        <ThroughputByAdapterCountDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At concurrency 1, only a single request is in flight at any moment, so only a single adapter is ever required in the batch. Adapter slots are never oversubscribed and there's no scheduling pressure. The GPU spends its time generating tokens for that one request, decode-bound, and the multi-LoRA machinery is virtually idle. Adapter inventory cannot matter when the working set is always one.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The implication for deployment is narrow but worth noting. For products in which users interact one at a time, or for low-throughput APIs where concurrency rarely exceeds a small number, the multi-LoRA serving path does not reduce throughput, even as adapter inventory grows by three orders of magnitude. The performance trade-offs of multi-LoRA serving become significant only at higher concurrency, which is where the remaining findings are located.</p>
+
+        <h2 id="finding-2" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Finding 2: Uniform traffic degrades faster than the cache-fit story predicts</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Under the inventory-as-constraint prediction, throughput should hold steady until adapter inventory exceeds the configured <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> value, at which point performance should degrade as adapters are evicted from the GPU and reloaded on demand. With <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> set to 32, this would indicate stable performance from N=1 through N=32, with degradation appearing only as N grows beyond that point.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The measurements contradicted this assumption. At concurrency 32 under uniform traffic with <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> set to 32, throughput at N=1 reaches 1,935 tokens per second. By N=10, the same configuration delivers 1,490 tokens per second. <strong className="font-medium">This is a 23% decline by ten adapters, well below the cache-size threshold the prediction would have located the cliff at.</strong> By N=1,000, throughput has settled around 884 tokens per second, which is a 54% decline from peak.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">What is happening is not a memory problem in the conventional sense, since the working set fits comfortably within the configured slot allocation. <strong className="font-medium">The actual bottleneck is scheduling.</strong> This means when 32 concurrent requests are distributed across 10 distinct adapters in a single batch, vLLM has to coordinate which adapter applies to which request inside the same forward pass. The kernel that performs the batched LoRA computation pays a cost that grows with adapter diversity in the batch, and this cost is independent of whether the relevant adapters happen to reside on the GPU.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The implication for capacity planning is that the intuitive question "how many adapters fit?" is the wrong one. Instead, a higher value question is <strong className="font-medium">"how diverse is the traffic in any given batch?"</strong></p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">These questions have different answers, but the second is the one that gives us insight into performance under stress.</p>
+
+        <h2 id="finding-3" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Finding 3: Realistic skewed traffic more than doubles throughput</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Production traffic rarely distributes evenly across adapters in a uniform manner; in nearly every real-world setting, a small number of adapters absorb the bulk of incoming requests while the remainder see only occasional access. This pattern is well described by a Zipf distribution, in which the probability of selecting the k-th most popular adapter scales as <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">1/k<sup>s</sup></code>. With the skew parameter set to 1.5, roughly half of all requests concentrate on the top five percent of adapters, which is a reasonable approximation of the traffic distributions observed in real customer-specific or task-specific adapter deployments.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">Switching the experiment's traffic distribution from uniform to Zipf at <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">s = 1.5</code>, while holding everything else constant, produces major improvements in both throughput and tail latency. At N=10, throughput moves from 1,490 tokens per second under uniform traffic to 2,531 under Zipf, a 70% increase. At N=500, the comparison is 897 versus 2,127 tokens per second, an increase of 137%. At N=1,000, the comparison is 884 versus 2,167, <strong className="font-medium">an increase of 145%</strong>. The corresponding p99 latency reduces by roughly half across all of these comparisons.</p>
+
+        <UniformVsZipfDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The lift grows with N. Under uniform traffic, the effective working set expands as more adapters are added to the pool, because every adapter remains equally likely to be requested. Under Zipf traffic, the effective working set is bounded: adapters one through ten do most of the work regardless of how many adapters sit in the pool behind them. The cache stabilizes on the most popular adapters and remains in that state. The uniform and Zipf cases therefore diverge increasingly as N grows, where the uniform case continues to degrade while the Zipf case holds close to constant.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">A practical consequence is that uniform-traffic benchmarks systematically underestimate the throughput a real deployment will achieve. Hardware provisioned against uniform numbers will tend to exceed what the actual workload requires.</p>
+
+        <h2 id="finding-4" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Finding 4: <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> is a U-curve, not a ceiling</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The intuitive interpretation is incorrect. Throughput is highest at moderate values of <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> and degrades in both directions, producing a U-shaped curve rather than the monotonic-increase shape that the cache-size interpretation would predict.</p>
+
+        <ThroughputHeatmapDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At N=500 under Zipf traffic with concurrency 32, the throughput numbers across the <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> range are as follows: 1,085 tokens per second at <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=4</code>, 1,628 at 8, <strong className="font-medium">2,160 at 16</strong>, 2,150 at 32, 2,000 at 64, and 1,763 at 128. The peak sits at <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=16</code>, and moving from this peak to <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=128</code> costs 20% of throughput on identical hardware and identical workload.</p>
+
+        <MaxLorasUCurveDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The latency degradation under undersized <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> is more severe than the throughput degradation. At <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=4</code> with N=500, p99 TTFT reaches <strong className="font-medium">8,034 milliseconds</strong>: more than eight seconds of waiting before the worst-served users see their first token of output. At <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=16</code> with the same N, p99 TTFT measures 170 milliseconds, a forty-seven-fold reduction.</p>
+
+        <TTFTHeatmapDiagram />
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The U-shape is not a single phenomenon, as the two sides of the curve are driven by different mechanisms with different operational signatures.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At the low end, the mechanism is <strong className="font-medium">cache thrashing</strong>. With <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> set to a small value, the GPU's batch-resident adapter set is smaller than the working set of any reasonably diverse traffic. Most batches therefore contain at least one request whose adapter is not currently resident, which requires the missing adapter to be transferred from CPU memory to the GPU before the request can proceed. The cold-loaded adapter pays its transfer cost in TTFT, and these misses are not independent. Once the working set exceeds the slot capacity, almost every batch contains at least one missing adapter, which produces a sharp tail-latency cliff rather than gradual degradation. The eight-second p99 numbers under <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras=4</code> are produced by exactly this dynamic.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">At the high end, the mechanism is <strong className="font-medium">per-batch coordination overhead</strong>. With <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> set to a large value, every adapter required by any batch fits comfortably, and nothing needs to be paged in or out. There is no cold-load penalty. However, vLLM must now coordinate a larger set of possible adapter slots in every batch step, and the kernel that batches LoRA computations across requests pays a per-distinct-adapter cost. Larger batches with more diverse adapter compositions take more work per generated token, even though the entire required adapter set is already on the GPU. Nothing is malfunctioning; the system is simply paying for capacity it does not need.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The U-curve is not produced by a single mechanism with an optimal operating point. Two distinct dynamics govern the two sides, and the configurations that perform best are those in which neither is active. The operational significance is that <strong className="font-medium"><code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> should be sized to the ninetieth-percentile working set of the actual workload</strong>, rather than to the total adapter inventory. If 90% of traffic over a five-minute window touches 30 distinct adapters, a setting of 32 is appropriate. Setting <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> higher in pursuit of headroom does not provide additional safety; it costs throughput in exchange for capacity that the system never uses.</p>
+
+        <h2 id="operational-summary" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">An operational summary</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The findings above suggest the following sizing approach for a multi-LoRA serving deployment.</p>
+
+        <div className="space-y-3 mb-5">
+          {[
+            { n: 1, text: <>Estimate the <strong className="font-medium">ninetieth-percentile active working set</strong> from production traffic logs by counting how many distinct adapters absorb 90% of requests over a five-minute window. Set <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> to that number, rounded up to the nearest power of two between 16 and 32. The temptation to set <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> higher in pursuit of headroom should be resisted, because per-batch coordination overhead will cost <strong className="font-medium">10 to 20 percent of throughput</strong> in exchange for capacity that goes unused.</> },
+            { n: 2, text: <>Set <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_cpu_loras</code> to the <strong className="font-medium">full adapter inventory</strong>, and budget host RAM at approximately <strong className="font-medium">13 MB per rank-16</strong> Llama-3.1-8B adapter. The GPU side of the memory budget is fixed by <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code>, regardless of inventory.</> },
+            { n: 3, text: <>If the production traffic distribution is genuinely uniform across hundreds of adapters, the bottleneck is the working set itself, and the most productive next step is to <strong className="font-medium">shard the adapter inventory across replicas</strong> by task family or customer group.</> },
+            { n: 4, text: <>Capacity planning should be conducted against the <strong className="font-medium">actual traffic distribution</strong> rather than against the worst-case uniform synthetic. Real Zipfian traffic delivers between <strong className="font-medium">two and 2.4 times the throughput</strong> of equivalent uniform traffic, and provisioning against the uniform number leads to substantial over-provisioning.</> },
+            { n: 5, text: <>At low concurrency, <strong className="font-medium">none of this matters</strong>. The infrastructure decisions above apply only to deployments with meaningful concurrent load.</> },
+          ].map(item => (
+            <div key={item.n} className="flex gap-4 border border-black/[0.06] rounded-lg px-5 py-4">
+              <span className="text-[18px] font-medium text-[#023e7d]/40 leading-none mt-[3px] select-none">{item.n}</span>
+              <p className="text-[16px] leading-[1.7] text-[#000000] flex-1">{item.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <h2 id="scope-and-limitations" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Scope and limitations</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The experiment reported here is bounded in several important ways, and the conclusions should be applied with awareness of those limitations.</p>
+
+        <ul className="list-disc list-outside pl-6 space-y-3 text-[17px] leading-[1.7] text-[#000000] mb-5">
+          <li>All measurements were taken at <strong className="font-medium">LoRA rank 16</strong>. Heterogeneous-rank serving, in which adapters of different ranks are co-batched against the same base model, is an active area of investigation and produces effects that the present experiment cannot observe.</li>
+          <li>Only <strong className="font-medium">one Zipf skew parameter</strong> was tested, <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">s = 1.5</code>. The sensitivity of the findings to different degrees of traffic skew is not characterized here.</li>
+          <li>The adapters used in the experiment were <strong className="font-medium">synthetic, with random weights</strong>. The serving mechanics are the primary focus, but no conclusions can be drawn from these results about adapter quality or task performance.</li>
+          <li>Prompts and outputs were both <strong className="font-medium">fixed at 128 tokens</strong>. Substantially different prompt-to-output length ratios may shift the bottleneck, particularly for prefill-heavy workloads where the cost of processing the input dominates the cost of generating the output.</li>
+          <li>The experiment used a <strong className="font-medium">single GPU and a single tenant</strong>. Tensor parallelism, multi-GPU adapter placement, and multi-replica scheduling are not in scope.</li>
+          <li>vLLM's recent multi-LoRA optimization work has focused on <strong className="font-medium">Mixture-of-Experts base models</strong> such as GPT-OSS and Qwen, which behave differently from dense models like Llama. The findings here apply to <strong className="font-medium">dense bases</strong>; their generalization to MoE bases is an open question.</li>
+        </ul>
+
+        <h2 id="closing" className="text-2xl font-medium tracking-tight leading-tight mt-14 mb-5 text-[#002855]">Closing</h2>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The conceptual model developed in the <a href="/mechanics-of-lora" onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/mechanics-of-lora'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="underline decoration-[#0B1120]/30 underline-offset-2 hover:decoration-[#0B1120] transition-colors">first article</a> held up under measurement. Adapters do live across a tiered memory hierarchy, an inference server does manage them through two genuine knobs, and traffic shape does matter more than total inventory size. What was less anticipated was the magnitude of the failure modes. An undersized <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> does not produce a gradual slowdown; it produces eight-second tail latencies. An oversized <code className="font-mono text-[0.92em] bg-[#E8EEF4] px-1.5 py-0.5 rounded text-[#000000] font-medium">max_loras</code> does not produce harmless overhead; it costs 20% of throughput. Traffic distribution alone produces throughput swings of more than 2.4 times. <strong className="font-medium">The system has narrow operating bands with steep penalties on either side</strong>, and the configuration choices that lie between them are not the ones an operator's intuition would lead to without measurement.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">I ran this benchmark because the conceptual picture of multi-LoRA serving is widely discussed but rarely interrogated. The serving literature consistently frames the system as a working-set and scheduling problem, but the magnitude of that framing's consequences is not something I had seen quantified for a production configuration. What started as a smoke test on the conceptual machinery turned into providing me with a clearer view of the parameters that carry weight, the ones that do not, and where the system's real operating range lies.</p>
+
+        <p className="text-[17px] leading-[1.7] text-[#000000] mb-5">The findings reported here came from one configuration on one piece of hardware with one base model. Multi-LoRA serving is being investigated by a growing number of teams in industry and academia, and the picture will only become clearer as more measurements accumulate. If you are working on multi-LoRA serving in production or in research, I would be interested to hear what you are seeing in your own measurements. I'm curious to hear about any findings that confirm or contradict what is reported!</p>
+      </>
+    ),
+  },
   // Placeholder for future articles
+];
+
+const LORA_SECTIONS = [
+  { id: 'starting-from-the-problem', label: 'The economics of LoRA' },
+  { id: 'what-fine-tuning-does', label: 'Inside the fine-tuning process' },
+  { id: 'lora-insight', label: 'The LoRA insight' },
+  { id: 'adapter-on-disk', label: 'An adapter on disk' },
+  { id: 'serving-and-vllm', label: 'Serving infrastructure' },
+  { id: 'wrapping-up', label: 'Where this goes next' },
+];
+
+const MULTI_LORA_SECTIONS = [
+  { id: 'a-question-worth-measuring', label: 'A question worth measuring' },
+  { id: 'how-adapters-fit', label: 'How adapters fit on a GPU' },
+  { id: 'experimental-setup', label: 'Experimental setup' },
+  { id: 'finding-1', label: 'Finding 1 — Low concurrency' },
+  { id: 'finding-2', label: 'Finding 2 — Uniform traffic' },
+  { id: 'finding-3', label: 'Finding 3 — Zipf lift' },
+  { id: 'finding-4', label: 'Finding 4 — max_loras U-curve' },
+  { id: 'operational-summary', label: 'Operational summary' },
+  { id: 'scope-and-limitations', label: 'Scope and limitations' },
+  { id: 'closing', label: 'Closing' },
 ];
 
 const ArticleDetail = ({ onNavigate }) => {
@@ -968,6 +1261,8 @@ const ArticleDetail = ({ onNavigate }) => {
   // Special handling for FPGA article with custom slug
   const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
   const rgbLedArticleSlug = 'rtl-design-of-a-rgb-led-mixer';
+  const loraArticleSlug = 'mechanics-of-lora';
+  const multiLoraArticleSlug = 'multi-lora-at-scale';
   let idx;
   let article;
   if (slug === fpgaArticleSlug) {
@@ -978,6 +1273,14 @@ const ArticleDetail = ({ onNavigate }) => {
     const rgbLedTitle = 'RTL Design of a RGB LED Mixer';
     idx = findArticleBySlug(articles, slugify(rgbLedTitle));
     article = articles[idx];
+  } else if (slug === loraArticleSlug) {
+    const loraTitle = 'The mechanics of LoRA: adapters, rank, and multi-tenant serving';
+    idx = findArticleBySlug(articles, slugify(loraTitle));
+    article = articles[idx];
+  } else if (slug === multiLoraArticleSlug) {
+    const multiLoraTitle = 'Multi-LoRA at scale: an empirical map of vLLM\'s operating range';
+    idx = findArticleBySlug(articles, slugify(multiLoraTitle));
+    article = articles[idx];
   } else {
     idx = findArticleBySlug(articles, slug);
     article = articles[idx];
@@ -985,35 +1288,126 @@ const ArticleDetail = ({ onNavigate }) => {
 
   // Check if this is the FPGA article
   const isFPGAArticle = article && slugify(article.title) === slugify('Understanding Field-Programmable Gate Arrays (FPGAs) from First Principles');
-  
+
   // Check if this is the RGB LED article (same font/header as FPGA but white background)
   const isRGBLedArticle = article && slugify(article.title) === slugify('RTL Design of a RGB LED Mixer');
-  const useFPGAStyle = isFPGAArticle || isRGBLedArticle;
+
+  // LoRA article: white background, serif font, simpler header
+  const isLoRAArticle = article && slugify(article.title) === slugify('The mechanics of LoRA: adapters, rank, and multi-tenant serving');
+  const isMultiLoRAArticle = article && slugify(article.title) === slugify('Multi-LoRA at scale: an empirical map of vLLM\'s operating range');
+  const useFPGAStyle = isFPGAArticle || isRGBLedArticle || isLoRAArticle || isMultiLoRAArticle;
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const articleRef = useRef(null);
+  const headerRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [currentSection, setCurrentSection] = useState('');
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const [showBar, setShowBar] = useState(false);
+
+  const sections = isLoRAArticle ? LORA_SECTIONS : isMultiLoRAArticle ? MULTI_LORA_SECTIONS : null;
 
   useEffect(() => {
     requestAnimationFrame(() => setIsLoaded(true));
   }, []);
 
   useEffect(() => {
+    if (!sections) return;
+    const onScroll = () => {
+      const el = articleRef.current;
+      const hdr = headerRef.current;
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      setScrollProgress(total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 0);
+
+      if (hdr) setShowBar(hdr.getBoundingClientRect().bottom < 0);
+
+      let active = sections[0].label;
+      let activeIdx = 0;
+      for (let i = 0; i < sections.length; i++) {
+        const heading = document.getElementById(sections[i].id);
+        if (heading && heading.getBoundingClientRect().top <= 100) {
+          active = sections[i].label;
+          activeIdx = i;
+        }
+      }
+      setCurrentSection(active);
+      setCurrentSectionIndex(activeIdx);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [sections]);
+
+  useEffect(() => {
     if (isFPGAArticle) {
       document.body.style.backgroundColor = '#f5efeb';
       return () => { document.body.style.backgroundColor = ''; };
     }
-  }, [isFPGAArticle]);
+    if (isLoRAArticle || isMultiLoRAArticle) {
+      document.body.style.backgroundColor = '#ffffff';
+      return () => { document.body.style.backgroundColor = ''; };
+    }
+  }, [isFPGAArticle, isLoRAArticle, isMultiLoRAArticle]);
 
   if (!article) {
     return null;
   }
 
   // Custom theme for FPGA-style articles
-  const bgColor = isFPGAArticle ? 'bg-[#f5efeb]/90' : 'bg-transparent';
-  const textColor = useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
-  const titleColor = useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white';
+  let bgColor = 'bg-transparent';
+  if (isFPGAArticle) bgColor = 'bg-[#f5efeb]/90';
+  else if (isLoRAArticle || isMultiLoRAArticle) bgColor = 'bg-white';
+  const isLoRAFamily = isLoRAArticle || isMultiLoRAArticle;
+  const textColor = isLoRAFamily ? 'text-[#000000]' : (useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white');
+  const titleColor = isLoRAFamily ? 'text-[#000000]' : (useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white');
 
   return (
-    <div className={`min-h-dvh w-full ${bgColor} transition-colors duration-200`}>
+    <div ref={articleRef} className={`min-h-dvh w-full ${bgColor} transition-colors duration-200`}>
+      {isLoRAFamily && sections && (
+        <div
+          className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+          style={{
+            opacity: showBar ? 1 : 0,
+            pointerEvents: showBar ? 'auto' : 'none',
+            transform: showBar ? 'translateY(0)' : 'translateY(-100%)',
+            fontFamily: '"IBM Plex Sans", sans-serif',
+          }}
+        >
+          <div className="bg-white/95 backdrop-blur-sm border-b border-black/5">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-8">
+              <div className="flex items-center gap-2 min-w-0">
+                <button
+                  onClick={() => {
+                    const id = sections[currentSectionIndex]?.id;
+                    const el = id && document.getElementById(id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="text-[11px] font-medium text-[#000000]/50 hover:text-[#023e7d] tracking-wide truncate transition-colors duration-200 cursor-pointer"
+                >
+                  {currentSection}
+                </button>
+                <span className="text-[10px] text-[#000000]/30 flex-shrink-0">{currentSectionIndex + 1} / {sections.length}</span>
+              </div>
+              <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                <span className="text-[10px] tabular-nums text-[#000000]/30">{Math.round(scrollProgress * 100)}%</span>
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="text-[#000000]/30 hover:text-[#023e7d] transition-colors duration-200"
+                  aria-label="Back to top"
+                >
+                  <ArrowUp size={12} />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="h-[2px] bg-[#0B1120]/5">
+            <div className="h-full bg-[#023e7d]/70 transition-[width] duration-75 ease-linear" style={{ width: `${scrollProgress * 100}%` }} />
+          </div>
+        </div>
+      )}
       {article.quote && (
       <div className={`px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10 transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-base sm:text-lg font-light icon-sweep">
@@ -1021,37 +1415,41 @@ const ArticleDetail = ({ onNavigate }) => {
         </button>
       </div>
       )}
-      <div className={`max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`} style={useFPGAStyle ? { fontFamily: 'Lora, serif' } : undefined}>
-        <div className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? 'text-xl sm:text-2xl md:text-3xl max-w-5xl' : 'text-3xl sm:text-4xl font-serif italic tracking-tight leading-tight'}`}>{article.title}</h1>
+      <div
+        className={`max-w-4xl mx-auto px-4 ${isLoRAFamily ? 'pt-20 pb-16' : 'py-16'} sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`}
+        style={
+          isLoRAFamily
+            ? { fontFamily: '"IBM Plex Sans", sans-serif' }
+            : useFPGAStyle
+              ? { fontFamily: 'Lora, serif' }
+              : undefined
+        }
+      >
+        <div ref={headerRef} className={useFPGAStyle ? 'mt-8' : ''}>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-xl sm:text-2xl md:text-3xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-semibold italic tracking-tight leading-tight'}`}>{article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
-              <span className="text-sm">By: Priyal Taneja</span>
-              <div className="flex items-center space-x-1.5">
-                <a 
-                  href="https://www.linkedin.com/in/priyaltaneja/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+              <span className="text-sm">Priyal Taneja</span>
+              <div className="flex items-center space-x-1 -ml-1.5 translate-y-[1px]">
+                <a
+                  href="https://www.linkedin.com/in/priyaltaneja/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[#1a1a1a] hover:text-[#1a1a1a]/70 transition-colors duration-200"
                   aria-label="LinkedIn"
                 >
-                  <FaLinkedinIn size={16} />
+                  <FaLinkedinIn size={13} />
                 </a>
-                <a 
-                  href="https://x.com/TanejaPriyal" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://x.com/TanejaPriyal"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[#1a1a1a] hover:text-[#1a1a1a]/70 transition-colors duration-200"
                   aria-label="Twitter"
                 >
-                  <RiTwitterXFill size={16} />
+                  <RiTwitterXFill size={13} />
                 </a>
-              </div>
-              <span className="text-[#1a1a1a]">|</span>
-              <div className="flex items-center gap-1.5">
-                <Clock size={14} className="text-[#1a1a1a]" />
-                <span className="text-sm">30 min read</span>
               </div>
               <span className="text-[#1a1a1a]">|</span>
               {article.date && (
@@ -1074,12 +1472,53 @@ const ArticleDetail = ({ onNavigate }) => {
             </div>
             </>
           )}
+          {isLoRAArticle && (
+            <>
+              <p className={`italic text-[16px] text-[#33415c] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                {article.subtitle}
+              </p>
+              <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                <span className="text-[11px] font-semibold tracking-widest uppercase text-[#023e7d]/80">Part 1 of 2</span>
+                <p className="text-[13px] leading-relaxed text-[#000000]/55 mt-1">
+                  This is the first of a two-part series on LoRA serving. If you're already comfortable with the fundamentals, feel free to skip ahead to{' '}
+                  <button
+                    onClick={() => onNavigate('multi-lora-at-scale')}
+                    className="text-[#023e7d]/80 hover:text-[#023e7d] underline decoration-[#023e7d]/30 underline-offset-2 hover:decoration-[#023e7d] transition-colors duration-200"
+                  >
+                    Part 2: Multi-LoRA at scale
+                  </button>.
+                </p>
+              </div>
+            </>
+          )}
+          {isMultiLoRAArticle && (
+            <>
+              <p className={`italic text-[16px] text-[#33415c] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                {article.subtitle}
+              </p>
+              <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                <span className="text-[11px] font-semibold tracking-widest uppercase text-[#023e7d]/80">Part 2 of 2</span>
+                <p className="text-[13px] leading-relaxed text-[#000000]/55 mt-1">
+                  This is the second part of a two-part series. The first article,{' '}
+                  <button
+                    onClick={() => onNavigate('mechanics-of-lora')}
+                    className="text-[#023e7d]/80 hover:text-[#023e7d] underline decoration-[#023e7d]/30 underline-offset-2 hover:decoration-[#023e7d] transition-colors duration-200"
+                  >
+                    The mechanics of LoRA
+                  </button>, covers the conceptual foundations that this article builds on.
+                </p>
+              </div>
+            </>
+          )}
         </div>
+        {isLoRAFamily && (
+          <hr className={`border-t border-black/10 mt-6 mb-12 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} />
+        )}
         {article.date && !useFPGAStyle && (
-        <div className={`text-gray-500 dark:text-gray-400 text-lg mb-8 transition-opacity duration-700 delay-150 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
+        <div className={`text-gray-500 dark:text-gray-400 text-lg mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
         )}
         {article.quote && (
-          <div className={`transition-opacity duration-700 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <hr className="border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
         <div className="italic text-xl text-white/50 mb-8">{article.quote}</div>
           </div>
@@ -1602,23 +2041,65 @@ const ArticleDetail = ({ onNavigate }) => {
             </ul>
           </div>
         )}
-        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           {React.cloneElement(article.content, {
             className: `${textColor} transition-colors duration-200`
           })}
         </div>
-        <div className="flex justify-center mt-12 mb-8">
-          <button
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="flex items-center gap-2 text-lg font-light cursor-pointer group"
-            aria-label="Back to the top"
-          >
-            <ArrowUp size={16} className="text-white/60 group-hover:text-white transition-colors duration-200" />
-            <span className="text-sweep-group">back to the top</span>
-          </button>
-        </div>
+        {isLoRAArticle && (
+          <div className="flex justify-end mt-8 mb-4 border-t border-black/10 pt-8">
+            <button
+              onClick={() => onNavigate('multi-lora-at-scale')}
+              className="flex items-center gap-2 text-[15px] font-medium transition-colors duration-200 group"
+              style={{ color: '#023e7d' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#001845'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#023e7d'; }}
+            >
+              <span>Part 2: Multi-LoRA at scale</span>
+              <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+            </button>
+          </div>
+        )}
+        {isMultiLoRAArticle && (
+          <div className="flex justify-between items-center mt-8 mb-4 border-t border-black/10 pt-8">
+            <button
+              onClick={() => onNavigate('mechanics-of-lora')}
+              className="flex items-center gap-2 text-[15px] font-medium transition-colors duration-200 group"
+              style={{ color: '#023e7d' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#001845'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#023e7d'; }}
+            >
+              <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
+              <span>Part 1: The mechanics of LoRA</span>
+            </button>
+            <a
+              href="https://github.com/priyaltaneja/multi-lora-serving-benchmark"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[15px] font-medium transition-colors duration-200"
+              style={{ color: '#023e7d' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#001845'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#023e7d'; }}
+            >
+              <FaGithub size={16} />
+              <span>View benchmark code</span>
+            </a>
+          </div>
+        )}
+        {!isLoRAFamily && (
+          <div className="flex justify-center mt-12 mb-8">
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="flex items-center gap-2 text-lg font-light cursor-pointer group"
+              aria-label="Back to the top"
+            >
+              <ArrowUp size={16} className="text-white/60 group-hover:text-white transition-colors duration-200" />
+              <span className="text-sweep-group">back to the top</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
