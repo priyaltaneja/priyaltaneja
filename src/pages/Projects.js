@@ -152,7 +152,7 @@ const Projects = ({ onNavigate }) => {
                                 href={part.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-0.5 text-xs font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
+                                className="px-2.5 py-0.5 text-sm font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
                               >
                                 {part.label}
                               </a>
@@ -165,7 +165,7 @@ const Projects = ({ onNavigate }) => {
                                 className="ml-1 text-zinc-300 hover:text-white transition-colors duration-200"
                                 aria-label="GitHub repository"
                               >
-                                <FaGithub size={16} />
+                                <FaGithub size={18} />
                               </a>
                             )}
                           </>
