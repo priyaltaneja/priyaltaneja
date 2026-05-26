@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Clock, Download, ArrowUp } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Download, ArrowUp } from 'lucide-react';
 import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { findArticleBySlug, slugify } from '../utils/slugify';

@@ -7,7 +7,6 @@ const RULE = '#C8D1DD';
 const FILL = '#F0F4F8';
 
 const NAVY = '#023e7d';
-const PURPLE = '#33415c';
 
 const FONT = "'IBM Plex Sans', sans-serif";
 

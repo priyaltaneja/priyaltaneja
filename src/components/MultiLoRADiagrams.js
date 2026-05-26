@@ -60,13 +60,6 @@ const DiagramFrame = ({ label, children, caption }) => (
   </figure>
 );
 
-const HGrid = ({ ticks, toY, x0, x1 }) => (
-  <>{ticks.map(t => (
-    <line key={t} x1={x0} y1={toY(t)} x2={x1} y2={toY(t)}
-      stroke={MUTED} strokeWidth="0.3" strokeDasharray="2 3" opacity="0.3" />
-  ))}</>
-);
-
 /* ================================================================
    FIG 1 - Memory hierarchy
    ================================================================ */
