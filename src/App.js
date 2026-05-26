@@ -134,7 +134,7 @@ function App() {
               </button>
 
               <ul
-                className="flex items-center text-base sm:text-lg font-light text-white/60 transition-transform duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                className="flex items-center text-sm md:text-base font-light text-white/60 transition-transform duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
                   transform: isSubPage ? 'translateX(44px)' : 'translateX(0px)',
                 }}
