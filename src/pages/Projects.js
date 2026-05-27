@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { PenLine } from 'lucide-react';
 import { FaMediumM, FaYoutube, FaChrome, FaGithub } from 'react-icons/fa';
+import { publicAsset } from '../utils/assets';
 
 const PROJECTS = [
   {
     title: "LoRA Serving: A Two-Part Series",
     description: "the mechanics of LoRA fine-tuning, followed by an empirical study of vLLM's multi-tenant serving range, with 1,000 adapters benchmarked on a single 80 GB GPU.",
-    image: process.env.PUBLIC_URL + "/images/LoRA.jpeg",
+    image: publicAsset("/images/LoRA.jpeg"),
     parts: [
       { url: '/mechanics-of-lora', label: 'Part 1' },
       { url: '/multi-lora-at-scale', label: 'Part 2' },
@@ -24,7 +25,7 @@ const PROJECTS = [
   {
     title: "Understanding FPGAs from First Principles",
     description: "a deep dive into how FPGAs work, from logic gates to lookup tables to configurable logic blocks. written to build intuition from the ground up.",
-    image: process.env.PUBLIC_URL + "/images/FPGA.jpg",
+    image: publicAsset("/images/FPGA.jpg"),
     links: [
       {
         url: `/understanding-fpgas-from-first-principles`,
@@ -37,7 +38,7 @@ const PROJECTS = [
   {
     title: "NextScholar",
     description: "a chrome extension that helps students find and compare universities. full-stack app with a focus on clean UX and fast search.",
-    image: process.env.PUBLIC_URL + "/images/NextScholarImage.png",
+    image: publicAsset("/images/NextScholarImage.png"),
     links: [
       {
         url: "https://chromewebstore.google.com/detail/nextscholar/ndohegljfodihdiaopgalhlinaamcfbj",
@@ -49,7 +50,7 @@ const PROJECTS = [
   {
     title: "Semantic Search Engine",
     description: "built a search engine that understands meaning, not just keywords. uses embeddings and cosine similarity to rank results by semantic relevance.",
-    image: process.env.PUBLIC_URL + "/images/SemanticSearchImage.png",
+    image: publicAsset("/images/SemanticSearchImage.png"),
     links: [
       {
         url: "https://priyaltaneja.medium.com/from-query-to-meaning-reshaping-the-landscape-of-google-search-results-through-semantic-search-7f5aa02ebc65",
@@ -61,7 +62,7 @@ const PROJECTS = [
   {
     title: "Grover's Algorithm",
     description: "implemented Grover's quantum search algorithm to optimize unstructured database searching. explored quantum speedup over classical approaches.",
-    image: process.env.PUBLIC_URL + "/images/GroversImage.png",
+    image: publicAsset("/images/GroversImage.png"),
     links: [
       {
         url: "https://priyaltaneja.medium.com/optimizing-database-searching-with-grovers-algorithm-cad50a603494",

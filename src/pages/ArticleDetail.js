@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Play, Pause, RotateCcw, Download,
 import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import { findArticleBySlug, slugify } from '../utils/slugify';
+import { publicAsset } from '../utils/assets';
 import TwitterEmbed from '../components/TwitterEmbed';
 import {
   ScalingDiagram,
@@ -24,25 +25,25 @@ const FPGA_SLIDES = [
   {
     number: 1,
     title: "Configurable Logic Block (CLB)",
-    image: process.env.PUBLIC_URL + "/images/CLB.png",
+    image: publicAsset("/images/CLB.png"),
     text: "The CLBs are the FPGA's basic logic units, which you configure to carry out the digital operations and functionality your circuit requires."
   },
   {
     number: 2,
     title: "Programmable Interconnect",
-    image: process.env.PUBLIC_URL + "/images/IConnect.png",
+    image: publicAsset("/images/IConnect.png"),
     text: "The programmable interconnect is the reconfigurable wiring fabric that links logic, memory, and I/O resources according to the user's design."
   },
   {
     number: 3,
     title: "Input/Output Blocks",
-    image: process.env.PUBLIC_URL + "/images/IO.png",
+    image: publicAsset("/images/IO.png"),
     text: "The I/O blocks form the interface between the FPGA's internal circuitry and the outside world, enabling communication with external components and systems."
   },
   {
     number: 4,
     title: "Specialized Blocks",
-    image: process.env.PUBLIC_URL + "/images/SB.png",
+    image: publicAsset("/images/SB.png"),
     text: "Specialized blocks are fixed-function hardware elements integrated into the chip to support operations that benefit from optimized, non-programmable circuitry."
   }
 ];
@@ -157,15 +158,15 @@ const FPGASlideshow = () => {
 };
 
 const LUT_SLIDES = [
-  { number: 1, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_1.PNG" },
-  { number: 2, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_2.PNG" },
-  { number: 3, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_3.png" },
-  { number: 4, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_4.PNG" },
-  { number: 5, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_5.PNG" },
-  { number: 6, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_6.PNG" },
-  { number: 7, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_7.PNG" },
-  { number: 8, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_8.PNG" },
-  { number: 9, image: process.env.PUBLIC_URL + "/images/FPGA_4.2_9.PNG" }
+  { number: 1, image: publicAsset("/images/FPGA_4.2_1.PNG") },
+  { number: 2, image: publicAsset("/images/FPGA_4.2_2.PNG") },
+  { number: 3, image: publicAsset("/images/FPGA_4.2_3.png") },
+  { number: 4, image: publicAsset("/images/FPGA_4.2_4.PNG") },
+  { number: 5, image: publicAsset("/images/FPGA_4.2_5.PNG") },
+  { number: 6, image: publicAsset("/images/FPGA_4.2_6.PNG") },
+  { number: 7, image: publicAsset("/images/FPGA_4.2_7.PNG") },
+  { number: 8, image: publicAsset("/images/FPGA_4.2_8.PNG") },
+  { number: 9, image: publicAsset("/images/FPGA_4.2_9.PNG") }
 ];
 
 const HDLCodeExample = () => {
@@ -586,7 +587,7 @@ const articles = [
 
         <h2 id="fpga-architectural-overview" className="text-2xl font-medium mt-8 mb-4">3. An Overview of an FPGA's Architecture</h2>
         <p className="text-lg mb-6">Modern FPGAs can be visualized as a two-dimensional matrix of small logic units surrounded by a programmable wiring network. Instead of instruction-driven execution, like those found in CPUs and GPUs, the FPGA contains no predefined instructions. It offers a canvas of logic elements, routing switches, memory structures, and hardwired computational blocks that can be interconnected to form almost any digital circuit.</p>
-        <img src={process.env.PUBLIC_URL + "/images/FPGAOverview.PNG"} alt="FPGA Architectural Overview" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/FPGAOverview.PNG")} alt="FPGA Architectural Overview" className="w-full max-w-4xl mx-auto my-8" />
         <p className="text-lg mb-6">When a configuration bitstream is loaded, it does not instruct the FPGA how to execute operations serially but rather redefines the structure of the hardware itself. The chip's internal switches are set so that signals flow through logic functions, memory elements, and routing paths. In effect, the FPGA transforms into a custom, application-specific integrated circuit, without requiring new silicon.</p>
         <p className="text-lg mb-6">It's important to note that the specific implementations differ among vendors and models. However, modern FPGAs share the same top-level structure composed of four major elements:</p>
 
@@ -598,7 +599,7 @@ const articles = [
         <p className="text-lg mb-6">The <strong>Configurable Logic Block (CLB)</strong>, variously termed <strong>Logic Array Block (LAB)</strong> or <strong>Logic Element (LE)</strong> depending on the vendor, is the fundamental building block that gives an FPGA its ability to form arbitrary digital circuits.</p>
         <p className="text-lg mb-6">At a high level, a CLB is a cluster of smaller, identical sub-units often called <strong>Slices</strong> or <strong>Adaptive Logic Modules (ALMs)</strong>.</p>
         <img
-          src={process.env.PUBLIC_URL + "/images/ALM_Diagram.png"}
+          src={publicAsset("/images/ALM_Diagram.png")}
           alt="Adaptive Logic Module illustration"
           className="w-full max-w-3xl mx-auto my-2"
         />
@@ -624,13 +625,13 @@ const articles = [
           <li className="text-lg"><strong>Performance Increase:</strong> The dominant source of delay in FPGAs is the programmable interconnect (routing), not the logic itself. By moving to larger LUTs, designs require fewer logic levels (LUTs in series) to implement a function. This reduces the number of interconnect hops a signal must travel through, significantly increasing the maximum frequency of the circuit.</li>
         </ul>
         <p className="text-lg mb-6">Modern LUTs are also fracturable. A single 6-input LUT can typically be split into two 5-input LUTs (sharing some inputs) or two independent small LUTs. This prevents the waste of silicon resources when implementing simple logic functions, ideally balancing the need for deep logic with the efficiency of granular logic.</p>
-        <img src={process.env.PUBLIC_URL + "/images/Fracturable-LUT.PNG"} alt="Fracturable LUT" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/Fracturable-LUT.PNG")} alt="Fracturable LUT" className="w-full max-w-4xl mx-auto my-8" />
 
         <h3 id="flip-flops-registers" className="text-xl font-medium mt-6 mb-3">4.2 Flip-Flops and Registers</h3>
         <p className="text-lg mb-6">LUTs give an FPGA the ability to implement arbitrary combinational logic, but by itself it cannot hold information. Digital systems require a way to remember intermediate results, synchronize operations, and ensure signals remain stable long enough for downstream logic to evaluate them. Hence, each logic cell includes one or more dedicated flip-flops (FF) that serve as a fundamental storage resource.</p>
         <p className="text-lg mb-6">At a conceptual level, a flip-flop is a one-bit memory element that updates its stored value only when a clock signal transitions. The FPGA uses D-type edge-triggered flip-flops, where the data input is sampled just before the active clock transition and then transferred to the output at the moment of the edge. Between clock events, the output remains fixed, even if upstream signals continue to fluctuate.</p>
         <img
-          src={process.env.PUBLIC_URL + "/images/Clock_Cycle.png"}
+          src={publicAsset("/images/Clock_Cycle.png")}
           alt="Clock cycle illustration"
           className="w-full max-w-3xl mx-auto my-2"
         />
@@ -640,21 +641,21 @@ const articles = [
         <h3 id="carry-chains" className="text-xl font-medium mt-6 mb-3">4.3 Carry Chains</h3>
         <p className="text-lg mb-6">Binary addition and subtraction rely on the propagation of a <em>carry</em> bit. In a standard ripple-carry adder, the carry-out from bit <span className="font-mono">N</span> must propagate to the input of bit <span className="font-mono">N</span>+1. If implemented using standard LUTs and general routing, a 32-bit adder would require the signal to traverse 32 LUTs and 32 interconnect segments, resulting in prohibitive delays.</p>
         <p className="text-lg mb-6">To solve this, FPGAs incorporate dedicated carry logic, a hardwired silicon path that runs vertically between adjacent Slices. This bypasses the general routing fabric entirely. When an adder is synthesized, the LUTs compute the sum bits, while the carry propagation is offloaded to this dedicated high-speed avenue. The carry signal can traverse a Slice in mere picoseconds, allowing FPGAs to implement wide counters and adders (eg. 64-bit or 128-bit) that operate at hundreds of Megahertz.</p>
-        <img src={process.env.PUBLIC_URL + "/images/CarryChainsALM.PNG"} alt="Diagram of ALMs arranged vertically with carry-chain circuitry" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/CarryChainsALM.PNG")} alt="Diagram of ALMs arranged vertically with carry-chain circuitry" className="w-full max-w-4xl mx-auto my-8" />
 
         <h2 id="programmable-interconnect" className="text-2xl font-medium mt-8 mb-4">5. Programmable Interconnect</h2>
         <p className="text-lg mb-6">Once the CLBs have been defined to perform specific operations, the next challenge in FPGA design is establishing the pathways that enable communication between these logic units. FPGAs don't simply contain isolated logic blocks; they require interconnections to form functional circuits that facilitate data transfer between logic blocks, memory units, and other specialized resources. This is achieved through a network of pre-fabricated wires and programmable switches.</p>
 
         <h3 id="routing-channels" className="text-xl font-medium mt-6 mb-3">5.1 Routing Channels</h3>
         <p className="text-lg mb-6">As previously established, the CLBs are arranged in a grid-like structure, with channels positioned in the rows and columns adjoining them. These channels are made up of fixed wire segments that provide predefined paths for signal transmission across the FPGA. Although the wires themselves remain static, their strategic placement allows for significant routing flexibility.</p>
-        <img src={process.env.PUBLIC_URL + "/images/Interconnect2.PNG"} alt="Interconnect routing channels" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/Interconnect2.PNG")} alt="Interconnect routing channels" className="w-full max-w-4xl mx-auto my-8" />
         <p className="text-lg mb-6">To connect one logic block to another, a signal must first exit the logic block pin, then enter the adjacent routing channel and traverse through the network to reach its destination. By leveraging the right combination of horizontal and vertical channels, each logic block is guaranteed a direct path to any other component on the board. When possible, data prioritizes the travel through local wires that connect neighbouring CLBs, to minimize delay. This grid-based layout provides the FPGA with both the reach and adaptability to implement circuits with varying complexity.</p>
 
         <h3 id="switch-matrices" className="text-xl font-medium mt-6 mb-3">5.2 Switch Matrices</h3>
         <p className="text-lg mb-6">The mechanism that makes these fixed wires <em>programmable</em> is the <strong>Switch Matrix</strong> located at the intersection of every horizontal and vertical channel. A Switch Matrix is a collection of pass transistors whose states are controlled by SRAM cells.</p>
-        <img src={process.env.PUBLIC_URL + "/images/Switch_Matrix.PNG"} alt="Switch Matrix diagram" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/Switch_Matrix.PNG")} alt="Switch Matrix diagram" className="w-full max-w-4xl mx-auto my-8" />
         <p className="text-lg mb-6">When a routing path is defined, the configuration bitstream turns on specific transistors within the matrix, creating a conductive 90-degree or 180-degree path for signals to travel through. By default, the transistors remain in an off state, meaning the connection between the vertical and horizontal wires is open and electrically isolated.</p>
-        <img src={process.env.PUBLIC_URL + "/images/Switch_Memory.PNG"} alt="Switch Memory cell" className="w-full max-w-4xl mx-auto my-8" />
+        <img src={publicAsset("/images/Switch_Memory.PNG")} alt="Switch Memory cell" className="w-full max-w-4xl mx-auto my-8" />
 
         <h3 id="key-parameters" className="text-xl font-medium mt-6 mb-3">5.3 Key Parameters</h3>
         <p className="text-lg mb-6">The routing network's behaviour is governed by several architectural parameters that determine how many paths exist, how far signals can travel, and how much delay each connection incurs. Understanding these parameters and design trade-offs is essential for appreciating how FPGAs achieve their reconfigurability.</p>
@@ -862,7 +863,7 @@ const articles = [
     content: (
       <>
         <img 
-          src={process.env.PUBLIC_URL + "/images/LEDgif.gif"} 
+          src={publicAsset("/images/LEDgif.gif")} 
           alt="RGB LED Mixer demonstration" 
           className="w-full max-w-[224px] mx-auto my-8"
         />
@@ -896,7 +897,7 @@ const articles = [
           <li className="text-lg">An LED output that appears brighter or dimmer based on that waveform</li>
         </ul>
         <img 
-          src={process.env.PUBLIC_URL + "/images/RGB_Overview.png"} 
+          src={publicAsset("/images/RGB_Overview.png")} 
           alt="RGB LED Mixer system overview" 
           className="w-full max-w-4xl mx-auto my-8"
         />
@@ -905,7 +906,7 @@ const articles = [
         <h2 id="handling-asynchronous-input" className="text-2xl font-medium mt-8 mb-4 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg inline-block">Handling Asynchronous Input</h2>
         <p className="text-lg mb-6">A rotary encoder is a mechanical device, so its two signals (A and B) are not synchronized to the clock signal. They can change at any time. On top of that, the metal contacts inside the encoder tend to bounce, which means one physical step often produces a short burst of rapid 0→1→0 transitions before it settles.</p>
         <img 
-          src={process.env.PUBLIC_URL + "/images/EncoderSignal.png"} 
+          src={publicAsset("/images/EncoderSignal.png")} 
           alt="Encoder signal bouncing" 
           className="w-full max-w-xs mx-auto my-8"
         />
@@ -920,7 +921,7 @@ const articles = [
         <p className="text-lg mb-6">The core idea is simple. Instead of trusting the input instantly, we sample it over a period of time and only accept it as real when it says the same for long enough.</p>
         <div className="my-8 flex flex-col items-center">
           <img 
-            src={process.env.PUBLIC_URL + "/images/Debounce.png"} 
+            src={publicAsset("/images/Debounce.png")} 
             alt="Debounce block diagram" 
             className="w-full max-w-md mx-auto"
           />
@@ -940,7 +941,7 @@ const articles = [
         <p className="text-lg mb-6">A rotary encoder outputs two square waves that are offset in time. This is called quadrature behaviour. The direction is encoded by which signal changes first. If A leads B, the rotation is in one direction and if A lags B, then the opposite direction is valid. The key point is that the direction is not determined by a single signal, but by the relationship between A and B over time.</p>
         <div className="my-8">
           <img 
-            src={process.env.PUBLIC_URL + "/images/encoder.png"} 
+            src={publicAsset("/images/Encoder.png")} 
             alt="Encoder block diagram" 
             className="w-full max-w-4xl mx-auto"
           />
@@ -1459,7 +1460,7 @@ const ArticleDetail = ({ onNavigate }) => {
                 <>
               <span className="text-[#1a1a1a]">|</span>
               <a
-                href={process.env.PUBLIC_URL + "/Understanding_FPGAs_from_First_Principles.pdf"}
+                href={publicAsset("/Understanding_FPGAs_from_First_Principles.pdf")}
                 download
                 className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#fce7f3] text-[#1a1a1a] font-medium hover:bg-[#f9d4e8] transition-colors duration-200 border border-[#1a1a1a]/20 shadow-sm"
                 aria-label="Download PDF"
