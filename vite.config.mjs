@@ -1,7 +1,19 @@
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
+import { execFileSync } from 'node:child_process';
+
+const getLastUpdated = () => {
+  try {
+    return execFileSync('git', ['log', '-1', '--format=%cd', '--date=format:%B %Y'], { encoding: 'utf8' }).trim().toLowerCase();
+  } catch {
+    return 'may 2026';
+  }
+};
 
 export default defineConfig({
+  define: {
+    __LAST_UPDATED__: JSON.stringify(getLastUpdated()),
+  },
   plugins: [
     {
       name: 'treat-src-js-as-jsx',

@@ -16,6 +16,7 @@ const IMAGES = [
 const CARD_WIDTH = 160;
 const CARD_HEIGHT = 255;
 const AUTO_SCROLL_SPEED = 0.5;
+const LAST_UPDATED = typeof __LAST_UPDATED__ === 'string' ? __LAST_UPDATED__ : 'may 2026';
 
 const useIsDesktop = () => {
   const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 768);
@@ -369,6 +370,9 @@ const Portfolio = ({ onNavigate, animateIntro = false }) => {
                 </a>
               </li>
             </ul>
+            <p className="mt-4 text-[11px] font-light text-white/30">
+              last updated {LAST_UPDATED}
+            </p>
           </div>
         </div>
 
