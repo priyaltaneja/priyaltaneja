@@ -124,78 +124,80 @@ const Projects = ({ onNavigate }) => {
               return (
                 <div
                   key={project.title}
-                  className="flex flex-col sm:flex-row gap-4 sm:gap-5 group"
+                  className="group"
                 >
-                  <a
-                    href={primaryLink.url}
-                    {...(primaryLink.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                    onClick={primaryLink.internal ? handleClick : undefined}
-                    className="w-full sm:w-48 aspect-[16/10] sm:aspect-auto sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black cursor-pointer block"
-                  >
-                    <ProjectImage
-                      src={project.image}
-                      alt={project.title}
-                      onLoad={handleImageLoad}
-                    />
-                  </a>
+                  <div className="flex items-start gap-3.5 sm:gap-5">
+                    <a
+                      href={primaryLink.url}
+                      {...(primaryLink.internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                      onClick={primaryLink.internal ? handleClick : undefined}
+                      className="hidden sm:block sm:w-48 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black cursor-pointer"
+                    >
+                      <ProjectImage
+                        src={project.image}
+                        alt={project.title}
+                        onLoad={handleImageLoad}
+                      />
+                    </a>
 
-                  <div className="flex flex-col justify-center min-w-0">
-                    <div className="flex items-start justify-between">
-                      <h3 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
-                        {project.title}
-                      </h3>
-                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
-                        {project.parts ? (
-                          <>
-                            {project.parts.map((part, i) => (
-                              <a
-                                key={i}
-                                href={part.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-2.5 py-0.5 text-sm font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
-                              >
-                                {part.label}
-                              </a>
-                            ))}
-                            {project.repo && (
-                              <a
-                                href={project.repo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="ml-1 text-zinc-300 hover:text-white transition-colors duration-200"
-                                aria-label="GitHub repository"
-                              >
-                                <FaGithub size={18} />
-                              </a>
-                            )}
-                          </>
-                        ) : (
-                          project.links.map((link, i) => {
-                            const isInternal = link.internal;
-                            return (
-                              <a
-                                key={i}
-                                href={link.url}
-                                {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                                onClick={isInternal ? (e) => {
-                                  e.preventDefault();
-                                  onNavigate(link.url.replace('/', ''));
-                                } : undefined}
-                                className="text-zinc-300 hover:text-white transition-colors duration-200"
-                                aria-label={link.label}
-                              >
-                                {React.createElement(link.icon, { size: 18 })}
-                              </a>
-                            );
-                          })
-                        )}
+                    <div className="flex min-w-0 flex-1 flex-col justify-center">
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-base sm:text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
+                          {project.title}
+                        </h3>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          {project.parts ? (
+                            <>
+                              {project.parts.map((part, i) => (
+                                <a
+                                  key={i}
+                                  href={part.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2 py-0.5 text-xs sm:px-2.5 sm:text-sm font-light text-zinc-300 hover:text-white border border-zinc-500/40 hover:border-zinc-300/80 rounded-full transition-colors duration-200"
+                                >
+                                  {part.label}
+                                </a>
+                              ))}
+                              {project.repo && (
+                                <a
+                                  href={project.repo}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="ml-1 text-zinc-300 hover:text-white transition-colors duration-200"
+                                  aria-label="GitHub repository"
+                                >
+                                  <FaGithub size={18} />
+                                </a>
+                              )}
+                            </>
+                          ) : (
+                            project.links.map((link, i) => {
+                              const isInternal = link.internal;
+                              return (
+                                <a
+                                  key={i}
+                                  href={link.url}
+                                  {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                                  onClick={isInternal ? (e) => {
+                                    e.preventDefault();
+                                    onNavigate(link.url.replace('/', ''));
+                                  } : undefined}
+                                  className="text-zinc-300 hover:text-white transition-colors duration-200"
+                                  aria-label={link.label}
+                                >
+                                  {React.createElement(link.icon, { size: 18 })}
+                                </a>
+                              );
+                            })
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
-                      {project.description}
-                    </p>
+                      <p className="mt-2 text-zinc-300 text-sm leading-relaxed font-light">
+                        {project.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
