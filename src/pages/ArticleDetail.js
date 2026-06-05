@@ -476,6 +476,29 @@ const articles = [
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Good questions don’t just help you get answers, they also help you become aware of the assumptions you were making without realizing it. I used to view confidence as needing fewer questions, but now I think it might be the willingness to ask clearer ones.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I’ve just begun learning this, it’s not something I’ve mastered yet. I still catch myself filling in gaps too quickly or hesitating before clarifying a basic concept. Though, I’m starting to see the goal is not to avoid not knowing, but being more honest about where my knowledge ends.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6"><strong>Not every gap needs to be filled with a guess. Some gaps just need a really good question.</strong></p>
+        
+        <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
+        
+        <div className="mt-8">
+          <div 
+            className="substack-embed" 
+            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
+            data-substack-domain="fieldnotesbypriyal.substack.com"
+          >
+            <iframe 
+              title="Substack embed"
+              src="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
+              width="100%"
+              height="320"
+              style={{border: '1px solid #333', background: '#111', borderRadius: '8px', colorScheme: 'dark', filter: 'invert(1) hue-rotate(180deg)'}}
+              frameBorder="0" 
+              scrolling="no"
+            />
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
+            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
+          </p>
+        </div>
       </>
     ),
   },
@@ -529,7 +552,7 @@ const articles = [
             />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
-            This piece first went out in field notes by priyal — my weekly corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
+            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
           </p>
         </div>
       </>
