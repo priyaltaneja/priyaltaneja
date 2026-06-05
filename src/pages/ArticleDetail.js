@@ -420,9 +420,15 @@ const articles = [
   {
     title: 'The Quiet Skill of Not Assuming',
     date: 'June 5, 2026',
-    quote: '"Not every gap needs to be filled with a guess. Some gaps just need a really good question."',
+    quote: '"The cost of asking can feel high in the moment, but the cost of assumption is usually higher."',
     content: (
       <>
+        <img
+          src={publicAsset("/images/not-assuming-hero.jpg")}
+          alt="Glowing golden abstract swirls against a dark cosmic background"
+          className="w-full rounded-lg mb-10"
+          loading="eager"
+        />
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Over the last few months, I’ve been in my first engineering role, and a lot of my work has been figuring out how to turn SOPs and internal processes into a product that people can actually use.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Before this, I don’t think I understood how much interpretation exists between a written process and a working product. A document can look really detailed, but once you start building from it, you realize how many decisions are still hidden in the wording.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Misunderstanding a requirement means building the wrong behaviour. If I assume a user will move through a workflow in the ideal way, I might miss the exact place where the experience breaks. If I assume an agent has enough context to make a decision, I might expect it to do something it was never actually set up to do.</p>
