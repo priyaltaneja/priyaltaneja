@@ -418,6 +418,62 @@ const LUTSlideshow = () => {
 
 const articles = [
   {
+    title: 'The Quiet Skill of Not Assuming',
+    date: 'June 5, 2026',
+    quote: '"Not every gap needs to be filled with a guess. Some gaps just need a really good question."',
+    content: (
+      <>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Over the last few months, I’ve been in my first engineering role, and a lot of my work has been figuring out how to turn SOPs and internal processes into a product that people can actually use.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Before this, I don’t think I understood how much interpretation exists between a written process and a working product. A document can look really detailed, but once you start building from it, you realize how many decisions are still hidden in the wording.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Misunderstanding a requirement means building the wrong behaviour. If I assume a user will move through a workflow in the ideal way, I might miss the exact place where the experience breaks. If I assume an agent has enough context to make a decision, I might expect it to do something it was never actually set up to do.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Where this gets complex is that <strong>most assumptions don’t feel like assumptions in the moment. They feel like reasonable interpretations.</strong></p>
+
+        <h2 className="text-2xl font-serif font-light italic tracking-tight leading-tight mt-10 mb-4 text-black dark:text-white">The harder problem isn't not knowing</h2>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">That has been one of the more humbling parts so far. I expected the hard part to be not knowing enough, and of course that is a part of it. There’s a learning curve to obtain all the unknown context, whether that’s about the codebase, the product, how the team operates or the small decisions everyone understands because they’ve been working with the system longer than I have.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">However, I’ve come to understand that the challenge lies in noticing what I do when I don’t know something.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">When I run into something I don’t understand, there’s a choice I can make for myself. I can either ask, clarify, and spend a little more time understanding the problem, or I can quietly fill in the gaps with my inference and hope that it’s right.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I have always valued being independent. I like figuring things out on my own, and for most of my life, that has been treated as a strength. It’s a mindset of trying first, problem-solving, being resourceful, and not asking questions that I could have answered myself.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I still heavily believe in that. There’s a lot of value in being able to sit with a problem before handing it off to someone else. There’s value in researching, testing, iterating, and giving yourself the chance to build confidence through effort.</p>
+
+        <h2 className="text-2xl font-serif font-light italic tracking-tight leading-tight mt-10 mb-4 text-black dark:text-white">When independence quietly turns into ego</h2>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">There is a point where that independence can quietly turn into ego. Not in a loud, arrogant manner, but the type that convinces you that asking for help means you’re less capable. As a result, you keep pushing forward on your own, even though one conversation would get you unstuck faster.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">That realization has been interesting to sit with because the difference is more nuanced than I expected. Sometimes “I’m figuring it out” really does mean that I’m building the muscle and learning how to work through uncertainty on my own. Other times, I’m filling in gaps with assumptions and convincing myself I understand more than I actually do.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">In engineering, that pride can get expensive quickly. A question that feels uncomfortable to ask can save hours of debugging the wrong thing, or building a feature nobody needed, or solving a problem that was never actually the problem.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6"><strong>The cost of asking can feel high in the moment, especially when you’re new to something and want to prove yourself, but the cost of assumption is usually higher.</strong></p>
+
+        <h2 className="text-2xl font-serif font-light italic tracking-tight leading-tight mt-10 mb-4 text-black dark:text-white">It's not about asking more, it's about asking better</h2>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I don’t think the answer is to ask more questions just for the sake of it. It’s to learn how to ask better ones.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">A vague question can leave you just as, if not more, confused. Saying you don’t understand something is honest, but it doesn’t always give someone enough context to work with.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">The questions that have helped me most are the ones that show the scope of my  understanding and the thought process behind it.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-4">This can look like:</p>
+        <div className="mb-6 space-y-3 border-l border-white/20 pl-5">
+          <p className="text-zinc-300 text-lg leading-relaxed font-light italic">“I’m interpreting the requirement as X. Is that right?”</p>
+          <p className="text-zinc-300 text-lg leading-relaxed font-light italic">“I tried A and B, but I’m getting stuck at C. Am I thinking about this the right way?”</p>
+          <p className="text-zinc-300 text-lg leading-relaxed font-light italic">“I was working towards Y. Is the goal here to optimize for speed, simplicity, or flexibility?”</p>
+          <p className="text-zinc-300 text-lg leading-relaxed font-light italic">“What should happen if the user does something outside the expected flow?”</p>
+          <p className="text-zinc-300 text-lg leading-relaxed font-light italic">“Is this edge case worth handling now, or is it out of scope?”</p>
+        </div>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">These questions do more than ask for an answer; they make your thinking visible.</p>
+
+        <h2 className="text-2xl font-serif font-light italic tracking-tight leading-tight mt-10 mb-4 text-black dark:text-white">This goes far beyond engineering</h2>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">So far, I’ve mostly been talking about this through the angle of work, because that’s where this idea first became apparent. For me, it’s an environment where my assumptions have immediate consequences.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Though, the more I think about it, the more I realize this goes far beyond the engineering world.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">So much of interacting with the people around us involves filling in blanks. Someone takes longer to reply, and you’re now under the impression that they're annoyed. A tone shifts, and you start deciding what they meant by it. A friend feels distant, and before you’ve asked anything, you’re already halfway into the narrative that something has changed.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6"><strong>Sometimes we treat our interpretation and bias like facts before we ever check them.</strong></p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">It’s not that every assumption is irrational. We make them because we are trying to make sense of incomplete information. But if left unquestioned, they can quietly shape how we respond to people. You may pull away before asking what’s wrong. You may get defensive before you understand what they meant. You might create an entire story in your head and then react to that narrative instead.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">That’s where I think the skill of not assuming is really valuable; it asks you to pause and think about the way you’re thinking, before turning uncertainty into a concrete conclusion.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">When I catch myself thinking someone doesn’t care, I try to remember that there are probably other explanations I haven’t considered yet.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Instead of saying “I should already know this”, a better question might be “What context am I missing?”</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">And, when I start convincing myself that someone is upset with me, I’ve learned that it’s often better to verify than to build an entire story from my guess.</p>
+        <h2 className="text-2xl font-serif font-light italic tracking-tight leading-tight mt-10 mb-4 text-black dark:text-white">Unlearning what I thought confidence was</h2>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">It’s a small shift in thinking with a bigger impact than you’d think. In both cases, the pattern is the same. There’s missing context, and it’s in your hands to decide whether to ask for it or invent it.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Good questions don’t just help you get answers, they also help you become aware of the assumptions you were making without realizing it. I used to view confidence as needing fewer questions, but now I think it might be the willingness to ask clearer ones.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I’ve just begun learning this, it’s not something I’ve mastered yet. I still catch myself filling in gaps too quickly or hesitating before clarifying a basic concept. Though, I’m starting to see the goal is not to avoid not knowing, but being more honest about where my knowledge ends.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6"><strong>Not every gap needs to be filled with a guess. Some gaps just need a really good question.</strong></p>
+      </>
+    ),
+  },
+  {
     title: 'Unlearning Perfectionism',
     date: 'September 17, 2025',
     quote: '"Perfectionism doesn\'t drive success, it hinders it."',
@@ -1410,8 +1466,8 @@ const ArticleDetail = ({ onNavigate }) => {
         </div>
       )}
       {article.quote && (
-      <div className={`px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10 transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-base sm:text-lg font-light icon-sweep">
+      <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-sm md:text-base font-light icon-sweep">
           <ArrowLeft size={18} /> back to writing
         </button>
       </div>
@@ -1427,7 +1483,7 @@ const ArticleDetail = ({ onNavigate }) => {
         }
       >
         <div ref={headerRef} className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-semibold italic tracking-tight leading-tight'}`}>{article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-light italic tracking-tight leading-tight'}`}>{article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
@@ -1516,12 +1572,12 @@ const ArticleDetail = ({ onNavigate }) => {
           <hr className={`border-t border-black/10 mt-6 mb-12 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} />
         )}
         {article.date && !useFPGAStyle && (
-        <div className={`text-gray-500 dark:text-gray-400 text-lg mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
+        <div className={`text-gray-500 dark:text-gray-400 text-sm md:text-base mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
         )}
         {article.quote && (
           <div className={`transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <hr className="border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
-        <div className="italic text-xl text-white/50 mb-8">{article.quote}</div>
+        <div className="italic text-sm md:text-base text-white/50 mb-8">{article.quote}</div>
           </div>
         )}
         {isFPGAArticle && (
@@ -2042,7 +2098,7 @@ const ArticleDetail = ({ onNavigate }) => {
             </ul>
           </div>
         )}
-        <div className={`prose prose-lg max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`${useFPGAStyle ? 'prose prose-lg' : 'prose reflective-article-content'} max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           {React.cloneElement(article.content, {
             className: `${textColor} transition-colors duration-200`
           })}
@@ -2093,11 +2149,10 @@ const ArticleDetail = ({ onNavigate }) => {
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="flex items-center gap-2 text-lg font-light cursor-pointer group"
+              className="flex items-center justify-center p-2 cursor-pointer group"
               aria-label="Back to the top"
             >
-              <ArrowUp size={16} className="text-white/60 group-hover:text-white transition-colors duration-200" />
-              <span className="text-sweep-group">back to the top</span>
+              <ArrowUp size={18} className="text-white/60 group-hover:text-white transition-colors duration-200" />
             </button>
           </div>
         )}

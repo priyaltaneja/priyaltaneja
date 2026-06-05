@@ -24,6 +24,7 @@ const scrollToTop = () => {
 
 function App() {
   const [displayPage, setDisplayPage] = useState(() => getPageFromPath());
+  const [navPage, setNavPage] = useState(() => getPageFromPath());
   const [visible, setVisible] = useState(true);
   const [appReady, setAppReady] = useState(false);
   const pendingPage = useRef(null);
@@ -39,6 +40,7 @@ function App() {
     if (page === displayPage && !pendingPage.current) return;
 
     pendingPage.current = page;
+    setNavPage(page);
     setVisible(false);
 
     clearTimeout(timerRef.current);
@@ -91,13 +93,20 @@ function App() {
   const loraArticleSlug = 'mechanics-of-lora';
   const multiLoraArticleSlug = 'multi-lora-at-scale';
   const displayPageLower = displayPage.toLowerCase();
+  const navPageLower = navPage.toLowerCase();
   const isFPGAPage = displayPageLower === fpgaArticleSlug;
   const isRGBLedPage = displayPageLower === rgbLedArticleSlug;
   const isLoRAPage = displayPageLower === loraArticleSlug;
   const isMultiLoRAPage = displayPageLower === multiLoraArticleSlug;
+  const isNavFPGAPage = navPageLower === fpgaArticleSlug;
+  const isNavRGBLedPage = navPageLower === rgbLedArticleSlug;
+  const isNavLoRAPage = navPageLower === loraArticleSlug;
+  const isNavMultiLoRAPage = navPageLower === multiLoraArticleSlug;
   const isArticlePage = /^article-/.test(displayPage) || isFPGAPage || isRGBLedPage || isLoRAPage || isMultiLoRAPage;
+  const isNavArticlePage = /^article-/.test(navPageLower) || isNavFPGAPage || isNavRGBLedPage || isNavLoRAPage || isNavMultiLoRAPage;
   const isSubPage = displayPage === 'projects' || displayPage === 'writing';
-  const showSharedNav = !isArticlePage;
+  const isNavSubPage = navPage === 'projects' || navPage === 'writing';
+  const showSharedNav = !isNavArticlePage;
 
   const renderPage = () => {
     if (isArticlePage) {
@@ -120,13 +129,17 @@ function App() {
         className={`min-h-dvh flex flex-col relative z-10 transition-opacity duration-500 ${!isSubPage && !isArticlePage ? 'h-dvh overflow-hidden' : ''}`}
         style={{ opacity: appReady ? 1 : 0 }}
       >
-        {showSharedNav && (
-          <header className="absolute top-0 left-0 right-0 z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+        <header
+          className={`absolute top-0 left-0 right-0 z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10 transition-opacity duration-250 ${
+            showSharedNav ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          aria-hidden={!showSharedNav}
+        >
             <nav className="relative">
               <button
                 onClick={() => handleNavigate('home')}
                 className={`icon-sweep absolute left-0 top-1/2 flex -translate-y-1/2 items-center transition-all duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
-                  isSubPage ? 'translate-x-0 opacity-100 pointer-events-auto' : '-translate-x-4 opacity-0 pointer-events-none'
+                  isNavSubPage ? 'translate-x-0 opacity-100 pointer-events-auto' : '-translate-x-4 opacity-0 pointer-events-none'
                 }`}
                 aria-label="Back to home"
               >
@@ -136,13 +149,13 @@ function App() {
               <ul
                 className="flex items-center text-sm md:text-base font-light text-white/60 transition-transform duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
-                  transform: isSubPage ? 'translateX(44px)' : 'translateX(0px)',
+                  transform: isNavSubPage ? 'translateX(44px)' : 'translateX(0px)',
                 }}
               >
                 <li className="mr-8">
                   <button
                     onClick={() => handleNavigate('projects')}
-                    className={displayPage === 'projects' ? 'glass-text' : 'text-sweep'}
+                    className={navPage === 'projects' ? 'glass-text' : 'text-sweep'}
                   >
                     projects
                   </button>
@@ -150,7 +163,7 @@ function App() {
                 <li>
                   <button
                     onClick={() => handleNavigate('writing')}
-                    className={displayPage === 'writing' ? 'glass-text' : 'text-sweep'}
+                    className={navPage === 'writing' ? 'glass-text' : 'text-sweep'}
                   >
                     writing
                   </button>
@@ -158,7 +171,6 @@ function App() {
               </ul>
             </nav>
           </header>
-        )}
 
         {/* Dark scrim – fades in on subpages to boost contrast against the texture */}
         <div

@@ -194,3 +194,27 @@ body {
   -webkit-mask-position: left;
 }
 
+.reflective-article-content .text-lg {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.reflective-article-content .text-xl {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.reflective-article-content .text-2xl {
+  font-size: 1.125rem;
+  line-height: 1.45;
+}
+
+@media (min-width: 768px) {
+  .reflective-article-content .text-lg {
+    font-size: 1.0625rem;
+  }
+
+  .reflective-article-content .text-2xl {
+    font-size: 1.25rem;
+  }
+}

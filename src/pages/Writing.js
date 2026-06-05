@@ -9,6 +9,11 @@ const articles = [
     externalUrl: 'https://thecollectivecommunity.substack.com/',
   },
   {
+    title: 'The Quiet Skill of Not Assuming',
+    date: 'June 5, 2026',
+    quote: '"The cost of asking can feel high in the moment, but the cost of assumption is usually higher."',
+  },
+  {
     title: 'Unlearning Perfectionism',
     date: 'September 17, 2025',
     quote: '"Perfectionism doesn\'t drive success, it hinders it."',
@@ -225,7 +230,7 @@ const Writing = ({ onNavigate }) => {
                   key={article.title}
                   href={articleHref}
                   {...(isExternal(article) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className={`flex flex-col group pb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30 rounded-sm ${idx !== 0 ? 'pt-8 border-t border-gray-100 dark:border-gray-800' : ''}`}
+                  className={`flex flex-col group pb-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30 rounded-sm ${idx !== 0 ? 'pt-5' : ''}`}
                   onClick={handleArticleClick(article)}
                   onKeyDown={handleArticleKeyDown(article)}
                   onAuxClick={handleArticleAuxClick(article)}
@@ -235,7 +240,7 @@ const Writing = ({ onNavigate }) => {
                     {article.date}
                   </span>
 
-                  <h2 className="text-lg font-serif italic tracking-tight leading-tight text-sweep-group">
+                  <h2 className="text-lg font-serif font-light italic tracking-tight leading-tight text-sweep-group">
                     {article.title}
                   </h2>
 
@@ -246,7 +251,6 @@ const Writing = ({ onNavigate }) => {
               );
             })}
           </div>
-          <div className="text-center text-gray-400 dark:text-gray-500 italic mt-8 text-sm font-light transition-colors duration-200">more articles coming soon...</div>
         </div>
       </div>
     </div>
