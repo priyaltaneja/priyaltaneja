@@ -12,23 +12,11 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    try {
-      return window.localStorage.getItem('priyal-theme') === 'dark';
-    } catch {
-      return false;
-    }
-  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
     document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
-
-    try {
-      window.localStorage.setItem('priyal-theme', isDarkMode ? 'dark' : 'light');
-    } catch {
-      // The theme still works when storage is unavailable.
-    }
   }, [isDarkMode]);
 
   const toggleTheme = () => {
