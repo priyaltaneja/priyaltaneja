@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
@@ -77,16 +76,12 @@ const IndexLink = ({ item, onNavigate }) => {
   );
 };
 
-const Portfolio = ({ onNavigate }) => {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
+const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = false }) => {
   return (
-    <main id="main-content" className={`portfolio-index ${ready ? 'is-ready' : ''}`}>
+    <main
+      id={isTransitionPreview ? undefined : 'main-content'}
+      className={`portfolio-index is-ready${suppressReveal || isTransitionPreview ? ' suppress-reveal' : ''}`}
+    >
       <div className="motion-blur" aria-hidden="true">
         <div className="motion-blur__wash motion-blur__wash--blue" />
         <div className="motion-blur__wash motion-blur__wash--coral" />

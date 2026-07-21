@@ -1332,10 +1332,12 @@ const MULTI_LORA_SECTIONS = [
   { id: 'closing', label: 'Closing' },
 ];
 
-const ArticleDetail = ({ onNavigate }) => {
+const ArticleDetail = ({ onNavigate, articleSlug }) => {
   
-  // Get article slug from pathname, e.g., /article-unlearning-perfectionism or /understanding-fpgas-from-first-principles
-  const path = window.location.pathname;
+  // Use the route being displayed, not the live URL. Navigation updates the URL
+  // before the transition completes, and reading it here would blank the
+  // outgoing article during that handoff.
+  const path = articleSlug || window.location.pathname;
   const pathWithoutSlash = path.startsWith('/') ? path.substring(1) : path;
   // Remove 'article-' prefix if present (case-insensitive) and normalize to lowercase
   const slug = pathWithoutSlash.replace(/^article-/i, '').toLowerCase();

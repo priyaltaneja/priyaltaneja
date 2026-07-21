@@ -1,14 +1,15 @@
 import React from 'react';
 
-const DURATION = 90; // ms
+const DURATION = 140; // ms
+const RETURN_DURATION = 300; // ms
 
-const PageContainer = ({ children, visible }) => {
+const PageContainer = ({ children, visible, isReturningHome = false }) => {
   return (
-    <div className={`page-transition ${visible ? 'is-visible' : 'is-hidden'}`}>
+    <div className={`page-transition ${visible ? 'is-visible' : 'is-hidden'}${isReturningHome ? ' is-returning-home' : ''}`}>
       {children}
     </div>
   );
 };
 
-export { DURATION };
+export { DURATION, RETURN_DURATION };
 export default PageContainer;
