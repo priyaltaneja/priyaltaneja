@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from
 import { Moon, Sun } from 'lucide-react';
 import Portfolio from './Portfolio';
 import ArticleDetail from './pages/ArticleDetail';
-import PageContainer, { DURATION } from './components/PageContainer';
+import PageContainer, { DURATION, RETURN_DURATION } from './components/PageContainer';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
 const ThemeToggle = ({ alignWithArticleHeader = false }) => {
@@ -16,7 +16,12 @@ const ThemeToggle = ({ alignWithArticleHeader = false }) => {
       aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
       aria-pressed={isDarkMode}
     >
-      {isDarkMode ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+      <span className="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">
+        <Moon />
+      </span>
+      <span className="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">
+        <Sun />
+      </span>
     </button>
   );
 };
@@ -58,23 +63,61 @@ const scrollToTop = () => {
 function App() {
   const [displayPage, setDisplayPage] = useState(() => getPageFromPath());
   const [visible, setVisible] = useState(true);
+  const [isReturningHome, setIsReturningHome] = useState(false);
+  const [homePreviewMounted, setHomePreviewMounted] = useState(false);
+  const [homePreviewActive, setHomePreviewActive] = useState(false);
   const [appReady, setAppReady] = useState(false);
   const pendingPage = useRef(null);
   const timerRef = useRef(null);
-  const hasVisitedHomeRef = useRef(getPageFromPath() === 'home');
+  const previewTimerRef = useRef(null);
 
   useEffect(() => {
     requestAnimationFrame(() => setAppReady(true));
   }, []);
 
-  // Transition to a new page: fade out -> swap -> fade in
+  // Forward routes use the veil. Returning home overlaps both pages so there is
+  // never a frame where the dark body is visible between route trees.
   const transitionTo = useCallback((page) => {
     if (page === displayPage && !pendingPage.current) return;
 
     pendingPage.current = page;
-    setVisible(false);
+    const returningHome = page === 'home' && displayPage !== 'home';
+    setIsReturningHome(returningHome);
 
     clearTimeout(timerRef.current);
+    clearTimeout(previewTimerRef.current);
+
+    if (returningHome) {
+      setVisible(true);
+      setHomePreviewActive(false);
+      setHomePreviewMounted(true);
+
+      // Let the transparent preview paint once before fading it over the article.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setHomePreviewActive(true));
+      });
+
+      timerRef.current = setTimeout(() => {
+        pendingPage.current = null;
+        setDisplayPage('home');
+
+        // Hold the preview over the route swap long enough for the new tree and
+        // its animated background to receive a full paint, then dissolve it.
+        timerRef.current = setTimeout(() => {
+          setHomePreviewActive(false);
+          previewTimerRef.current = setTimeout(() => {
+            setHomePreviewMounted(false);
+            setIsReturningHome(false);
+          }, 180);
+        }, 220);
+      }, RETURN_DURATION);
+      return;
+    }
+
+    setHomePreviewMounted(false);
+    setHomePreviewActive(false);
+    setVisible(false);
+
     timerRef.current = setTimeout(() => {
       const next = pendingPage.current;
       pendingPage.current = null;
@@ -119,23 +162,20 @@ function App() {
     scrollToTop();
   }, [displayPage]);
 
-  useEffect(() => {
-    if (displayPage === 'home') {
-      hasVisitedHomeRef.current = true;
-    }
-  }, [displayPage]);
-
-  useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEffect(() => () => {
+    clearTimeout(timerRef.current);
+    clearTimeout(previewTimerRef.current);
+  }, []);
 
   const isArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage) || TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
   const isReflectiveArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
     if (isArticlePage) {
-      return <ArticleDetail onNavigate={handleNavigate} />;
+      return <ArticleDetail onNavigate={handleNavigate} articleSlug={displayPage} />;
     }
 
-    return <Portfolio onNavigate={handleNavigate} animateIntro={!hasVisitedHomeRef.current} />;
+    return <Portfolio onNavigate={handleNavigate} suppressReveal={isReturningHome} />;
   };
 
   return (
@@ -147,9 +187,18 @@ function App() {
         style={{ opacity: appReady ? 1 : 0 }}
       >
         <div className="flex-grow relative z-10">
-          <PageContainer visible={visible}>
+          <PageContainer visible={visible} isReturningHome={isReturningHome}>
             {renderPage()}
           </PageContainer>
+          {homePreviewMounted && (
+            <div
+              className={`route-home-preview${homePreviewActive ? ' is-active' : ''}`}
+              aria-hidden="true"
+              inert=""
+            >
+              <Portfolio onNavigate={handleNavigate} isTransitionPreview />
+            </div>
+          )}
         </div>
       </div>
     </ThemeProvider>

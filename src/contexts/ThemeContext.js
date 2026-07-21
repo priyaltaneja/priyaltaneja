@@ -36,8 +36,8 @@ export const ThemeProvider = ({ children }) => {
     const nextMode = !isDarkMode;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const applyTheme = () => {
-      root.classList.add('theme-changing');
+    const applyTheme = (freezeTransitions = false) => {
+      if (freezeTransitions) root.classList.add('theme-changing');
       flushSync(() => {
         root.classList.toggle('dark', nextMode);
         root.style.colorScheme = nextMode ? 'dark' : 'light';
@@ -45,13 +45,18 @@ export const ThemeProvider = ({ children }) => {
       });
     };
 
-    if (!document.startViewTransition || reduceMotion) {
-      applyTheme();
+    if (reduceMotion) {
+      applyTheme(true);
       window.requestAnimationFrame(() => root.classList.remove('theme-changing'));
       return;
     }
 
-    const transition = document.startViewTransition(applyTheme);
+    if (!document.startViewTransition) {
+      applyTheme();
+      return;
+    }
+
+    const transition = document.startViewTransition(() => applyTheme(true));
     transition.finished.finally(() => root.classList.remove('theme-changing'));
   };
 
