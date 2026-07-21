@@ -5,12 +5,12 @@ import ArticleDetail from './pages/ArticleDetail';
 import PageContainer, { DURATION } from './components/PageContainer';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
-const ThemeToggle = () => {
+const ThemeToggle = ({ alignWithArticleHeader = false }) => {
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <button
-      className="theme-toggle"
+      className={`theme-toggle${alignWithArticleHeader ? ' theme-toggle--article' : ''}`}
       type="button"
       onClick={toggleTheme}
       aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
@@ -128,6 +128,7 @@ function App() {
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   const isArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage) || TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
+  const isReflectiveArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
     if (isArticlePage) {
@@ -140,7 +141,7 @@ function App() {
   return (
     <ThemeProvider>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <ThemeToggle />
+      <ThemeToggle alignWithArticleHeader={isReflectiveArticlePage} />
       <div
         className="min-h-dvh flex flex-col relative z-10 transition-opacity duration-500"
         style={{ opacity: appReady ? 1 : 0 }}
