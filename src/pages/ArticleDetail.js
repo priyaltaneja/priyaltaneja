@@ -21,6 +21,29 @@ import {
   TTFTHeatmapDiagram,
 } from '../components/MultiLoRADiagrams';
 
+const FieldNotesEmbed = () => {
+  const embedUrl = 'https://fieldnotesbypriyal.substack.com/embed?theme=light';
+
+  return (
+    <div
+      className="substack-embed"
+      data-substack-embed={embedUrl}
+      data-substack-domain="fieldnotesbypriyal.substack.com"
+      data-theme="light"
+    >
+      <iframe
+        title="Subscribe to field notes by priyal"
+        src={embedUrl}
+        width="100%"
+        height="320"
+        style={{ colorScheme: 'light' }}
+        frameBorder="0"
+        scrolling="no"
+      />
+    </div>
+  );
+};
+
 const FPGA_SLIDES = [
   {
     number: 1,
@@ -480,21 +503,7 @@ const articles = [
         <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
         
         <div className="mt-8">
-          <div 
-            className="substack-embed" 
-            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
-            data-substack-domain="fieldnotesbypriyal.substack.com"
-          >
-            <iframe 
-              title="Substack embed"
-              src="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
-              width="100%"
-              height="320"
-              style={{border: '1px solid #333', background: '#111', borderRadius: '8px', colorScheme: 'dark', filter: 'invert(1) hue-rotate(180deg)'}}
-              frameBorder="0" 
-              scrolling="no"
-            />
-          </div>
+          <FieldNotesEmbed />
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
             This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
           </p>
@@ -536,21 +545,7 @@ const articles = [
         <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
         
         <div className="mt-8">
-          <div 
-            className="substack-embed" 
-            data-substack-embed="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
-            data-substack-domain="fieldnotesbypriyal.substack.com"
-          >
-            <iframe 
-              title="Substack embed"
-              src="https://fieldnotesbypriyal.substack.com/embed?theme=dark"
-              width="100%"
-              height="320"
-              style={{border: '1px solid #333', background: '#111', borderRadius: '8px', colorScheme: 'dark', filter: 'invert(1) hue-rotate(180deg)'}}
-              frameBorder="0" 
-              scrolling="no"
-            />
-          </div>
+          <FieldNotesEmbed />
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
             This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
           </p>
@@ -560,6 +555,7 @@ const articles = [
   },
   {
     title: 'I\'ll Be Happy When [insert here] — A Reflection on Conditional Happiness Versus True Happiness.',
+    displayTitle: 'I\'ll Be Happy When…',
     date: 'June 6, 2023',
     quote: '"Conditional Happiness not only prevents us from being happy in the present, it also stunts our progress and personal growth. It holds us back from the success we are forfeiting happiness to achieve."',
     image: '/images/article.webp',
@@ -1382,6 +1378,7 @@ const ArticleDetail = ({ onNavigate }) => {
   const isLoRAArticle = article && slugify(article.title) === slugify('The mechanics of LoRA: adapters, rank, and multi-tenant serving');
   const isMultiLoRAArticle = article && slugify(article.title) === slugify('Multi-LoRA at scale: an empirical map of vLLM\'s operating range');
   const useFPGAStyle = isFPGAArticle || isRGBLedArticle || isLoRAArticle || isMultiLoRAArticle;
+  const isReflectiveArticle = !useFPGAStyle;
 
   const [isLoaded, setIsLoaded] = useState(false);
   const articleRef = useRef(null);
@@ -1451,7 +1448,19 @@ const ArticleDetail = ({ onNavigate }) => {
   const titleColor = isLoRAFamily ? 'text-[#000000]' : (useFPGAStyle ? 'text-[#1a1a1a]' : 'text-black dark:text-white');
 
   return (
-    <div ref={articleRef} className={`min-h-dvh w-full ${bgColor} transition-colors duration-200`}>
+    <main
+      id="main-content"
+      ref={articleRef}
+      className={`min-h-dvh w-full ${bgColor} transition-colors duration-200 ${isReflectiveArticle ? 'reflective-article-page' : ''}`}
+    >
+      {isReflectiveArticle && (
+        <div className="motion-blur" aria-hidden="true">
+          <div className="motion-blur__wash motion-blur__wash--blue" />
+          <div className="motion-blur__wash motion-blur__wash--coral" />
+          <div className="motion-blur__wash motion-blur__wash--cyan" />
+          <div className="motion-blur__veil" />
+        </div>
+      )}
       {isLoRAFamily && sections && (
         <div
           className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -1496,13 +1505,13 @@ const ArticleDetail = ({ onNavigate }) => {
       )}
       {article.quote && (
       <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
-        <button onClick={() => onNavigate('writing')} className="flex items-center gap-2 text-sm md:text-base font-light icon-sweep">
-          <ArrowLeft size={18} /> back to writing
+        <button onClick={() => onNavigate('home')} className="article-back" aria-label="Back home">
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
       </div>
       )}
       <div
-        className={`max-w-4xl mx-auto px-4 ${isLoRAFamily ? 'pt-20 pb-16' : 'py-16'} sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'font-light'}`}
+        className={`max-w-4xl mx-auto px-4 ${isLoRAFamily ? 'pt-20 pb-16' : 'py-16'} sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'reflective-article-shell'}`}
         style={
           isLoRAFamily
             ? { fontFamily: '"IBM Plex Sans", sans-serif' }
@@ -1512,7 +1521,7 @@ const ArticleDetail = ({ onNavigate }) => {
         }
       >
         <div ref={headerRef} className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'text-3xl sm:text-4xl font-serif font-light italic tracking-tight leading-tight'}`}>{article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'reflective-article-title font-serif'}`}>{article.displayTitle || article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
@@ -1601,12 +1610,12 @@ const ArticleDetail = ({ onNavigate }) => {
           <hr className={`border-t border-black/10 mt-6 mb-12 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} />
         )}
         {article.date && !useFPGAStyle && (
-        <div className={`text-gray-500 dark:text-gray-400 text-sm md:text-base mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
+        <div className={`reflective-article-date text-sm md:text-base mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
         )}
         {article.quote && (
           <div className={`transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-        <hr className="border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
-        <div className="italic text-sm md:text-base text-white/50 mb-8">{article.quote}</div>
+        <hr className="reflective-article-header-line border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
+        <div className={`reflective-article-quote ${article.quote.length > 120 ? 'reflective-article-quote--long' : ''} text-sm md:text-base mb-8`}>{article.quote}</div>
           </div>
         )}
         {isFPGAArticle && (
@@ -2178,15 +2187,15 @@ const ArticleDetail = ({ onNavigate }) => {
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="flex items-center justify-center p-2 cursor-pointer group"
+              className="article-to-top flex items-center justify-center p-2 cursor-pointer group"
               aria-label="Back to the top"
             >
-              <ArrowUp size={18} className="text-white/60 group-hover:text-white transition-colors duration-200" />
+              <ArrowUp size={18} />
             </button>
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 

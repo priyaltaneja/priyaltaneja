@@ -1,16 +1,10 @@
 import React from 'react';
 
-const DURATION = 100; // ms
+const DURATION = 90; // ms
 
 const PageContainer = ({ children, visible }) => {
   return (
-    <div
-      style={{
-        opacity: visible ? 1 : 0,
-        transition: `opacity ${DURATION}ms ease`,
-        willChange: 'opacity',
-      }}
-    >
+    <div className={`page-transition ${visible ? 'is-visible' : 'is-hidden'}`}>
       {children}
     </div>
   );
