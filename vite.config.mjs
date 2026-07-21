@@ -11,6 +11,11 @@ const getLastUpdated = () => {
 };
 
 export default defineConfig({
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: { '.js': 'jsx' },
+    },
+  },
   define: {
     __LAST_UPDATED__: JSON.stringify(getLastUpdated()),
   },

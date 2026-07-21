@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 const ThemeContext = createContext();
 
@@ -11,13 +12,48 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const isDarkMode = true;
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return window.localStorage.getItem('priyal-theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
 
-  const toggleTheme = () => {};
+    try {
+      window.localStorage.setItem('priyal-theme', isDarkMode ? 'dark' : 'light');
+    } catch {
+      // The theme still works when storage is unavailable.
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    const root = document.documentElement;
+    const nextMode = !isDarkMode;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const applyTheme = () => {
+      root.classList.add('theme-changing');
+      flushSync(() => {
+        root.classList.toggle('dark', nextMode);
+        root.style.colorScheme = nextMode ? 'dark' : 'light';
+        setIsDarkMode(nextMode);
+      });
+    };
+
+    if (!document.startViewTransition || reduceMotion) {
+      applyTheme();
+      window.requestAnimationFrame(() => root.classList.remove('theme-changing'));
+      return;
+    }
+
+    const transition = document.startViewTransition(applyTheme);
+    transition.finished.finally(() => root.classList.remove('theme-changing'));
+  };
 
   const value = {
     isDarkMode,

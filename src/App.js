@@ -1,20 +1,53 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import Portfolio from './Portfolio';
-import Projects from './pages/Projects';
-import Writing from './pages/Writing';
 import ArticleDetail from './pages/ArticleDetail';
 import PageContainer, { DURATION } from './components/PageContainer';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
-// Helper function to get page from pathname
-const getPageFromPath = () => {
-  const path = window.location.pathname;
-  if (path === '/' || path === '') {
+const ThemeToggle = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
+
+  return (
+    <button
+      className="theme-toggle"
+      type="button"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+      aria-pressed={isDarkMode}
+    >
+      {isDarkMode ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+    </button>
+  );
+};
+
+const PERSONAL_ARTICLE_SLUGS = [
+  'the-quiet-skill-of-not-assuming',
+  'unlearning-perfectionism',
+  'ill-be-happy-when-insert-here-a-reflection-on-conditional-happiness-versus-true-happiness',
+];
+
+const TECHNICAL_ARTICLE_SLUGS = [
+  'understanding-fpgas-from-first-principles',
+  'rtl-design-of-a-rgb-led-mixer',
+  'mechanics-of-lora',
+  'multi-lora-at-scale',
+];
+
+const normalizePage = (page) => {
+  const normalized = page.toLowerCase().replace(/^\/+|\/+$/g, '');
+  const articleSlug = normalized.replace(/^article-/, '');
+
+  if (!normalized || normalized === 'home' || normalized === 'projects' || normalized === 'writing') {
     return 'home';
   }
-  return path.substring(1);
+
+  if (PERSONAL_ARTICLE_SLUGS.includes(articleSlug)) return articleSlug;
+  if (TECHNICAL_ARTICLE_SLUGS.includes(normalized)) return normalized;
+  return 'home';
 };
+
+const getPageFromPath = () => normalizePage(window.location.pathname);
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -24,7 +57,6 @@ const scrollToTop = () => {
 
 function App() {
   const [displayPage, setDisplayPage] = useState(() => getPageFromPath());
-  const [navPage, setNavPage] = useState(() => getPageFromPath());
   const [visible, setVisible] = useState(true);
   const [appReady, setAppReady] = useState(false);
   const pendingPage = useRef(null);
@@ -40,7 +72,6 @@ function App() {
     if (page === displayPage && !pendingPage.current) return;
 
     pendingPage.current = page;
-    setNavPage(page);
     setVisible(false);
 
     clearTimeout(timerRef.current);
@@ -53,10 +84,18 @@ function App() {
   }, [displayPage]);
 
   const handleNavigate = useCallback((page) => {
-    const path = page === 'home' ? '/' : `/${page}`;
+    const normalizedPage = normalizePage(page);
+    const path = normalizedPage === 'home' ? '/' : `/${normalizedPage}`;
     window.history.pushState(null, '', path);
-    transitionTo(page);
+    transitionTo(normalizedPage);
   }, [transitionTo]);
+
+  useEffect(() => {
+    const canonicalPath = displayPage === 'home' ? '/' : `/${displayPage}`;
+    if (window.location.pathname !== canonicalPath) {
+      window.history.replaceState(null, '', canonicalPath);
+    }
+  }, [displayPage]);
 
   useEffect(() => {
     const handlePopState = () => transitionTo(getPageFromPath());
@@ -88,96 +127,24 @@ function App() {
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
-  const fpgaArticleSlug = 'understanding-fpgas-from-first-principles';
-  const rgbLedArticleSlug = 'rtl-design-of-a-rgb-led-mixer';
-  const loraArticleSlug = 'mechanics-of-lora';
-  const multiLoraArticleSlug = 'multi-lora-at-scale';
-  const displayPageLower = displayPage.toLowerCase();
-  const navPageLower = navPage.toLowerCase();
-  const isFPGAPage = displayPageLower === fpgaArticleSlug;
-  const isRGBLedPage = displayPageLower === rgbLedArticleSlug;
-  const isLoRAPage = displayPageLower === loraArticleSlug;
-  const isMultiLoRAPage = displayPageLower === multiLoraArticleSlug;
-  const isNavFPGAPage = navPageLower === fpgaArticleSlug;
-  const isNavRGBLedPage = navPageLower === rgbLedArticleSlug;
-  const isNavLoRAPage = navPageLower === loraArticleSlug;
-  const isNavMultiLoRAPage = navPageLower === multiLoraArticleSlug;
-  const isArticlePage = /^article-/.test(displayPage) || isFPGAPage || isRGBLedPage || isLoRAPage || isMultiLoRAPage;
-  const isNavArticlePage = /^article-/.test(navPageLower) || isNavFPGAPage || isNavRGBLedPage || isNavLoRAPage || isNavMultiLoRAPage;
-  const isSubPage = displayPage === 'projects' || displayPage === 'writing';
-  const isNavSubPage = navPage === 'projects' || navPage === 'writing';
-  const showSharedNav = !isNavArticlePage;
+  const isArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage) || TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
     if (isArticlePage) {
       return <ArticleDetail onNavigate={handleNavigate} />;
     }
 
-    switch (displayPage) {
-      case 'projects':
-        return <Projects onNavigate={handleNavigate} />;
-      case 'writing':
-        return <Writing onNavigate={handleNavigate} />;
-      default:
-        return <Portfolio onNavigate={handleNavigate} animateIntro={!hasVisitedHomeRef.current} />;
-    }
+    return <Portfolio onNavigate={handleNavigate} animateIntro={!hasVisitedHomeRef.current} />;
   };
 
   return (
     <ThemeProvider>
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <ThemeToggle />
       <div
-        className={`min-h-dvh flex flex-col relative z-10 transition-opacity duration-500 ${!isSubPage && !isArticlePage ? 'h-dvh overflow-hidden' : ''}`}
+        className="min-h-dvh flex flex-col relative z-10 transition-opacity duration-500"
         style={{ opacity: appReady ? 1 : 0 }}
       >
-        <header
-          className={`absolute top-0 left-0 right-0 z-30 w-full px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10 transition-opacity duration-250 ${
-            showSharedNav ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
-          aria-hidden={!showSharedNav}
-        >
-            <nav className="relative">
-              <button
-                onClick={() => handleNavigate('home')}
-                className={`icon-sweep absolute left-0 top-1/2 flex -translate-y-1/2 items-center transition-all duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
-                  isNavSubPage ? 'translate-x-0 opacity-100 pointer-events-auto' : '-translate-x-4 opacity-0 pointer-events-none'
-                }`}
-                aria-label="Back to home"
-              >
-                <ArrowLeft size={18} />
-              </button>
-
-              <ul
-                className="flex items-center text-sm md:text-base font-light text-white/60 transition-transform duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-                style={{
-                  transform: isNavSubPage ? 'translateX(44px)' : 'translateX(0px)',
-                }}
-              >
-                <li className="mr-8">
-                  <button
-                    onClick={() => handleNavigate('projects')}
-                    className={navPage === 'projects' ? 'glass-text' : 'text-sweep'}
-                  >
-                    projects
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => handleNavigate('writing')}
-                    className={navPage === 'writing' ? 'glass-text' : 'text-sweep'}
-                  >
-                    writing
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </header>
-
-        {/* Dark scrim – fades in on subpages to boost contrast against the texture */}
-        <div
-          className="fixed inset-0 bg-black pointer-events-none transition-opacity duration-100 z-0"
-          style={{ opacity: (isSubPage || isArticlePage) && !isLoRAPage && !isMultiLoRAPage ? 0.35 : 0 }}
-        />
-
         <div className="flex-grow relative z-10">
           <PageContainer visible={visible}>
             {renderPage()}
