@@ -85,6 +85,7 @@ body {
 }
 
 .theme-toggle svg { width: .95rem; height: .95rem; stroke-width: 1.6; }
+.theme-toggle--article { top: 2rem; }
 .theme-toggle:hover { color: #111c31; }
 .theme-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 .dark .theme-toggle { color: rgba(250, 247, 242, .68); }
@@ -978,6 +979,14 @@ body { font-family: var(--orchid-sans); }
 
 .reflective-article-shell { position: relative; z-index: 1; }
 
+.reflective-article-nav {
+  box-sizing: border-box;
+}
+
+.reflective-article-nav .article-back {
+  margin-inline-start: max(0px, calc((100% - var(--article-reading-width)) / 2));
+}
+
 .reflective-article-title {
   max-width: none;
   box-sizing: border-box;
@@ -1133,6 +1142,10 @@ body { font-family: var(--orchid-sans); }
     max-width: 100%;
     white-space: normal;
   }
+}
+
+@media (min-width: 768px) {
+  .theme-toggle--article { top: 2.5rem; }
 }
 
 .index-identity,

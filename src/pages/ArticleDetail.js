@@ -1504,7 +1504,7 @@ const ArticleDetail = ({ onNavigate }) => {
         </div>
       )}
       {article.quote && (
-      <div className="px-8 sm:px-12 md:px-14 lg:px-20 pt-8 md:pt-10">
+      <div className="reflective-article-nav max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10">
         <button onClick={() => onNavigate('home')} className="article-back" aria-label="Back home">
           <ArrowLeft size={18} aria-hidden="true" />
         </button>
@@ -1569,7 +1569,7 @@ const ArticleDetail = ({ onNavigate }) => {
           )}
           {isLoRAArticle && (
             <>
-              <p className={`italic text-[16px] text-[#33415c] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className={`italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
                 {article.subtitle}
               </p>
               <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
@@ -1588,7 +1588,7 @@ const ArticleDetail = ({ onNavigate }) => {
           )}
           {isMultiLoRAArticle && (
             <>
-              <p className={`italic text-[16px] text-[#33415c] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className={`italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
                 {article.subtitle}
               </p>
               <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
