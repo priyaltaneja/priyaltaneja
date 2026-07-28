@@ -11,7 +11,7 @@ const articles = [
   {
     title: 'Looking back instead of around',
     date: 'July 26, 2026',
-    quote: '"The only comparison that actually tells me anything is who I was in the past."',
+    quote: '"Who I’m becoming is the sum of moments I almost forgot to celebrate."',
   },
   {
     title: 'The Quiet Skill of Not Assuming',
