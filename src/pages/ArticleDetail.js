@@ -673,7 +673,12 @@ const articles = [
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">This may seem like a small achievement, but even a small step towards true happiness is a victory in my opinion.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">And, I've come to realize that a significant change in the way you doesn't happen overnight. It's an iterative process of both failures and successes, and it's common to find yourself reverting to what's comfortable. But, as long as you are self-aware, you'll continue being conscious of your method of thinking.</p>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Regardless, I'm still finding my way, navigating through life, and striving to be the best version of myself.</p>
-        <div className="mt-8 p-4 bg-gray-100 dark:bg-white/5 rounded-lg text-gray-700 dark:text-gray-300 font-semibold text-center">TL;DR? As humans, our greatest gift is that happiness is in our control.</div>
+        <div id="happiness-summary" className="article-glass-quote-shell mt-10">
+          <div className="article-glass-quote">
+            <span className="article-glass-quote__label">TL;DR</span>
+            <p>As humans, our greatest gift is that happiness is in our control.</p>
+          </div>
+        </div>
       </>
     ),
   },
