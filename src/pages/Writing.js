@@ -9,6 +9,11 @@ const articles = [
     externalUrl: 'https://thecollectivecommunity.substack.com/',
   },
   {
+    title: 'Looking back instead of around',
+    date: 'July 26, 2026',
+    quote: '"The only comparison that actually tells me anything is who I was in the past."',
+  },
+  {
     title: 'The Quiet Skill of Not Assuming',
     date: 'June 5, 2026',
     quote: '"The cost of asking can feel high in the moment, but the cost of assumption is usually higher."',

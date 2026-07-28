@@ -27,6 +27,7 @@ const ThemeToggle = ({ alignWithArticleHeader = false }) => {
 };
 
 const PERSONAL_ARTICLE_SLUGS = [
+  'looking-back-instead-of-around',
   'the-quiet-skill-of-not-assuming',
   'unlearning-perfectionism',
   'ill-be-happy-when-insert-here-a-reflection-on-conditional-happiness-versus-true-happiness',

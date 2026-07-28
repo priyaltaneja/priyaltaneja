@@ -31,6 +31,10 @@ const WRITING = [
     href: 'https://thecollectivecommunity.substack.com/',
   },
   {
+    title: 'Looking back instead of around',
+    href: '/looking-back-instead-of-around',
+  },
+  {
     title: 'The Quiet Skill of Not Assuming',
     href: '/the-quiet-skill-of-not-assuming',
   },

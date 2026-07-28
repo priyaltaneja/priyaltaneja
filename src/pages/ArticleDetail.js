@@ -441,6 +441,51 @@ const LUTSlideshow = () => {
 
 const articles = [
   {
+    title: 'Looking back instead of around',
+    date: 'July 26, 2026',
+    quote: '"The only comparison that actually tells me anything is who I was in the past."',
+    content: (
+      <>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Ever since January, my life has changed in ways I couldn’t have foreseen.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">Amidst starting my first technical role at a startup, moving 3,000 kilometers away from a place that’s been home my entire life, learning how to show up in the relationships that matter most, and building a life that feels authentic to me, it’s been a really dynamic season.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">There have been many multifaceted variables and decisions in an environment that’s moved faster than I’ve had time to process.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I overlook them because my default is to measure my growth against the people around me, whether that’s the pace they’re moving at or the opportunities they have. For me, the benchmark has almost always been external.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">It took time, but I’ve come to realize that’s the wrong point of reference when measuring growth. The only comparison that actually tells me anything is who I was in the past.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">But, I tend to spend far too long questioning what’s next and forget to internalize how far I’ve come.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">So, I wanted to write down a few things I’m proud of myself for. They’re not flashy accomplishments, but I view them as evidence of the person I’m evolving into through hundreds of small decisions I rarely acknowledge.</p>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-4">A few things I’m proud of lately:</p>
+        <ul className="list-disc ml-8 mb-8 space-y-2">
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Moving to a new city for the summer even though I was nervous, and going anyway with the scared still attached</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Learning my neighbourhood without relying on Google Maps</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Not defaulting to a work, sleep, repeat routine</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Having ownership of a project in production</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Shipping something, breaking something, and fixing it without spiraling</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Speaking in meetings without rehearsing</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Asking more thoughtful questions</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Having friends I adore, in both Toronto &amp; San Francisco</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Actively putting myself out there and meeting new people</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Staying close to my family across time zones and mismatched work schedules</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Showing up for people without keeping score</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Being someone people feel comfortable opening up to</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Communicating instead of assuming</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Trying new things</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Allowing myself to be a beginner with epistemic humility</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Becoming less interested in appearing impressive</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Trusting my judgment more</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Becoming more comfortable with uncertainty instead of trying to control every outcome</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Trusting that I’ll figure it out</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Keeping promises that I make to myself</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Prioritizing sleep</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Resting without guilt</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Walking without music</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">Feeling comfortable doing things by myself</li>
+          <li className="text-zinc-300 text-lg leading-relaxed font-light">And finally, I’m proud of even taking the time to pause and intentionally notice this.</li>
+        </ul>
+        <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I have a habit of moving on before I’ve taken the time to appreciate where I am. However, this is a nice reminder that the routines, relationships, and ordinary moments that seem insignificant today are the ones that quietly shape who you’re becoming.</p>
+      </>
+    ),
+  },
+  {
     title: 'The Quiet Skill of Not Assuming',
     date: 'June 5, 2026',
     quote: '"The cost of asking can feel high in the moment, but the cost of assumption is usually higher."',
@@ -2139,9 +2184,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
           </div>
         )}
         <div className={`${useFPGAStyle ? 'prose prose-lg' : 'prose reflective-article-content'} max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          {React.cloneElement(article.content, {
-            className: `${textColor} transition-colors duration-200`
-          })}
+          {article.content}
         </div>
         {isLoRAArticle && (
           <div className="flex justify-end mt-8 mb-4 border-t border-black/10 pt-8">
