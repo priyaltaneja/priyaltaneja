@@ -16,6 +16,10 @@ code {
     monospace;
 }
 
+a[href] {
+  cursor: pointer;
+}
+
 html {
   overflow-x: hidden;
   overflow-y: scroll;
