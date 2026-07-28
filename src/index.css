@@ -1142,30 +1142,59 @@ body { font-family: var(--orchid-sans); }
 }
 
 .reflective-article-quote {
-  max-width: none;
+  position: relative;
+  width: min(100%, var(--article-reading-width));
   box-sizing: border-box;
-  padding-inline-start: max(0px, calc((100% - var(--article-reading-width)) / 2));
+  overflow: hidden;
+  margin-inline: auto;
+  padding: 1.2rem 1.35rem;
+  border-radius: 1.05rem;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, .4), transparent 42%),
+    linear-gradient(135deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .12));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .5),
+    0 18px 48px rgba(30, 52, 93, .08);
   color: var(--article-ink);
   font-family: var(--orchid-serif);
   font-size: clamp(.98rem, 1.5vw, 1.12rem);
   font-style: italic;
   line-height: 1.55;
-  white-space: nowrap;
+  white-space: normal;
+  text-wrap: pretty;
+}
+
+.reflective-article-quote::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 26%, rgba(255, 255, 255, .2) 48%, transparent 70%);
+  opacity: .72;
+  pointer-events: none;
+}
+
+.reflective-article-quote > span {
+  position: relative;
+  z-index: 1;
 }
 
 .reflective-article-quote--long {
-  width: min(100%, var(--article-reading-width));
-  margin-inline: auto;
-  padding-inline-start: 0;
-  white-space: normal;
-  text-wrap: pretty;
+  line-height: 1.62;
 }
 
 .reflective-article-page hr { border-color: color-mix(in srgb, var(--article-ink) 16%, transparent); }
 
 .reflective-article-page .reflective-article-header-line {
-  width: min(100%, var(--article-reading-width));
-  margin-inline: auto;
+  display: none;
+}
+
+.dark .reflective-article-quote {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, .05), transparent 44%),
+    linear-gradient(135deg, rgba(17, 25, 45, .26), rgba(17, 25, 45, .08));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    0 20px 54px rgba(0, 0, 0, .12);
 }
 
 .reflective-article-page .reflective-article-content {
@@ -1287,11 +1316,7 @@ body { font-family: var(--orchid-sans); }
 
 @media (max-width: 840px) {
   .reflective-article-quote {
-    max-width: var(--article-reading-width);
-    margin-inline: auto;
-    padding-inline-start: 0;
-    white-space: normal;
-    text-wrap: pretty;
+    padding: 1.1rem 1.15rem;
   }
 }
 

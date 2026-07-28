@@ -1667,7 +1667,9 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
         {article.quote && (
           <div className={`transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <hr className="reflective-article-header-line border-t border-gray-200 dark:border-white/20 mb-8 transition-colors duration-200" />
-        <div className={`reflective-article-quote ${article.quote.length > 120 ? 'reflective-article-quote--long' : ''} text-sm md:text-base mb-8`}>{article.quote}</div>
+        <div className={`reflective-article-quote ${article.quote.length > 120 ? 'reflective-article-quote--long' : ''} text-sm md:text-base mb-8`}>
+          <span>{article.quote}</span>
+        </div>
           </div>
         )}
         {isFPGAArticle && (
