@@ -100,7 +100,7 @@ const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = f
           </h1>
 
           <p className="index-tagline reveal-item">
-            I study Computer Engineering at <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noreferrer">McMaster</a> and build agents for freight and logistics at <a href="https://e3group.ai" target="_blank" rel="noreferrer">e3</a>. I’m curious about ML systems, how complex ideas become useful products, and learning how to think well before reaching for the right answer.
+            I study Computer Engineering at <a href="https://www.eng.mcmaster.ca/" target="_blank" rel="noreferrer">McMaster</a> and build agents for freight and logistics as an MTS at <a href="https://e3group.ai/" target="_blank" rel="noreferrer">e3</a>. I’m curious about ML systems, how complex ideas become useful products, and learning how to think well before reaching for the right answer.
           </p>
 
           <div className="single-socials reveal-item" aria-label="Social and contact details">
