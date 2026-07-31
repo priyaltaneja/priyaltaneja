@@ -1041,6 +1041,20 @@ body { font-family: var(--orchid-sans); }
 .dark .portfolio-index .motion-blur::after { opacity: 1; }
 
 /* Personal writing carries the homepage atmosphere; technical work keeps its own system. */
+.technical-article-reveal {
+  opacity: 0;
+  transition: opacity 520ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.technical-article-reveal.is-loaded { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .technical-article-reveal {
+    opacity: 1;
+    transition: none;
+  }
+}
+
 .reflective-article-page {
   --article-ink: #111c31;
   --article-body: rgba(17, 28, 49, .74);

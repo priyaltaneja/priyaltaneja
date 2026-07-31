@@ -1557,7 +1557,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
       </div>
       )}
       <div
-        className={`max-w-4xl mx-auto px-4 ${isLoRAFamily ? 'pt-20 pb-16' : 'py-16'} sm:px-6 lg:px-8 ${useFPGAStyle ? '' : 'reflective-article-shell'}`}
+        className={`max-w-4xl mx-auto px-4 ${isLoRAFamily ? 'pt-20 pb-16' : 'py-16'} sm:px-6 lg:px-8 ${useFPGAStyle ? `technical-article-reveal${isLoaded ? ' is-loaded' : ''}` : 'reflective-article-shell'}`}
         style={
           isLoRAFamily
             ? { fontFamily: '"IBM Plex Sans", sans-serif' }
@@ -1567,7 +1567,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
         }
       >
         <div ref={headerRef} className={useFPGAStyle ? 'mt-8' : ''}>
-          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'reflective-article-title font-serif'}`}>{article.displayTitle || article.title}</h1>
+          <h1 className={`mb-4 ${titleColor} transition-colors duration-200 ${isReflectiveArticle ? `transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}` : ''} ${useFPGAStyle ? `text-3xl md:text-4xl ${isLoRAFamily || isFPGAArticle ? 'font-medium' : 'font-semibold'} max-w-5xl` : 'reflective-article-title font-serif'}`}>{article.displayTitle || article.title}</h1>
           {useFPGAStyle && (
             <>
             <div className={`flex items-center gap-3 mb-8 ${textColor} transition-colors duration-200`}>
@@ -1615,10 +1615,10 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
           )}
           {isLoRAArticle && (
             <>
-              <p className={`italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className="italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4">
                 {article.subtitle}
               </p>
-              <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="border-l-2 border-[#023e7d]/30 pl-4 mb-2">
                 <span className="text-[11px] font-semibold tracking-widest uppercase text-[#023e7d]/80">Part 1 of 2</span>
                 <p className="text-[13px] leading-relaxed text-[#000000]/55 mt-1">
                   This is the first of a two-part series on LoRA serving. If you're already comfortable with the fundamentals, feel free to skip ahead to{' '}
@@ -1634,10 +1634,10 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
           )}
           {isMultiLoRAArticle && (
             <>
-              <p className={`italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className="italic text-[16px] text-[#000000] leading-[1.7] mt-2 mb-4">
                 {article.subtitle}
               </p>
-              <div className={`border-l-2 border-[#023e7d]/30 pl-4 mb-2 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="border-l-2 border-[#023e7d]/30 pl-4 mb-2">
                 <span className="text-[11px] font-semibold tracking-widest uppercase text-[#023e7d]/80">Part 2 of 2</span>
                 <p className="text-[13px] leading-relaxed text-[#000000]/55 mt-1">
                   This is the second part of a two-part series. The first article,{' '}
@@ -1653,7 +1653,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
           )}
         </div>
         {isLoRAFamily && (
-          <hr className={`border-t border-black/10 mt-6 mb-12 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} />
+          <hr className="border-t border-black/10 mt-6 mb-12" />
         )}
         {article.date && !useFPGAStyle && (
         <div className={`reflective-article-date text-sm md:text-base mb-8 transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>{article.date}</div>
@@ -2184,7 +2184,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
             </ul>
           </div>
         )}
-        <div className={`${useFPGAStyle ? 'prose prose-lg' : 'prose reflective-article-content'} max-w-none mb-8 ${textColor} transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`${useFPGAStyle ? 'prose prose-lg' : 'prose reflective-article-content'} max-w-none mb-8 ${textColor} ${isReflectiveArticle ? `transition-opacity duration-700 delay-100 ${isLoaded ? 'opacity-100' : 'opacity-0'}` : ''}`}>
           {article.content}
         </div>
         {isLoRAArticle && (
