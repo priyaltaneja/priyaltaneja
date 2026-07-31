@@ -6,10 +6,12 @@ const PROJECTS = [
   {
     title: 'LoRA Serving: A Two-Part Series',
     href: '/mechanics-of-lora',
+    openInNewTab: true,
   },
   {
     title: 'Understanding FPGAs from First Principles',
     href: '/understanding-fpgas-from-first-principles',
+    openInNewTab: true,
   },
   {
     title: 'NextScholar',
@@ -50,10 +52,11 @@ const WRITING = [
 
 const IndexLink = ({ item, onNavigate }) => {
   const external = /^https?:\/\//.test(item.href);
+  const opensInNewTab = external || item.openInNewTab;
 
   const handleClick = (event) => {
     if (
-      external ||
+      opensInNewTab ||
       event.defaultPrevented ||
       event.button !== 0 ||
       event.metaKey ||
@@ -73,7 +76,7 @@ const IndexLink = ({ item, onNavigate }) => {
       className="index-link reveal-item"
       href={item.href}
       onClick={handleClick}
-      {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+      {...(opensInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {item.title}
     </a>
