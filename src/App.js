@@ -170,6 +170,7 @@ function App() {
 
   const isArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage) || TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
   const isReflectiveArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage);
+  const isTechnicalArticlePage = TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
     if (isArticlePage) {
@@ -182,7 +183,7 @@ function App() {
   return (
     <ThemeProvider>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <ThemeToggle alignWithArticleHeader={isReflectiveArticlePage} />
+      {!isTechnicalArticlePage && <ThemeToggle alignWithArticleHeader={isReflectiveArticlePage} />}
       <div
         className="min-h-dvh flex flex-col relative z-10 transition-opacity duration-500"
         style={{ opacity: appReady ? 1 : 0 }}

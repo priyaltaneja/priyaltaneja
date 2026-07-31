@@ -838,7 +838,7 @@ const articles = [
         <div className="my-8 overflow-x-auto flex justify-center">
           <table className="border-collapse border border-gray-300 text-lg">
             <thead>
-              <tr className="bg-gray-100 dark:bg-gray-800">
+              <tr className="bg-gray-100 text-[#1a1a1a] dark:bg-gray-800 dark:text-white">
                 <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Feature</th>
                 <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Flip-Flops (Registers)</th>
                 <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Distributed RAM (LUT RAM)</th>
