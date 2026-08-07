@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from
 import { Moon, Sun } from 'lucide-react';
 import Portfolio from './Portfolio';
 import ArticleDetail from './pages/ArticleDetail';
+import Photos from './pages/Photos';
 import PageContainer, { DURATION, RETURN_DURATION } from './components/PageContainer';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
@@ -48,6 +49,7 @@ const normalizePage = (page) => {
     return 'home';
   }
 
+  if (normalized === 'photos') return 'photos';
   if (PERSONAL_ARTICLE_SLUGS.includes(articleSlug)) return articleSlug;
   if (TECHNICAL_ARTICLE_SLUGS.includes(normalized)) return normalized;
   return 'home';
@@ -173,6 +175,10 @@ function App() {
   const isTechnicalArticlePage = TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
+    if (displayPage === 'photos') {
+      return <Photos onNavigate={handleNavigate} />;
+    }
+
     if (isArticlePage) {
       return <ArticleDetail onNavigate={handleNavigate} articleSlug={displayPage} />;
     }
@@ -196,7 +202,7 @@ function App() {
             <div
               className={`route-home-preview${homePreviewActive ? ' is-active' : ''}`}
               aria-hidden="true"
-              inert=""
+              inert={true}
             >
               <Portfolio onNavigate={handleNavigate} isTransitionPreview />
             </div>

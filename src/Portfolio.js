@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
+import PHOTOS from './data/photos';
 
 const PROJECTS = [
   {
@@ -83,6 +84,37 @@ const IndexLink = ({ item, onNavigate }) => {
   );
 };
 
+const PhotosPreview = ({ onNavigate }) => {
+  const handleClick = (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    onNavigate('photos');
+  };
+
+  return (
+    <a
+      className="photo-contact-sheet reveal-item"
+      href="/photos"
+      onClick={handleClick}
+      aria-label="Open photos"
+    >
+      {PHOTOS.slice(0, 4).map((photo) => (
+        <img key={photo.id} src={photo.src} alt="" aria-hidden="true" />
+      ))}
+    </a>
+  );
+};
+
 const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = false }) => {
   return (
     <main
@@ -136,6 +168,11 @@ const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = f
               <IndexLink key={article.title} item={article} onNavigate={onNavigate} />
             ))}
           </div>
+        </section>
+
+        <section className="index-section index-section--photos" aria-labelledby="photos-heading">
+          <h2 id="photos-heading" className="reveal-item">Photos</h2>
+          <PhotosPreview onNavigate={onNavigate} />
         </section>
       </div>
     </main>
