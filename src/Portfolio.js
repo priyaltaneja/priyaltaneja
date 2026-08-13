@@ -84,6 +84,20 @@ const IndexLink = ({ item, onNavigate }) => {
   );
 };
 
+const HOME_PHOTO_SELECTION = [
+  { id: 'golden-gate', previewPosition: '50% 54%' },
+  { id: 'bay-bridge-moon', previewPosition: '50% 40%' },
+  { id: 'coast-birds', previewPosition: '50% 62%' },
+  { id: 'coffee-table', previewPosition: '50% 52%' },
+];
+
+const HOME_PHOTOS = HOME_PHOTO_SELECTION
+  .map(({ id, previewPosition }) => {
+    const photo = PHOTOS.find((candidate) => candidate.id === id);
+    return photo ? { ...photo, previewPosition } : null;
+  })
+  .filter(Boolean);
+
 const PhotosPreview = ({ onNavigate }) => {
   const handleClick = (event) => {
     if (
@@ -108,8 +122,14 @@ const PhotosPreview = ({ onNavigate }) => {
       onClick={handleClick}
       aria-label="Open photos"
     >
-      {PHOTOS.slice(0, 4).map((photo) => (
-        <img key={photo.id} src={photo.src} alt="" aria-hidden="true" />
+      {HOME_PHOTOS.map((photo) => (
+        <img
+          key={photo.id}
+          src={photo.src}
+          alt=""
+          aria-hidden="true"
+          style={{ objectPosition: photo.previewPosition || photo.position }}
+        />
       ))}
     </a>
   );
