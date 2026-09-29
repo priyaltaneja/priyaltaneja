@@ -35,6 +35,9 @@ const CENTER_RADIUS = 62;
 // Stamens: washed over with their petals, but their fine detail waits until last.
 const STAMEN_BOX = [155, 122, 248, 256];
 const SETTLE = 0.55;
+const SEED = 1507;
+const SWAY_ANGLE = 0.045; // radians at the petal tips' peak, about 2.5°
+const SWAY_SPEED = 2.6; // radians per second
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const easeInOut = (t) => 0.5 - Math.cos(Math.PI * t) / 2;
@@ -340,6 +343,36 @@ const blurred = (img, factor, tint) => {
   return c;
 };
 
+// Split the finished flower into one soft-edged layer per petal. Weights across the layers
+// sum to one, so drawn with 'lighter' and no sway they rebuild the exact image.
+const splitPetals = (image) => {
+  const [cx, cy] = LILY_CENTER;
+  const angles = LILY_SKETCH.filter(([kind]) => kind === 'gesture')
+    .map(([, pts]) => Math.atan2(pts[pts.length - 1][1] - cy, pts[pts.length - 1][0] - cx));
+  const layers = angles.map(() => new ImageData(SIZE, SIZE));
+  const src = image.data;
+  const w = new Float32Array(angles.length);
+  for (let y = 0; y < SIZE; y += 1) {
+    for (let x = 0; x < SIZE; x += 1) {
+      const i = (y * SIZE + x) * 4;
+      if (!src[i + 3]) continue;
+      const phi = Math.atan2(y - cy, x - cx);
+      let sum = 0;
+      for (let k = 0; k < angles.length; k += 1) { w[k] = Math.exp(4 * Math.cos(phi - angles[k])); sum += w[k]; }
+      for (let k = 0; k < angles.length; k += 1) {
+        const d = layers[k].data;
+        d[i] = src[i]; d[i + 1] = src[i + 1]; d[i + 2] = src[i + 2];
+        d[i + 3] = Math.round((src[i + 3] * w[k]) / sum);
+      }
+    }
+  }
+  return layers.map((data) => {
+    const c = makeCanvas();
+    c.getContext('2d').putImageData(data, 0, 0);
+    return c;
+  });
+};
+
 const LilyMark = ({ className = '' }) => {
   const canvasRef = useRef(null);
 
@@ -350,88 +383,165 @@ const LilyMark = ({ className = '' }) => {
     const img = new Image();
     let frame = 0;
     let cancelled = false;
+    let detach = () => {};
 
     img.onload = () => {
       if (cancelled) return;
-      const rand = mulberry32(1507);
       const read = makeCanvas();
       const rctx = read.getContext('2d', { willReadFrequently: true });
       rctx.drawImage(img, 0, 0, SIZE, SIZE);
       const alpha = rctx.getImageData(0, 0, SIZE, SIZE).data;
-
       const sources = {
         wash: blurred(img, 7, 'rgba(255,238,242,.38)'),
         glaze: blurred(img, 2.6),
         detail: read,
       };
       const inside = insideOf(alpha);
-      const pencil = makeCanvas();
-      const pctx = pencil.getContext('2d');
-      const live = makeCanvas();
-      const lctx = live.getContext('2d');
       const tmp = makeCanvas();
       const tctx = tmp.getContext('2d');
-      const sketch = planSketch(rand, inside);
-      const passes = planPaint(inside, rand, sketch.end - 0.1);
       const petalCount = LILY_SKETCH.filter(([kind]) => kind === 'gesture').length;
-      const paintEnd = sketch.end + petalCount * PETAL_STRIDE + PETAL_WINDOW + PASSES[PASSES.length - 1].stroke;
-      const end = paintEnd + SETTLE;
 
-      const render = (now) => {
-        // Finished strokes are committed; the ones in progress are redrawn each frame.
-        lctx.clearRect(0, 0, SIZE, SIZE);
-        sketch.strokes.forEach((s) => {
-          if (s.done || now < s.start) return;
-          const k = easeInOut(clamp01((now - s.start) / s.dur));
-          if (k >= 1) { drawPencil(pctx, s, 1); s.done = true; } else drawPencil(lctx, s, k);
-        });
-        out.clearRect(0, 0, SIZE, SIZE);
-        passes.forEach((pass) => {
-          const mctx = pass.mask.getContext('2d');
-          pass.strokes.forEach((s) => { if (now >= s.start && s.done < s.total) paintStroke(mctx, pass, s, now); });
-          mctx.setTransform(1, 0, 0, 1, 0, 0);
-          tctx.globalCompositeOperation = 'source-over';
-          tctx.clearRect(0, 0, SIZE, SIZE);
-          tctx.drawImage(pass.mask, 0, 0);
-          tctx.globalCompositeOperation = 'source-in';
-          tctx.drawImage(sources[pass.key], 0, 0);
-          out.drawImage(tmp, 0, 0);
-        });
-        const settle = clamp01((now - paintEnd) / SETTLE);
-        if (settle > 0) {
-          out.globalAlpha = easeInOut(settle);
-          out.drawImage(img, 0, 0, SIZE, SIZE);
+      // One full sketch-and-paint run. Each replay uses a new seed, so no two sketches are identical.
+      const buildScene = (seed) => {
+        const rand = mulberry32(seed);
+        const pencil = makeCanvas();
+        const pctx = pencil.getContext('2d');
+        const live = makeCanvas();
+        const lctx = live.getContext('2d');
+        const sketch = planSketch(rand, inside);
+        const passes = planPaint(inside, rand, sketch.end - 0.1);
+        const paintEnd = sketch.end + petalCount * PETAL_STRIDE + PETAL_WINDOW + PASSES[PASSES.length - 1].stroke;
+        const end = paintEnd + SETTLE;
+
+        const render = (now) => {
+          // Finished strokes are committed; the ones in progress are redrawn each frame.
+          lctx.clearRect(0, 0, SIZE, SIZE);
+          sketch.strokes.forEach((s) => {
+            if (s.done || now < s.start) return;
+            const k = easeInOut(clamp01((now - s.start) / s.dur));
+            if (k >= 1) { drawPencil(pctx, s, 1); s.done = true; } else drawPencil(lctx, s, k);
+          });
+          out.clearRect(0, 0, SIZE, SIZE);
+          passes.forEach((pass) => {
+            const mctx = pass.mask.getContext('2d');
+            pass.strokes.forEach((s) => { if (now >= s.start && s.done < s.total) paintStroke(mctx, pass, s, now); });
+            mctx.setTransform(1, 0, 0, 1, 0, 0);
+            tctx.globalCompositeOperation = 'source-over';
+            tctx.clearRect(0, 0, SIZE, SIZE);
+            tctx.drawImage(pass.mask, 0, 0);
+            tctx.globalCompositeOperation = 'source-in';
+            tctx.drawImage(sources[pass.key], 0, 0);
+            out.drawImage(tmp, 0, 0);
+          });
+          const settle = clamp01((now - paintEnd) / SETTLE);
+          if (settle > 0) {
+            out.globalAlpha = easeInOut(settle);
+            out.drawImage(img, 0, 0, SIZE, SIZE);
+            out.globalAlpha = 1;
+          }
+          // Pencil stays visible under the transparent paint, fading as the pigment builds up.
+          const paintProgress = clamp01((now - sketch.end) / (end - sketch.end));
+          out.globalCompositeOperation = 'multiply';
+          out.globalAlpha = 0.9 - 0.7 * paintProgress;
+          out.drawImage(pencil, 0, 0);
+          out.drawImage(live, 0, 0);
+          out.globalCompositeOperation = 'source-over';
           out.globalAlpha = 1;
-        }
-        // Pencil stays visible under the transparent paint, fading as the pigment builds up.
-        const paintProgress = clamp01((now - sketch.end) / (end - sketch.end));
-        out.globalCompositeOperation = 'multiply';
-        out.globalAlpha = 0.9 - 0.7 * paintProgress;
-        out.drawImage(pencil, 0, 0);
-        out.drawImage(live, 0, 0);
-        out.globalCompositeOperation = 'source-over';
-        out.globalAlpha = 1;
+        };
+        return { render, end };
       };
 
       const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      let run = 0;
       if (reduceMotion) {
-        render(end + 1);
+        buildScene(SEED).render(Infinity);
         return;
       }
-      let t0 = null;
-      const tick = (ts) => {
-        if (t0 === null) t0 = ts;
-        const now = (ts - t0) / 1000;
-        render(now);
-        if (now < end) frame = requestAnimationFrame(tick);
+
+      // Hover sway: the finished flower is split into overlapping petal layers that rock
+      // around the centre slightly out of step, so the tips move and the heart stays put.
+      let still = null;
+      let petals = null;
+      let mode = 'drawing';
+      let amp = 0;
+      let target = 0;
+      let lastTs = null;
+
+      const settleIntoStill = () => {
+        still = makeCanvas();
+        still.getContext('2d').drawImage(canvas, 0, 0);
+        petals = splitPetals(out.getImageData(0, 0, SIZE, SIZE));
+        mode = 'still';
+        if (target) startSway();
       };
-      frame = requestAnimationFrame(tick);
+
+      const sway = (ts) => {
+        const dt = lastTs === null ? 0 : Math.min(0.05, (ts - lastTs) / 1000);
+        lastTs = ts;
+        amp += (target - amp) * Math.min(1, dt * 3.5);
+        if (!target && amp < 0.01) {
+          out.clearRect(0, 0, SIZE, SIZE);
+          out.drawImage(still, 0, 0);
+          mode = 'still';
+          lastTs = null;
+          return;
+        }
+        const [cx, cy] = LILY_CENTER;
+        out.clearRect(0, 0, SIZE, SIZE);
+        out.globalCompositeOperation = 'lighter';
+        petals.forEach((layer, i) => {
+          const a = amp * SWAY_ANGLE * Math.sin((ts / 1000) * SWAY_SPEED + i * 1.35);
+          const c = Math.cos(a), sn = Math.sin(a);
+          out.setTransform(c, sn, -sn, c, cx - c * cx + sn * cy, cy - sn * cx - c * cy);
+          out.drawImage(layer, 0, 0);
+        });
+        out.setTransform(1, 0, 0, 1, 0, 0);
+        out.globalCompositeOperation = 'source-over';
+        frame = requestAnimationFrame(sway);
+      };
+
+      const startSway = () => {
+        if (mode !== 'still') return;
+        mode = 'sway';
+        frame = requestAnimationFrame(sway);
+      };
+
+      const play = () => {
+        cancelAnimationFrame(frame);
+        mode = 'drawing';
+        out.setTransform(1, 0, 0, 1, 0, 0);
+        out.globalCompositeOperation = 'source-over';
+        const scene = buildScene(SEED + run);
+        run += 1;
+        let t0 = null;
+        const tick = (ts) => {
+          if (t0 === null) t0 = ts;
+          const now = (ts - t0) / 1000;
+          scene.render(now);
+          if (now < scene.end) frame = requestAnimationFrame(tick);
+          else settleIntoStill();
+        };
+        frame = requestAnimationFrame(tick);
+      };
+
+      const onEnter = () => { target = 1; startSway(); };
+      const onLeave = () => { target = 0; };
+      canvas.addEventListener('pointerenter', onEnter);
+      canvas.addEventListener('pointerleave', onLeave);
+      canvas.addEventListener('click', play);
+      detach = () => {
+        canvas.removeEventListener('pointerenter', onEnter);
+        canvas.removeEventListener('pointerleave', onLeave);
+        canvas.removeEventListener('click', play);
+      };
+      play();
     };
     img.src = SRC;
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(frame);
+      detach();
     };
   }, []);
 
