@@ -2,6 +2,7 @@ import { MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 import PHOTOS from './data/photos';
+import LilyMark from './components/LilyMark';
 
 const PROJECTS = [
   {
@@ -148,6 +149,7 @@ const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = f
         <div className="index-identity__copy">
           <h1 id="home-title" className="index-name reveal-item">
             Priyal Taneja
+            <LilyMark className="index-name__lily" />
           </h1>
 
           <p className="index-tagline reveal-item">
