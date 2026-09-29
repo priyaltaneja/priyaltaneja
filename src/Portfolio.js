@@ -134,7 +134,7 @@ const PhotosPreview = ({ onNavigate }) => {
           style={{ objectPosition: photo.previewPosition || photo.position }}
         />
       ))}
-      <span className="photo-contact-sheet__more" aria-hidden="true">↗</span>
+      <span className="photo-contact-sheet__more" aria-hidden="true" />
     </a>
   );
 };
