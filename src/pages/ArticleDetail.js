@@ -2170,7 +2170,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
               onMouseLeave={e => { e.currentTarget.style.color = '#023e7d'; }}
             >
               <span>Part 2: Multi-LoRA at scale</span>
-              <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+              <ChevronRight size={18} />
             </button>
           </div>
         )}
@@ -2183,7 +2183,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
               onMouseEnter={e => { e.currentTarget.style.color = '#001845'; }}
               onMouseLeave={e => { e.currentTarget.style.color = '#023e7d'; }}
             >
-              <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
+              <ChevronLeft size={18} />
               <span>Part 1: The mechanics of LoRA</span>
             </button>
             <a

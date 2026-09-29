@@ -1142,7 +1142,7 @@ body { font-family: var(--orchid-sans); }
   position: relative;
   z-index: 2;
   color: var(--article-muted);
-  transition: color .2s ease, transform .2s ease;
+  transition: color .2s ease;
 }
 
 .article-back {
@@ -1164,7 +1164,6 @@ body { font-family: var(--orchid-sans); }
 
 .article-back:hover,
 .article-to-top:hover { color: var(--article-ink); }
-.article-back:hover { transform: none; }
 .article-back:focus-visible,
 .article-to-top:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 
@@ -1676,7 +1675,7 @@ body { font-family: var(--orchid-sans); }
   height: 1.8rem;
   color: var(--photos-muted);
   line-height: 1;
-  transition: color var(--theme-speed) var(--theme-ease), transform 180ms var(--theme-ease);
+  transition: color var(--theme-speed) var(--theme-ease);
 }
 
 .photos-back svg {
@@ -1685,8 +1684,7 @@ body { font-family: var(--orchid-sans); }
   stroke-width: 1.6;
 }
 
-.photos-back:hover { color: var(--photos-ink); transform: translateX(-2px); }
-.photos-back:active { transform: translateX(-2px) translateY(1px); }
+.photos-back:hover { color: var(--photos-ink); }
 .photos-back:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 
 .photos-masonry-frame {
@@ -1847,8 +1845,7 @@ body { font-family: var(--orchid-sans); }
   }
 
   .photo-contact-sheet:hover img,
-  .photos-tile:hover img,
-  .photos-back:hover {
+  .photos-tile:hover img {
     transform: none;
   }
 }
