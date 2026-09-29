@@ -1917,7 +1917,18 @@ body { font-family: var(--orchid-sans); }
   line-height: 1;
   transition: color 180ms ease;
 }
-.photo-contact-sheet:hover .photo-contact-sheet__more { color: #6b7280; }
+/* Same arrow as the McMaster and e3 links. */
+.photo-contact-sheet__more::before {
+  content: '';
+  width: .8rem;
+  height: .8rem;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: .65;
+  transition: opacity .25s ease;
+}
+.photo-contact-sheet:hover .photo-contact-sheet__more::before { opacity: .9; }
 
 /* Serif body copy needs a little more size to stay readable. */
 .portfolio-index .index-tagline,
