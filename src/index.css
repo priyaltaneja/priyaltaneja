@@ -1413,6 +1413,7 @@ body { font-family: var(--orchid-sans); }
   margin: -.15em 0 -.15em .22em;
   /* flex centres on the line box, which includes descender space; lift to the cap-height centre */
   transform: translateY(-.14em);
+  cursor: pointer;
 }
 
 .index-tagline {
