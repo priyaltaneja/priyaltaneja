@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" preserveAspectRatio="none">
+  <defs>
+    <filter id="w" x="-5%" y="-30%" width="110%" height="160%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.05" numOctaves="2" seed="21" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="0.9" result="soft"/>
+      <feMorphology in="soft" operator="erode" radius="1.8" result="inner"/>
+      <feComposite in="soft" in2="inner" operator="out" result="rim"/>
+      <feGaussianBlur in="rim" stdDeviation="0.9" result="rimSoft"/>
+      <feColorMatrix in="rimSoft" type="matrix" values="0 0 0 0 0.91 0 0 0 0 0.58 0 0 0 0 0.74 0 0 0 0.4 0" result="rimColor"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="17" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.9 0 0 0 1.3" result="grainA"/>
+      <feComposite in="soft" in2="grainA" operator="in" result="grained"/>
+      <feMerge><feMergeNode in="grained"/><feMergeNode in="rimColor"/></feMerge>
+    </filter>
+  </defs>
+  <g opacity=".62" filter="url(#w)" fill="rgb(246,188,214)">
+    <ellipse cx="20.0" cy="23.3" rx="22.4" ry="15.7"/>
+    <ellipse cx="48.8" cy="21.6" rx="26.3" ry="13.8"/>
+    <ellipse cx="79.5" cy="26.5" rx="22.6" ry="14.4"/>
+    <ellipse cx="107.3" cy="24.7" rx="28.4" ry="15.4"/>
+    <ellipse cx="132.5" cy="24.1" rx="26.3" ry="17.0"/>
+    <ellipse cx="162.4" cy="25.3" rx="26.7" ry="13.8"/>
+    <ellipse cx="191.2" cy="25.8" rx="23.0" ry="13.6"/>
+    <ellipse cx="218.9" cy="25.1" rx="27.2" ry="17.0"/>
+    <ellipse cx="222" cy="23.6" rx="16" ry="15.4"/>
+  </g>
+</svg>
