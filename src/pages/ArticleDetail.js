@@ -21,29 +21,6 @@ import {
   TTFTHeatmapDiagram,
 } from '../components/MultiLoRADiagrams';
 
-const FieldNotesEmbed = () => {
-  const embedUrl = 'https://fieldnotesbypriyal.substack.com/embed?theme=light';
-
-  return (
-    <div
-      className="substack-embed"
-      data-substack-embed={embedUrl}
-      data-substack-domain="fieldnotesbypriyal.substack.com"
-      data-theme="light"
-    >
-      <iframe
-        title="Subscribe to field notes by priyal"
-        src={embedUrl}
-        width="100%"
-        height="320"
-        style={{ colorScheme: 'light' }}
-        frameBorder="0"
-        scrolling="no"
-      />
-    </div>
-  );
-};
-
 const FPGA_SLIDES = [
   {
     number: 1,
@@ -482,6 +459,12 @@ const articles = [
           <li className="text-zinc-300 text-lg leading-relaxed font-light">And finally, I’m proud of even taking the time to pause and intentionally notice this.</li>
         </ul>
         <p className="text-zinc-300 text-lg leading-relaxed font-light mb-6">I have a habit of moving on before I’ve taken the time to appreciate where I am. However, this is a nice reminder that the routines, relationships, and ordinary moments that seem insignificant today are the ones that quietly shape who you’re becoming.</p>
+        <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
+        <div className="mt-8">
+          <p className="text-sm mt-4 italic">
+            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can <a href="https://fieldnotesbypriyal.substack.com/subscribe" target="_blank" rel="noopener noreferrer" className="underline">subscribe here</a>! ♡
+          </p>
+        </div>
       </>
     ),
   },
@@ -542,9 +525,8 @@ const articles = [
         <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
         
         <div className="mt-8">
-          <FieldNotesEmbed />
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
-            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
+          <p className="text-sm mt-4 italic">
+            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can <a href="https://fieldnotesbypriyal.substack.com/subscribe" target="_blank" rel="noopener noreferrer" className="underline">subscribe here</a>! ♡
           </p>
         </div>
       </>
@@ -584,9 +566,8 @@ const articles = [
         <hr className="border-t border-gray-200 dark:border-gray-700 my-12" />
         
         <div className="mt-8">
-          <FieldNotesEmbed />
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-4 italic">
-            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can subscribe! ♡
+          <p className="text-sm mt-4 italic">
+            This piece first went out in field notes by priyal, my corner for sharing reflections and sparks of curiosity. If you'd like to follow along with me and receive these notes straight in your inbox, you can <a href="https://fieldnotesbypriyal.substack.com/subscribe" target="_blank" rel="noopener noreferrer" className="underline">subscribe here</a>! ♡
           </p>
         </div>
       </>
@@ -1497,16 +1478,8 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
     <main
       id="main-content"
       ref={articleRef}
-      className={`min-h-dvh w-full ${bgColor} transition-colors duration-200 ${isReflectiveArticle ? 'reflective-article-page' : ''}`}
+      className={`${isFPGAArticle ? 'fpga-article-page' : isLoRAFamily ? 'lora-article-page' : 'article-page'} min-h-dvh w-full ${bgColor} transition-colors duration-200 ${isReflectiveArticle ? 'reflective-article-page' : ''}`}
     >
-      {isReflectiveArticle && (
-        <div className="motion-blur" aria-hidden="true">
-          <div className="motion-blur__wash motion-blur__wash--blue" />
-          <div className="motion-blur__wash motion-blur__wash--coral" />
-          <div className="motion-blur__wash motion-blur__wash--cyan" />
-          <div className="motion-blur__veil" />
-        </div>
-      )}
       {isLoRAFamily && sections && (
         <div
           className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -1562,7 +1535,7 @@ const ArticleDetail = ({ onNavigate, articleSlug }) => {
           isLoRAFamily
             ? { fontFamily: '"IBM Plex Sans", sans-serif' }
             : useFPGAStyle
-              ? { fontFamily: 'Lora, serif' }
+              ? { fontFamily: isFPGAArticle ? 'Lora, serif' : 'var(--orchid-sans)' }
               : undefined
         }
       >

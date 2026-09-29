@@ -197,13 +197,6 @@ const Photos = ({ onNavigate }) => {
 
   return (
     <main id="main-content" className="photos-page">
-      <div className="motion-blur" aria-hidden="true">
-        <div className="motion-blur__wash motion-blur__wash--blue" />
-        <div className="motion-blur__wash motion-blur__wash--coral" />
-        <div className="motion-blur__wash motion-blur__wash--cyan" />
-        <div className="motion-blur__veil" />
-      </div>
-
       <header className="photos-header">
         <a className="photos-back" href="/" onClick={handleHomeClick} aria-label="Back to home">
           <ArrowLeft size={18} aria-hidden="true" />

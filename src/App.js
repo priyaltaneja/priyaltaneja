@@ -1,32 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
 import Portfolio from './Portfolio';
 import ArticleDetail from './pages/ArticleDetail';
 import Photos from './pages/Photos';
 import PageContainer, { DURATION, RETURN_DURATION } from './components/PageContainer';
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
-
-const ThemeToggle = ({ alignWithArticleHeader = false }) => {
-  const { isDarkMode, toggleTheme } = useTheme();
-
-  return (
-    <button
-      className={`theme-toggle${alignWithArticleHeader ? ' theme-toggle--article' : ''}`}
-      type="button"
-      onClick={toggleTheme}
-      aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-      aria-pressed={isDarkMode}
-    >
-      <span className="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">
-        <Moon />
-      </span>
-      <span className="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">
-        <Sun />
-      </span>
-    </button>
-  );
-};
-
 const PERSONAL_ARTICLE_SLUGS = [
   'looking-back-instead-of-around',
   'the-quiet-skill-of-not-assuming',
@@ -66,6 +42,7 @@ const scrollToTop = () => {
 function App() {
   const [displayPage, setDisplayPage] = useState(() => getPageFromPath());
   const [visible, setVisible] = useState(true);
+  const [isEnteringWriting, setIsEnteringWriting] = useState(false);
   const [isReturningHome, setIsReturningHome] = useState(false);
   const [homePreviewMounted, setHomePreviewMounted] = useState(false);
   const [homePreviewActive, setHomePreviewActive] = useState(false);
@@ -83,6 +60,7 @@ function App() {
   const transitionTo = useCallback((page) => {
     if (page === displayPage && !pendingPage.current) return;
 
+    setIsEnteringWriting(PERSONAL_ARTICLE_SLUGS.includes(page));
     pendingPage.current = page;
     const returningHome = page === 'home' && displayPage !== 'home';
     setIsReturningHome(returningHome);
@@ -171,8 +149,6 @@ function App() {
   }, []);
 
   const isArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage) || TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
-  const isReflectiveArticlePage = PERSONAL_ARTICLE_SLUGS.includes(displayPage);
-  const isTechnicalArticlePage = TECHNICAL_ARTICLE_SLUGS.includes(displayPage);
 
   const renderPage = () => {
     if (displayPage === 'photos') {
@@ -187,15 +163,14 @@ function App() {
   };
 
   return (
-    <ThemeProvider>
+    <>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      {!isTechnicalArticlePage && <ThemeToggle alignWithArticleHeader={isReflectiveArticlePage} />}
       <div
         className="min-h-dvh flex flex-col relative z-10 transition-opacity duration-500"
         style={{ opacity: appReady ? 1 : 0 }}
       >
         <div className="flex-grow relative z-10">
-          <PageContainer visible={visible} isReturningHome={isReturningHome}>
+          <PageContainer visible={visible} isReturningHome={isReturningHome} isEnteringWriting={isEnteringWriting}>
             {renderPage()}
           </PageContainer>
           {homePreviewMounted && (
@@ -209,7 +184,7 @@ function App() {
           )}
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

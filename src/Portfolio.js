@@ -30,7 +30,7 @@ const PROJECTS = [
 
 const WRITING = [
   {
-    title: 'Under the Hood',
+    title: 'Under the Hood [The Collective NYC]',
     href: 'https://thecollectivecommunity.substack.com/',
   },
   {
@@ -89,6 +89,8 @@ const HOME_PHOTO_SELECTION = [
   { id: 'bay-bridge-moon', previewPosition: '50% 40%' },
   { id: 'coast-birds', previewPosition: '50% 62%' },
   { id: 'coffee-table', previewPosition: '50% 52%' },
+  { id: 'flower-market', previewPosition: '50% 50%' },
+  { id: 'grand-canyon', previewPosition: '50% 50%' },
 ];
 
 const HOME_PHOTOS = HOME_PHOTO_SELECTION
@@ -120,7 +122,7 @@ const PhotosPreview = ({ onNavigate }) => {
       className="photo-contact-sheet reveal-item"
       href="/photos"
       onClick={handleClick}
-      aria-label="Open photos"
+      aria-label="View all photos"
     >
       {HOME_PHOTOS.map((photo) => (
         <img
@@ -131,6 +133,7 @@ const PhotosPreview = ({ onNavigate }) => {
           style={{ objectPosition: photo.previewPosition || photo.position }}
         />
       ))}
+      <span className="photo-contact-sheet__more" aria-hidden="true">↗</span>
     </a>
   );
 };
@@ -141,13 +144,6 @@ const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = f
       id={isTransitionPreview ? undefined : 'main-content'}
       className={`portfolio-index is-ready${suppressReveal || isTransitionPreview ? ' suppress-reveal' : ''}`}
     >
-      <div className="motion-blur" aria-hidden="true">
-        <div className="motion-blur__wash motion-blur__wash--blue" />
-        <div className="motion-blur__wash motion-blur__wash--coral" />
-        <div className="motion-blur__wash motion-blur__wash--cyan" />
-        <div className="motion-blur__veil" />
-      </div>
-
       <section className="index-identity" aria-labelledby="home-title">
         <div className="index-identity__copy">
           <h1 id="home-title" className="index-name reveal-item">
@@ -165,7 +161,7 @@ const Portfolio = ({ onNavigate, isTransitionPreview = false, suppressReveal = f
             <span className="single-socials__separator" aria-hidden="true" />
             <a className="single-email" href="mailto:priyaltaneja15@gmail.com">priyaltaneja15@gmail.com</a>
             <span className="single-socials__separator" aria-hidden="true" />
-            <span className="single-location"><MapPin aria-hidden="true" /> toronto / sf</span>
+            <span className="single-location"><MapPin aria-hidden="true" /> Toronto / SF</span>
           </div>
         </div>
 

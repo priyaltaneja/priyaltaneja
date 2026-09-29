@@ -3,9 +3,9 @@ import React from 'react';
 const DURATION = 140; // ms
 const RETURN_DURATION = 300; // ms
 
-const PageContainer = ({ children, visible, isReturningHome = false }) => {
+const PageContainer = ({ children, visible, isReturningHome = false, isEnteringWriting = false }) => {
   return (
-    <div className={`page-transition ${visible ? 'is-visible' : 'is-hidden'}${isReturningHome ? ' is-returning-home' : ''}`}>
+    <div className={`page-transition ${visible ? 'is-visible' : 'is-hidden'}${isReturningHome ? ' is-returning-home' : ''}${isEnteringWriting ? ' is-entering-writing' : ''}`}>
       {children}
     </div>
   );
