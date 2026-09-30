@@ -1485,7 +1485,16 @@ body { font-family: var(--orchid-sans); }
 
 .index-identity .single-socials { color: var(--index-body); }
 .index-identity .single-socials__separator { background: var(--index-muted); }
-.index-identity .single-socials a:hover { color: #6b7280; }
+.index-identity .single-socials a {
+  position: relative;
+  isolation: isolate;
+}
+.index-identity .single-socials a:hover { color: var(--index-ink); }
+/* Icons get a small round dab of wash; the email gets a snug swipe like McMaster and e3. */
+.index-identity .single-socials > a:not(.single-email)::before { inset: -.2rem -.14rem; }
+.index-identity .single-socials > a:nth-of-type(2)::before { background-image: url('/images/wash-2.svg'); }
+.index-identity .single-socials > a:nth-of-type(3)::before { background-image: url('/images/wash-3.svg'); }
+.index-identity .single-socials .single-email::before { inset: -.05em -.2em -.15em -.15em; background-image: url('/images/wash-2.svg'); }
 
 .index-content {
   display: grid;
@@ -1514,7 +1523,8 @@ body { font-family: var(--orchid-sans); }
 
 /* Watercolour highlight: a wash brushed in from the left, with a soft wet leading edge. */
 .index-link::before,
-.index-tagline a::before {
+.index-tagline a::before,
+.index-identity .single-socials a::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -1536,7 +1546,9 @@ body { font-family: var(--orchid-sans); }
 .index-link:hover::before,
 .index-link:focus-visible::before,
 .index-tagline a:hover::before,
-.index-tagline a:focus-visible::before {
+.index-tagline a:focus-visible::before,
+.index-identity .single-socials a:hover::before,
+.index-identity .single-socials a:focus-visible::before {
   -webkit-mask-position: 0 0;
   mask-position: 0 0;
   opacity: 1;
@@ -1547,7 +1559,9 @@ body { font-family: var(--orchid-sans); }
   .index-link::before,
   .index-link:hover::before,
   .index-tagline a::before,
-  .index-tagline a:hover::before { transition: opacity .2s ease; }
+  .index-tagline a:hover::before,
+  .index-identity .single-socials a::before,
+  .index-identity .single-socials a:hover::before { transition: opacity .2s ease; }
 }
 
 .index-link:hover { color: var(--index-ink); }
